@@ -13,18 +13,17 @@
           <p class="eyebrow">Style Guide / Theme Tokens</p>
           <h1>Dark UI Baseline</h1>
           <p class="hero-text">
-            Starter reference for typography, spacing, form controls, states,
-            and layout primitives. The token model is ready for a future light
-            theme and easy Svelte extraction.
+            Flat black surfaces, no gradients, and a neon-leaning state system
+            built around start, mid, warning, and error tones. The structure is
+            still plain HTML and CSS, but the tokens are ready to be lifted into
+            Svelte components later.
           </p>
         </div>
 
         <div class="hero-actions">
-          <button type="button" class="button button-primary">
-            Primary Action
-          </button>
+          <button type="button" class="button button-primary">Start</button>
           <button type="button" class="button button-secondary">
-            Secondary
+            Mid / Info
           </button>
           <button type="button" class="button button-ghost">Ghost</button>
         </div>
@@ -36,7 +35,7 @@
             <p class="eyebrow">Typography</p>
             <h2>Text Samples</h2>
           </div>
-          <span class="badge badge-info">monospace</span>
+          <span class="badge badge-start">monospace</span>
         </div>
 
         <div class="type-grid">
@@ -44,23 +43,25 @@
             <span class="kicker">Heading</span>
             <h3>Display title with clear hierarchy</h3>
             <p>
-              Paragraph text should remain calm, readable, and high-contrast
-              without drifting into pure white.
+              Paragraph text stays bright enough to read against black while the
+              quieter copy keeps some depth instead of collapsing into stark
+              white.
             </p>
           </div>
 
           <div class="card">
             <span class="kicker">Inline Elements</span>
             <p>
-              This is a <span class="accent-text">span accent</span>, an
+              This is a <span class="accent-text">start-tone span</span>, an
               <a href="#forms">anchor link</a>, and an
               <code>inline code token</code>.
             </p>
             <div class="stack-row">
-              <span class="badge">Default</span>
-              <span class="badge badge-success">Success</span>
-              <span class="badge badge-warning">Warning</span>
-              <span class="badge badge-danger">Danger</span>
+              <span class="badge">Neutral</span>
+              <span class="badge badge-start">Start</span>
+              <span class="badge badge-mid">Mid / Info</span>
+              <span class="badge badge-warning">75% / Warning</span>
+              <span class="badge badge-danger">End / Error</span>
             </div>
           </div>
         </div>
@@ -72,7 +73,7 @@
             <p class="eyebrow">Controls</p>
             <h2>Form Elements</h2>
           </div>
-          <span class="helper-text">dark theme</span>
+          <span class="helper-text">flat black theme</span>
         </div>
 
         <div class="form-grid">
@@ -170,6 +171,141 @@
       <section class="panel">
         <div class="section-heading">
           <div>
+            <p class="eyebrow">States</p>
+            <h2>Hover, Focus & Selected</h2>
+          </div>
+          <span class="helper-text">hover = blue, focus = amber</span>
+        </div>
+
+        <div class="state-grid">
+          <div class="card stack">
+            <span class="kicker">Tabs</span>
+            <div class="tab-list" role="tablist" aria-label="Tone states">
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id="tab-start"
+                data-panel="panel-start"
+                data-tone="start"
+                aria-controls="panel-start"
+                aria-selected="true"
+                tabindex="0"
+              >
+                Start
+              </button>
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id="tab-mid"
+                data-panel="panel-mid"
+                data-tone="mid"
+                aria-controls="panel-mid"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Mid / Info
+              </button>
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id="tab-warning"
+                data-panel="panel-warning"
+                data-tone="warning"
+                aria-controls="panel-warning"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                75% / Warning
+              </button>
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id="tab-danger"
+                data-panel="panel-danger"
+                data-tone="danger"
+                aria-controls="panel-danger"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                End / Error
+              </button>
+            </div>
+
+            <div class="tab-panels">
+              <section
+                class="tab-panel"
+                role="tabpanel"
+                id="panel-start"
+                aria-labelledby="tab-start"
+              >
+                <p>
+                  Hover moves into neon blue. Selected state keeps the component
+                  in its own tone without turning the whole surface loud.
+                </p>
+              </section>
+              <section
+                class="tab-panel"
+                role="tabpanel"
+                id="panel-mid"
+                aria-labelledby="tab-mid"
+                hidden
+              >
+                <p>
+                  Mid and info surfaces lean teal so they remain distinct from
+                  the amber warning color for users with green-yellow confusion.
+                </p>
+              </section>
+              <section
+                class="tab-panel"
+                role="tabpanel"
+                id="panel-warning"
+                aria-labelledby="tab-warning"
+                hidden
+              >
+                <p>
+                  Warning uses amber with a warm red bias, which keeps it away
+                  from the teal mid tone while still reading as caution.
+                </p>
+              </section>
+              <section
+                class="tab-panel"
+                role="tabpanel"
+                id="panel-danger"
+                aria-labelledby="tab-danger"
+                hidden
+              >
+                <p>
+                  Error and end states sit in a pink-red range so they stay
+                  visibly separate from both amber and blue.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div class="card stack">
+            <span class="kicker">State Legend</span>
+            <p>
+              Hover is always a cooler blue shift. Keyboard focus is a brighter
+              amber ring. Selected controls keep their own tone so state and
+              meaning are both visible at the same time.
+            </p>
+            <div class="stack-row">
+              <span class="badge badge-start">Blue = Start</span>
+              <span class="badge badge-mid">Teal = Mid</span>
+              <span class="badge badge-warning">Amber = 75%</span>
+              <span class="badge badge-danger">Pink Red = End</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
             <p class="eyebrow">Feedback</p>
             <h2>Status & Data</h2>
           </div>
@@ -177,28 +313,32 @@
 
         <div class="feedback-grid">
           <div class="card stack">
-            <div class="alert alert-info">
-              <strong>Info:</strong> Token names are stable and ready to map to
-              a component library.
+            <div class="alert alert-start">
+              <strong>Start:</strong> Primary actions and initial states stay in
+              neon blue.
+            </div>
+            <div class="alert alert-mid">
+              <strong>Mid / Info:</strong> Informational and in-progress states
+              lean teal-green.
             </div>
             <div class="alert alert-warning">
-              <strong>Warning:</strong> Light theme values still need to be
-              defined.
+              <strong>75% / Warning:</strong> Amber remains clearly separated
+              from teal.
             </div>
             <div class="alert alert-danger">
-              <strong>Error:</strong> Disabled states should be reviewed once
-              components are split out.
+              <strong>End / Error:</strong> Error states use a pink-red tone
+              with stronger contrast.
             </div>
           </div>
 
           <div class="card stack">
             <label class="meter-block">
               <span class="field-label">Progress</span>
-              <progress max="100" value="68">68%</progress>
+              <progress max="100" value="34">34%</progress>
             </label>
             <label class="meter-block">
               <span class="field-label">Meter</span>
-              <meter min="0" max="100" value="74">74%</meter>
+              <meter min="0" max="100" value="78">78%</meter>
             </label>
           </div>
         </div>
@@ -216,17 +356,27 @@
               <tr>
                 <td><code>--color-bg</code></td>
                 <td>Application background</td>
-                <td>#0b0f14</td>
+                <td>#040506</td>
               </tr>
               <tr>
-                <td><code>--color-panel</code></td>
-                <td>Cards and surfaces</td>
-                <td>#131922</td>
+                <td><code>--color-start</code></td>
+                <td>Start, hover, primary action</td>
+                <td>#35d8ff</td>
               </tr>
               <tr>
-                <td><code>--color-accent</code></td>
-                <td>Interactive highlight</td>
-                <td>#7dd3fc</td>
+                <td><code>--color-mid</code></td>
+                <td>Midpoint, info, selected state</td>
+                <td>#2ef0c3</td>
+              </tr>
+              <tr>
+                <td><code>--color-warning</code></td>
+                <td>75%, caution, focus attention</td>
+                <td>#ffbe55</td>
+              </tr>
+              <tr>
+                <td><code>--color-danger</code></td>
+                <td>End state, error, destructive tone</td>
+                <td>#ff5c8a</td>
               </tr>
             </tbody>
           </table>
@@ -243,16 +393,25 @@
 
         <div class="layout-grid">
           <div class="card stack">
-            <span class="kicker">Card</span>
+            <span class="kicker">Swatches</span>
             <div class="swatch-row">
-              <div class="swatch">
+              <div class="swatch swatch-bg">
                 <span class="swatch-label">bg</span>
               </div>
               <div class="swatch swatch-panel">
                 <span class="swatch-label">panel</span>
               </div>
-              <div class="swatch swatch-accent">
-                <span class="swatch-label">accent</span>
+              <div class="swatch swatch-start">
+                <span class="swatch-label">start</span>
+              </div>
+              <div class="swatch swatch-mid">
+                <span class="swatch-label">mid</span>
+              </div>
+              <div class="swatch swatch-warning">
+                <span class="swatch-label">warn</span>
+              </div>
+              <div class="swatch swatch-danger">
+                <span class="swatch-label">end</span>
               </div>
             </div>
           </div>
@@ -264,8 +423,8 @@
                 Spacing scale: <code>--space-1</code> through
                 <code>--space-6</code>
               </li>
-              <li>Radius scale: subtle rounded corners</li>
-              <li>Shadows: used sparingly on panels and hover states</li>
+              <li>Hover shifts blue, focus shifts amber, selected shifts teal</li>
+              <li>No gradients; all contrast comes from flat surfaces and tone</li>
             </ul>
           </div>
 
@@ -273,8 +432,9 @@
             <span class="kicker">Code Block</span>
             <pre><code>:root {
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
-  --color-bg: #0b0f14;
-  --color-panel: #131922;
+  --color-bg: #040506;
+  --color-start: #35d8ff;
+  --color-mid: #2ef0c3;
 }</code></pre>
           </div>
         </div>
