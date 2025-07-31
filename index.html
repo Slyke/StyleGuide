@@ -147,6 +147,7 @@
               max="100"
               value="56"
               aria-labelledby="range-label"
+              data-output="range-output"
             />
           </div>
 
@@ -161,10 +162,353 @@
                 type="checkbox"
                 checked
                 aria-labelledby="toggle-label"
+                data-toggle-output="toggle-state"
               />
               <span class="switch-track"></span>
             </label>
           </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Variants</p>
+            <h2>Tone Control Sets</h2>
+          </div>
+          <span class="helper-text">buttons, inputs, sliders, checks, toggles</span>
+        </div>
+
+        <div class="tone-grid">
+          <article class="tone-card card" data-tone="start">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Start / Good</p>
+                <h3>Blue Controls</h3>
+              </div>
+              <span class="badge badge-start">start</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Start Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Start Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="Begin flow..."
+                />
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-start-range-label">
+                    Start Slider
+                  </span>
+                  <output id="tone-start-range-output" for="tone-start-range">
+                    28
+                  </output>
+                </div>
+                <input
+                  id="tone-start-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="28"
+                  aria-labelledby="tone-start-range-label"
+                  data-output="tone-start-range-output"
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Start checkbox</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="tone-start-choice"
+                    checked
+                  />
+                  <span>Start radio</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-start-toggle-label">
+                    Start Toggle
+                  </span>
+                  <span class="helper-text" id="tone-start-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="tone-start-toggle-label"
+                    data-toggle-output="tone-start-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="mid">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Mid / Info</p>
+                <h3>Teal Controls</h3>
+              </div>
+              <span class="badge badge-mid">mid</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Mid Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Mid Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="Process update..."
+                />
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-mid-range-label">
+                    Mid Slider
+                  </span>
+                  <output id="tone-mid-range-output" for="tone-mid-range">
+                    54
+                  </output>
+                </div>
+                <input
+                  id="tone-mid-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="54"
+                  aria-labelledby="tone-mid-range-label"
+                  data-output="tone-mid-range-output"
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Mid checkbox</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="tone-mid-choice"
+                    checked
+                  />
+                  <span>Mid radio</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-mid-toggle-label">
+                    Mid Toggle
+                  </span>
+                  <span class="helper-text" id="tone-mid-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="tone-mid-toggle-label"
+                    data-toggle-output="tone-mid-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="warning">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">75% / Warning</p>
+                <h3>Amber Controls</h3>
+              </div>
+              <span class="badge badge-warning">warning</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Warning Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Warning Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="Needs review..."
+                />
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-warning-range-label">
+                    Warning Slider
+                  </span>
+                  <output
+                    id="tone-warning-range-output"
+                    for="tone-warning-range"
+                  >
+                    76
+                  </output>
+                </div>
+                <input
+                  id="tone-warning-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="76"
+                  aria-labelledby="tone-warning-range-label"
+                  data-output="tone-warning-range-output"
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Warning checkbox</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="tone-warning-choice"
+                    checked
+                  />
+                  <span>Warning radio</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-warning-toggle-label">
+                    Warning Toggle
+                  </span>
+                  <span class="helper-text" id="tone-warning-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="tone-warning-toggle-label"
+                    data-toggle-output="tone-warning-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="danger">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">End / Error</p>
+                <h3>Danger Controls</h3>
+              </div>
+              <span class="badge badge-danger">danger</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Danger Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Danger Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="Stop condition..."
+                />
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-danger-range-label">
+                    Danger Slider
+                  </span>
+                  <output id="tone-danger-range-output" for="tone-danger-range">
+                    92
+                  </output>
+                </div>
+                <input
+                  id="tone-danger-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="92"
+                  aria-labelledby="tone-danger-range-label"
+                  data-output="tone-danger-range-output"
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Danger checkbox</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="tone-danger-choice"
+                    checked
+                  />
+                  <span>Danger radio</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="tone-danger-toggle-label">
+                    Danger Toggle
+                  </span>
+                  <span class="helper-text" id="tone-danger-toggle-state">
+                    disabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    aria-labelledby="tone-danger-toggle-label"
+                    data-toggle-output="tone-danger-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -255,7 +599,7 @@
                 hidden
               >
                 <p>
-                  Mid and info surfaces lean teal so they remain distinct from
+                  Mid and info surfaces lean neon green so they remain distinct from
                   the amber warning color for users with green-yellow confusion.
                 </p>
               </section>
@@ -268,7 +612,7 @@
               >
                 <p>
                   Warning uses amber with a warm red bias, which keeps it away
-                  from the teal mid tone while still reading as caution.
+                  from the green mid tone while still reading as caution.
                 </p>
               </section>
               <section
@@ -319,11 +663,11 @@
             </div>
             <div class="alert alert-mid">
               <strong>Mid / Info:</strong> Informational and in-progress states
-              lean teal-green.
+              lean neon green.
             </div>
             <div class="alert alert-warning">
               <strong>75% / Warning:</strong> Amber remains clearly separated
-              from teal.
+              from green.
             </div>
             <div class="alert alert-danger">
               <strong>End / Error:</strong> Error states use a pink-red tone
@@ -361,25 +705,64 @@
               <tr>
                 <td><code>--color-start</code></td>
                 <td>Start, hover, primary action</td>
-                <td>#35d8ff</td>
+                <td>#00b6ff</td>
               </tr>
               <tr>
                 <td><code>--color-mid</code></td>
                 <td>Midpoint, info, selected state</td>
-                <td>#2ef0c3</td>
+                <td>#39ff79</td>
               </tr>
               <tr>
                 <td><code>--color-warning</code></td>
                 <td>75%, caution, focus attention</td>
-                <td>#ffbe55</td>
+                <td>#ffbc3a</td>
               </tr>
               <tr>
                 <td><code>--color-danger</code></td>
                 <td>End state, error, destructive tone</td>
-                <td>#ff5c8a</td>
+                <td>#ff1f5a</td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Contrast</p>
+            <h2>Cross-Paired Color Mixes</h2>
+          </div>
+          <span class="helper-text">text and surface pair tests</span>
+        </div>
+
+        <div class="combo-grid">
+          <article class="combo-card combo-card-blue-bg">
+            <p class="kicker">Green Text / Blue Background</p>
+            <h3>Mid On Start</h3>
+            <p>
+              Neon green text on a blue field keeps the words bright while the
+              surface still reads as active and controlled.
+            </p>
+          </article>
+
+          <article class="combo-card combo-card-green-bg">
+            <p class="kicker">Blue Text / Green Background</p>
+            <h3>Start On Mid</h3>
+            <p>
+              Blue text over a green surface makes the foreground cooler and more
+              technical without losing contrast.
+            </p>
+          </article>
+
+          <article class="combo-card combo-card-red-bg">
+            <p class="kicker">Yellow Text / Red Background</p>
+            <h3>Warning On Error</h3>
+            <p>
+              Amber text on a stronger red background pushes urgency harder while
+              staying readable against the dark system.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -423,7 +806,7 @@
                 Spacing scale: <code>--space-1</code> through
                 <code>--space-6</code>
               </li>
-              <li>Hover shifts blue, focus shifts amber, selected shifts teal</li>
+              <li>Hover shifts blue, focus shifts amber, selected shifts green</li>
               <li>No gradients; all contrast comes from flat surfaces and tone</li>
             </ul>
           </div>
@@ -433,8 +816,9 @@
             <pre><code>:root {
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
   --color-bg: #040506;
-  --color-start: #35d8ff;
-  --color-mid: #2ef0c3;
+  --color-start: #00b6ff;
+  --color-mid: #39ff79;
+  --color-danger: #ff1f5a;
 }</code></pre>
           </div>
         </div>

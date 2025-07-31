@@ -1,10 +1,16 @@
-const rangeInput = document.querySelector("#scale-range");
-const rangeOutput = document.querySelector("#range-output");
-const featureToggle = document.querySelector("#feature-toggle");
-const toggleState = document.querySelector("#toggle-state");
+const rangeInputs = document.querySelectorAll('input[type="range"][data-output]');
+const toggleInputs = document.querySelectorAll(
+  'input[type="checkbox"][data-toggle-output]'
+);
 const tabLists = document.querySelectorAll('[role="tablist"]');
 
-if (rangeInput && rangeOutput) {
+rangeInputs.forEach((rangeInput) => {
+  const rangeOutput = document.getElementById(rangeInput.dataset.output || "");
+
+  if (!rangeOutput) {
+    return;
+  }
+
   const syncRange = () => {
     rangeOutput.value = rangeInput.value;
     rangeOutput.textContent = rangeInput.value;
@@ -12,16 +18,24 @@ if (rangeInput && rangeOutput) {
 
   syncRange();
   rangeInput.addEventListener("input", syncRange);
-}
+});
 
-if (featureToggle && toggleState) {
+toggleInputs.forEach((toggleInput) => {
+  const toggleState = document.getElementById(
+    toggleInput.dataset.toggleOutput || ""
+  );
+
+  if (!toggleState) {
+    return;
+  }
+
   const syncToggle = () => {
-    toggleState.textContent = featureToggle.checked ? "enabled" : "disabled";
+    toggleState.textContent = toggleInput.checked ? "enabled" : "disabled";
   };
 
   syncToggle();
-  featureToggle.addEventListener("change", syncToggle);
-}
+  toggleInput.addEventListener("change", syncToggle);
+});
 
 tabLists.forEach((tabList) => {
   const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
