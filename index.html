@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CSS Style Guide</title>
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("styleguid-theme");
+
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (error) {
+        console.warn("Theme preference unavailable.", error);
+      }
+    </script>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -11,16 +22,25 @@
       <header class="hero panel">
         <div class="hero-copy">
           <p class="eyebrow">Style Guide / Theme Tokens</p>
-          <h1>Dark UI Baseline</h1>
+          <h1>Light + Dark UI Baseline</h1>
           <p class="hero-text">
-            Flat black surfaces, no gradients, and a neon-leaning state system
-            built around start, mid, warning, and error tones. The structure is
-            still plain HTML and CSS, but the tokens are ready to be lifted into
-            Svelte components later.
+            The same controls, states, and tone system rendered through shared
+            tokens for dark and light mode. The structure is still plain HTML
+            and CSS, but the token model is ready to be lifted into Svelte
+            components later.
           </p>
         </div>
 
         <div class="hero-actions">
+          <button
+            type="button"
+            class="button theme-toggle"
+            id="theme-toggle"
+            aria-pressed="false"
+          >
+            <span class="theme-toggle-name">Theme</span>
+            <span class="theme-toggle-state" id="theme-toggle-state">Dark</span>
+          </button>
           <button type="button" class="button button-primary">Start</button>
           <button type="button" class="button button-secondary">
             Mid / Info
@@ -43,9 +63,8 @@
             <span class="kicker">Heading</span>
             <h3>Display title with clear hierarchy</h3>
             <p>
-              Paragraph text stays bright enough to read against black while the
-              quieter copy keeps some depth instead of collapsing into stark
-              white.
+              Paragraph text stays readable across both modes while quieter copy
+              still keeps enough separation to preserve hierarchy.
             </p>
           </div>
 
@@ -73,7 +92,7 @@
             <p class="eyebrow">Controls</p>
             <h2>Form Elements</h2>
           </div>
-          <span class="helper-text">flat black theme</span>
+          <span class="helper-text" id="theme-helper">token driven</span>
         </div>
 
         <div class="form-grid">
@@ -760,7 +779,7 @@
             <h3>Warning On Error</h3>
             <p>
               Amber text on a stronger red background pushes urgency harder while
-              staying readable against the dark system.
+              staying readable against the surrounding UI.
             </p>
           </article>
         </div>

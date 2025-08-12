@@ -1,8 +1,47 @@
+const root = document.documentElement;
+const themeToggle = document.querySelector("#theme-toggle");
+const themeToggleState = document.querySelector("#theme-toggle-state");
+const themeHelper = document.querySelector("#theme-helper");
 const rangeInputs = document.querySelectorAll('input[type="range"][data-output]');
 const toggleInputs = document.querySelectorAll(
   'input[type="checkbox"][data-toggle-output]'
 );
 const tabLists = document.querySelectorAll('[role="tablist"]');
+
+const syncThemeUi = (theme) => {
+  const nextTheme = theme === "light" ? "light" : "dark";
+
+  root.dataset.theme = nextTheme;
+
+  if (themeToggle) {
+    themeToggle.setAttribute("aria-pressed", String(nextTheme === "light"));
+  }
+
+  if (themeToggleState) {
+    themeToggleState.textContent = nextTheme === "light" ? "Light" : "Dark";
+  }
+
+  if (themeHelper) {
+    themeHelper.textContent =
+      nextTheme === "light" ? "light theme active" : "dark theme active";
+  }
+};
+
+syncThemeUi(root.dataset.theme);
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
+
+    syncThemeUi(nextTheme);
+
+    try {
+      localStorage.setItem("styleguid-theme", nextTheme);
+    } catch (error) {
+      console.warn("Theme preference unavailable.", error);
+    }
+  });
+}
 
 rangeInputs.forEach((rangeInput) => {
   const rangeOutput = document.getElementById(rangeInput.dataset.output || "");
