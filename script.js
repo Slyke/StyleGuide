@@ -2,6 +2,10 @@ const root = document.documentElement;
 const themeToggle = document.querySelector("#theme-toggle");
 const themeToggleState = document.querySelector("#theme-toggle-state");
 const themeHelper = document.querySelector("#theme-helper");
+const fontSelector = document.querySelector("#font-selector");
+const fontOptions = fontSelector
+  ? new Set(Array.from(fontSelector.options, (option) => option.value))
+  : new Set();
 const rangeInputs = document.querySelectorAll('input[type="range"][data-output]');
 const toggleInputs = document.querySelectorAll(
   'input[type="checkbox"][data-toggle-output]'
@@ -39,6 +43,30 @@ if (themeToggle) {
       localStorage.setItem("styleguid-theme", nextTheme);
     } catch (error) {
       console.warn("Theme preference unavailable.", error);
+    }
+  });
+}
+
+const syncFontUi = (fontKey) => {
+  const nextFont = fontOptions.has(fontKey) ? fontKey : "system-stack";
+
+  root.dataset.font = nextFont;
+
+  if (fontSelector) {
+    fontSelector.value = nextFont;
+  }
+};
+
+syncFontUi(root.dataset.font);
+
+if (fontSelector) {
+  fontSelector.addEventListener("change", () => {
+    syncFontUi(fontSelector.value);
+
+    try {
+      localStorage.setItem("styleguid-font", fontSelector.value);
+    } catch (error) {
+      console.warn("Font preference unavailable.", error);
     }
   });
 }
