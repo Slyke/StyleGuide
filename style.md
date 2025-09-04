@@ -1,40 +1,56 @@
-# Style Guide Reference
+# Style Contract
 
-This repository is the reference implementation for a monospace UI system with:
+This file is the canonical UI contract for this style system.
+
+If an agent or project references this repository:
+
+- Read this file first.
+- Read `CODING_STYLE.md` second for implementation conventions.
+- Read `index.html`, `styles.css`, and `script.js` only if this contract is not enough or a concrete example is needed.
+
+## Purpose
+
+This system defines a monospace UI with:
 
 - dark and light themes
-- a root-level font selector
-- shared semantic tone tokens
-- token-driven component styling suitable for plain HTML/CSS and Svelte
+- root-driven theme switching
+- root-driven font switching
+- four semantic color tones
+- flat surfaces with no gradients
+- shared rules that work in plain HTML/CSS and can be carried into Svelte
 
-Use this document as the contract when applying the style system to other projects.
+## Required
 
-## Core Rules
+- Use a monospace font for the entire UI, not just code blocks.
+- Drive theme from a root `data-theme` attribute.
+- Drive font from a root `data-font` attribute.
+- Style controls from shared tokens and shared rules.
+- Preserve the semantic tones `start`, `mid`, `warning`, and `danger`.
+- Keep hover, focus, selected, and error behavior semantically consistent.
+- Prefer shared variables and shared component rules over one-off exceptions.
 
-- Use monospace fonts for the full UI, not only code blocks.
-- Drive theme and font from root data attributes, not per-component overrides.
-- Keep component styles token-based. Do not hardcode one-off colors unless they become new tokens.
-- Avoid gradients. Surfaces should be flat and rely on tone, border, and contrast.
-- Preserve the four semantic tones:
-  - `start`: primary, active, hover, “good”
-  - `mid`: informational, in-progress, selected
-  - `warning`: caution, review, 75%
-  - `danger`: end state, destructive, error
+## Forbidden
 
-## Root State
+- Do not introduce gradients unless a project explicitly chooses to diverge.
+- Do not hardcode random accent colors when an existing semantic tone fits.
+- Do not switch themes with per-component theme classes if root state can handle it.
+- Do not switch fonts with per-component overrides if root state can handle it.
+- Do not rename or repurpose the four semantic tones without updating this file.
 
-Apply state at the app root, ideally `html`:
+## Root Contract
+
+Apply state at the root element, ideally `html`:
 
 ```html
 <html data-theme="dark" data-font="system-stack">
 ```
 
-Supported theme values:
+Supported `data-theme` values:
 
 - `dark`
 - `light`
 
-Supported font values:
+Supported `data-font` values:
 
 - `system-stack`
 - `ui-mono`
@@ -53,40 +69,49 @@ Supported font values:
 - `dejavu-sans-mono`
 - `liberation-mono`
 
-## Theme Behavior
+## Semantic Tones
 
-The page should switch theme by changing `data-theme` only. Component rules should stay shared.
+- `start`: primary actions, active states, hover energy, initial states, neon blue
+- `mid`: informational states, selected states, in-progress states, neon green
+- `warning`: caution, review, focus emphasis, 75% states, amber
+- `danger`: destructive actions, terminal states, error states, strong red
 
-Dark mode intent:
+Use these tone meanings consistently across alerts, buttons, toggles, inputs, tabs, sliders, badges, and status panels.
+
+## Interaction Mapping
+
+- Hover should bias toward `start`.
+- Keyboard focus should bias toward `warning`.
+- Selected, checked, and switched-on states should bias toward `mid`.
+- Error and destructive emphasis should bias toward `danger`.
+- Motion should stay fast and restrained.
+- Current baseline transition timing is `120ms ease-out`.
+
+## Theme Intent
+
+Dark theme:
 
 - near-black background
+- flat surfaces
 - neon accents
-- stronger fills and borders
+- strong borders and fills
 
-Light mode intent:
+Light theme:
 
 - pale neutral background
-- same semantic hues, reduced glare
+- flat surfaces
+- same semantic hues with lower glare
 - crisp borders and readable ink colors
 
-## Interaction Rules
+## Font Contract
 
-- Hover should bias toward `start` blue.
-- Keyboard focus should use `warning` amber.
-- Selected and “on” states should bias toward `mid` green.
-- Error emphasis should use `danger` red.
-- Motion should stay fast and restrained. Current baseline is `120ms ease-out`.
+Use a single page-wide variable for UI typography:
 
-## Component Rules
+```css
+--font-mono
+```
 
-- Buttons, inputs, selects, textareas, badges, tabs, alerts, switches, sliders, and tables should all inherit from shared theme tokens.
-- Custom controls should use the semantic tone tokens instead of inventing local accent colors.
-- Code blocks and inline code should still use the global monospace family.
-- Alerts and contrast panels should show tone meaning clearly enough to distinguish blue vs green and green vs warning for color-sensitive users.
-
-## Typography
-
-Use `--font-mono` as the single page-wide font variable. Changing the selected font should change the entire UI.
+Changing the selected font must change the entire page, including controls, labels, tables, badges, code blocks, and helper text.
 
 Recommended default stack:
 
@@ -97,31 +122,41 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 "DejaVu Sans Mono", "Liberation Mono", "Courier New", monospace
 ```
 
-## Svelte Integration
+## Component Contract
 
-For Svelte apps:
+- Buttons, inputs, selects, textareas, tabs, switches, sliders, badges, alerts, tables, cards, and code blocks should inherit from shared theme tokens.
+- Custom controls should use semantic tone tokens instead of inventing local accent palettes.
+- Tone meaning must stay legible for users who may confuse green and yellow unless contrast and hue separation are deliberate.
+- Blue and green must stay visibly distinct.
+- Green and warning must stay visibly distinct.
+- Danger should read as red first, not pink first.
 
-- keep theme and font in a store or root state
-- update `document.documentElement.dataset.theme`
-- update `document.documentElement.dataset.font`
-- keep component CSS bound to shared variables instead of duplicating per-theme class trees
+## Svelte Contract
 
-Example:
+In Svelte or any component framework:
+
+- keep theme in app state or a store
+- keep font in app state or a store
+- write those values to `document.documentElement.dataset`
+- keep component CSS bound to shared variables rather than duplicating theme-specific class trees
+
+Minimal example:
 
 ```js
 document.documentElement.dataset.theme = theme;
 document.documentElement.dataset.font = font;
 ```
 
-## Adoption Checklist
+## Decision Rule
 
-- Copy or map the root tokens first.
-- Preserve `data-theme` and `data-font`.
-- Reuse semantic tone names: `start`, `mid`, `warning`, `danger`.
-- Keep hover/focus/selected behavior consistent with this guide.
-- If adding a new control, style it through existing tokens before inventing new ones.
-- If adding a new visual pattern, update this document so it remains the canonical reference.
+If a project is extending this system:
+
+- reuse an existing tone before creating a new one
+- reuse an existing component rule before creating a local exception
+- update this file when a reusable pattern changes
+- document intentional divergence explicitly
 
 ## Canonical Source
 
-When another project references this style system, this file is the human-readable source of truth. The demo implementation in this repository exists to show the rules in practice.
+This file is the shortest source of truth for the UI system.
+The demo files show implementation examples, but this contract should be enough for most agent decisions.
