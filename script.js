@@ -10,6 +10,9 @@ const rangeInputs = document.querySelectorAll('input[type="range"][data-output]'
 const toggleInputs = document.querySelectorAll(
   'input[type="checkbox"][data-toggle-output]'
 );
+const tableRowChecks = document.querySelectorAll(
+  'input[type="checkbox"][data-row-select]'
+);
 const tabLists = document.querySelectorAll('[role="tablist"]');
 
 const syncThemeUi = (theme) => {
@@ -102,6 +105,22 @@ toggleInputs.forEach((toggleInput) => {
 
   syncToggle();
   toggleInput.addEventListener("change", syncToggle);
+});
+
+tableRowChecks.forEach((rowCheck) => {
+  const row = rowCheck.closest("tr");
+
+  if (!row) {
+    return;
+  }
+
+  const syncRow = () => {
+    row.dataset.selected = rowCheck.checked ? "true" : "false";
+    row.setAttribute("aria-selected", String(rowCheck.checked));
+  };
+
+  syncRow();
+  rowCheck.addEventListener("change", syncRow);
 });
 
 tabLists.forEach((tabList) => {
