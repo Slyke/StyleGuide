@@ -85,6 +85,7 @@ Use these tone meanings consistently across alerts, buttons, toggles, inputs, ta
 - Keyboard focus should bias toward `warning`.
 - Selected, checked, and switched-on states should bias toward `mid`.
 - Error and destructive emphasis should bias toward `danger`.
+- Disabled interactive controls should use dashed borders or tracks, reduced saturation, and no lift.
 - Motion should stay fast and restrained.
 - Current baseline transition timing is `120ms ease-out`.
 
@@ -133,6 +134,8 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 - Secondary accents should also stay distinct from each other instead of collapsing into near-neighbor hues.
 - Tables may use row-level hover and checkbox-selected highlighting, but the row color should still map back to neutral or one of the semantic tones.
 - When secondary accents are part of a guide, show them across multiple surfaces such as alerts, stat blocks, table rows, swatches, and color-pair tests.
+- Disabled controls should read as intentionally unavailable with dashed borders or tracks, low saturation, and no hover or active elevation.
+- Disabled controls should preserve their underlying tone family while muted so unavailable states still read correctly.
 - Tone meaning must stay legible for users who may confuse green and yellow unless contrast and hue separation are deliberate.
 - Blue and green must stay visibly distinct.
 - Green and warning must stay visibly distinct.

@@ -92,6 +92,7 @@
               Mid / Info
             </button>
             <button type="button" class="button button-ghost">Ghost</button>
+            <button type="button" class="button" disabled>Disabled</button>
           </div>
         </div>
       </header>
@@ -143,6 +144,22 @@
         </div>
 
         <div class="form-grid">
+          <div class="field field-wide">
+            <span class="field-label">Button States</span>
+            <div class="stack-row" aria-label="Button state examples">
+              <button type="button" class="button button-primary">
+                Primary Action
+              </button>
+              <button type="button" class="button button-secondary">
+                Mid Action
+              </button>
+              <button type="button" class="button button-ghost">Ghost</button>
+              <button type="button" class="button" disabled>
+                Disabled Action
+              </button>
+            </div>
+          </div>
+
           <label class="field">
             <span class="field-label">Text Input</span>
             <input type="text" placeholder="Example text" />
@@ -904,9 +921,11 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">States</p>
-            <h2>Hover, Focus & Selected</h2>
+            <h2>Hover, Focus, Selected & Disabled</h2>
           </div>
-          <span class="helper-text">hover = blue, focus = amber</span>
+          <span class="helper-text">
+            hover = blue, focus = amber, disabled = dashed
+          </span>
         </div>
 
         <div class="state-grid">
@@ -1030,6 +1049,784 @@
               <span class="badge badge-mid">Green = Mid</span>
               <span class="badge badge-warning">Amber = 75%</span>
               <span class="badge badge-danger">Red = End</span>
+            </div>
+          </div>
+
+          <div class="card stack">
+            <span class="kicker">Disabled Actions</span>
+            <p>
+              Disabled buttons use the mqttctl pattern: dashed border, low
+              saturation, no hover lift, and no active shadow. The disabled
+              control sets below extend that same rule to other controls.
+            </p>
+            <div class="stack-row" aria-label="Disabled button examples">
+              <button type="button" class="button button-primary" disabled>
+                Start Disabled
+              </button>
+              <button type="button" class="button button-secondary" disabled>
+                Mid Disabled
+              </button>
+              <button type="button" class="button" disabled>
+                Neutral Disabled
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Disabled</p>
+            <h2>Disabled Control Sets</h2>
+          </div>
+          <span class="helper-text">
+            muted tone, dashed chrome, no hover or active lift
+          </span>
+        </div>
+
+        <p class="section-note">
+          Disabled controls keep their color family, then mute it through
+          reduced saturation, dashed borders or tracks, and no hover energy.
+        </p>
+
+        <div class="stack">
+          <div class="stack">
+            <span class="kicker">Semantic Tones</span>
+            <div class="tone-grid">
+          <article class="tone-card card" data-tone="start">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Semantic / Disabled</p>
+                <h3>Start Disabled</h3>
+              </div>
+              <span class="badge badge-start">start</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Start Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="start.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Start locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-start-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-start-range">24</output>
+                </div>
+                <input
+                  id="disabled-start-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="24"
+                  aria-labelledby="disabled-start-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-start-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-start-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox" checked
+                    disabled
+                    aria-labelledby="disabled-start-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="mid">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Semantic / Disabled</p>
+                <h3>Mid Disabled</h3>
+              </div>
+              <span class="badge badge-mid">mid</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Mid Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="mid.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Mid locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-mid-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-mid-range">56</output>
+                </div>
+                <input
+                  id="disabled-mid-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="56"
+                  aria-labelledby="disabled-mid-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-mid-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-mid-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox" checked
+                    disabled
+                    aria-labelledby="disabled-mid-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="warning">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Semantic / Disabled</p>
+                <h3>Warning Disabled</h3>
+              </div>
+              <span class="badge badge-warning">warning</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Warning Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="warning.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Warning locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-warning-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-warning-range">74</output>
+                </div>
+                <input
+                  id="disabled-warning-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="74"
+                  aria-labelledby="disabled-warning-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-warning-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-warning-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    disabled
+                    aria-labelledby="disabled-warning-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-tone="danger">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Semantic / Disabled</p>
+                <h3>Danger Disabled</h3>
+              </div>
+              <span class="badge badge-danger">danger</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Danger Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="danger.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Danger locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-danger-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-danger-range">92</output>
+                </div>
+                <input
+                  id="disabled-danger-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="92"
+                  aria-labelledby="disabled-danger-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-danger-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-danger-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    disabled
+                    aria-labelledby="disabled-danger-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+            </div>
+          </div>
+
+          <div class="stack">
+            <span class="kicker">Utility & Secondary Accents</span>
+            <div class="tone-grid">
+          <article class="tone-card card" data-accent="neutral">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Utility / Disabled</p>
+                <h3>Neutral Disabled</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="neutral">neutral</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Neutral Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="neutral.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Neutral locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-neutral-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-neutral-range">42</output>
+                </div>
+                <input
+                  id="disabled-neutral-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="42"
+                  aria-labelledby="disabled-neutral-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-neutral-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-neutral-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox" checked
+                    disabled
+                    aria-labelledby="disabled-neutral-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="alpha">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Accent / Disabled</p>
+                <h3>Accent Alpha Disabled</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="alpha">alpha</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Alpha Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="alpha.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Alpha locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-alpha-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-alpha-range">31</output>
+                </div>
+                <input
+                  id="disabled-alpha-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="31"
+                  aria-labelledby="disabled-alpha-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-alpha-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-alpha-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox" checked
+                    disabled
+                    aria-labelledby="disabled-alpha-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="beta">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Accent / Disabled</p>
+                <h3>Accent Beta Disabled</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="beta">beta</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Beta Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="beta.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Beta locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-beta-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-beta-range">63</output>
+                </div>
+                <input
+                  id="disabled-beta-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="63"
+                  aria-labelledby="disabled-beta-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-beta-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-beta-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    disabled
+                    aria-labelledby="disabled-beta-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="gamma">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Accent / Disabled</p>
+                <h3>Accent Gamma Disabled</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="gamma">gamma</span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button" disabled>
+                Gamma Disabled
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  value="gamma.disabled.value"
+                  disabled
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Disabled Select</span>
+                <select class="tone-input" disabled>
+                  <option selected>Gamma locked</option>
+                </select>
+              </label>
+
+              <div class="field tone-field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-gamma-range-label">
+                    Disabled Slider
+                  </span>
+                  <output for="disabled-gamma-range">81</output>
+                </div>
+                <input
+                  id="disabled-gamma-range"
+                  class="tone-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="81"
+                  aria-labelledby="disabled-gamma-range-label"
+                  disabled
+                />
+              </div>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="checkbox"
+                    checked
+                    disabled
+                  />
+                  <span>Locked selection</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="disabled-gamma-choice"
+                    checked
+                    disabled
+                  />
+                  <span>Unavailable path</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="disabled-gamma-toggle-label">
+                    Disabled Toggle
+                  </span>
+                  <span class="helper-text">disabled</span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox" checked
+                    disabled
+                    aria-labelledby="disabled-gamma-toggle-label"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
             </div>
           </div>
         </div>
