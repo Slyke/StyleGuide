@@ -2,6 +2,8 @@
 
 Use this when you’ve copied the logger files into another repo and just need to wire them in.
 
+Important: An error key should never be reused. All codeblocks that produce errors should have their own unique error key.
+
 ## 1. Copy required files
 
 Copy these files into your backend project:
@@ -137,3 +139,4 @@ K8S_NODE_NAME=
 - `generateError` creates structured error objects and logs them by default.
 - `wrapError` is a convenience wrapper for bubbled errors and preserves prior error chain.
 - `errorKey` maps to `errorCode` via `errors.json` (fallback is `ERR_UNKNOWN` if present).
+- An error key should never be reused. All codeblocks that produce errors should have their own unique error key.

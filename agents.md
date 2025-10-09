@@ -46,7 +46,7 @@ If this repository is run in WSL2 or another Linux environment:
 Unless otherwise specified:
 - Create an `en-US.json` file for user-facing strings.
 - Keep it flat, using keys in the format below.
-- Use `./interpolation.js` to place dynamic values into rendered text when required.
+- Copy only the `interpolate` function from `./interpolation.js` when you need to place dynamic values into rendered text.
 
 Example language file:
 ```
