@@ -1,7 +1,5 @@
 # styleguid
 
-Monospace UI style guide and reference implementation for plain HTML/CSS with a path to Svelte integration.
-
 ## What This Repo Contains
 
 - `index.html`: demo page with the controls and examples
@@ -9,7 +7,7 @@ Monospace UI style guide and reference implementation for plain HTML/CSS with a 
 - `script.js`: theme, font, and demo interaction behavior
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
 - `style.md`: canonical UI contract for humans and LLMs
-- `CODING_STYLE.md`: implementation style rules
+- `JAVASCRIPT_AND_TS_CODING_STYLE.md`: implementation style rules for JS and TS
 - `agents.md`: instructions for agents consuming this repo
 
 ## Primary Entry Points
@@ -17,7 +15,7 @@ Monospace UI style guide and reference implementation for plain HTML/CSS with a 
 If you are using this repository from another project:
 
 - Read `style.md` first.
-- Read `CODING_STYLE.md` second.
+- Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` second.
 - Read `agents.md` if the consumer is an agent or LLM workflow.
 - Read `index.html`, `styles.css`, and `script.js` only when you need implementation examples.
 
@@ -59,7 +57,7 @@ Then keep component styling token-driven and aligned with `style.md`.
 This repository is intentionally documented for LLM-first consumption.
 
 - `style.md` is the shortest source of truth for UI decisions.
-- `CODING_STYLE.md` is the source of truth for implementation conventions.
+- `JAVASCRIPT_AND_TS_CODING_STYLE.md` is the source of truth for implementation conventions.
 - `agents.md` tells agents to prefer those docs over scanning the whole demo.
 
 ## Notes
