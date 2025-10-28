@@ -3,13 +3,15 @@
 Before making UI, CSS, JS/TS, theme, font, component-style, or logging/error-handling changes in projects that reference this repository:
 
 1. Read [`style.md`](./style.md).
-2. Read [`CODING_STYLE.md`](./CODING_STYLE.md).
-3. Read [`logging/logging.md`](./logging/logging.md) when the work touches logging or structured errors.
-4. Treat `style.md` as the canonical UI style contract.
-5. Treat `CODING_STYLE.md` as the canonical implementation style contract.
-6. Treat `logging/logging.md` as the canonical logging and error-handling guide for copied logger setups.
-7. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
-8. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
+2. Read [`JAVASCRIPT_AND_TS_CODING_STYLE.md`](./JAVASCRIPT_AND_TS_CODING_STYLE.md).
+3. Read [`SVELTE_NODE_HTTP_PROXY.md`](./SVELTE_NODE_HTTP_PROXY.md) when the work touches SvelteKit/Node HTTP API proxying or configurable API base paths.
+4. Read [`logging/logging.md`](./logging/logging.md) when the work touches logging or structured errors.
+5. Treat `style.md` as the canonical UI style contract.
+6. Treat `JAVASCRIPT_AND_TS_CODING_STYLE.md` as the canonical implementation style contract.
+7. Treat `SVELTE_NODE_HTTP_PROXY.md` as the canonical SvelteKit Node API proxy contract.
+8. Treat `logging/logging.md` as the canonical logging and error-handling guide for copied logger setups.
+9. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
+10. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
 
 ## WSL2 Command Environment
 
@@ -33,12 +35,12 @@ If this repository is run in WSL2 or another Linux environment:
   - `warning`
   - `danger`
 - Prefer updating shared variables and shared component rules over adding one-off exceptions.
-- Follow the coding conventions defined in `CODING_STYLE.md` when editing JS, TS, or similar implementation files.
+- Follow the coding conventions defined in `JAVASCRIPT_AND_TS_CODING_STYLE.md` when editing JS, TS, or similar implementation files.
 
 ## If Extending The System
 
 - Update `style.md` when adding new reusable patterns.
-- Update `CODING_STYLE.md` only when the coding conventions themselves change.
+- Update `JAVASCRIPT_AND_TS_CODING_STYLE.md` only when the coding conventions themselves change.
 - Keep documentation and implementation aligned.
 - If a project intentionally diverges, document the divergence explicitly instead of silently drifting from the guide.
 

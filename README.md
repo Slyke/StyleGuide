@@ -8,6 +8,7 @@
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
 - `style.md`: canonical UI contract for humans and LLMs
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md`: implementation style rules for JS and TS
+- `SVELTE_NODE_HTTP_PROXY.md`: SvelteKit Node HTTP API proxy pattern for configurable browser-to-API routing
 - `agents.md`: instructions for agents consuming this repo
 
 ## Primary Entry Points
@@ -17,6 +18,7 @@ If you are using this repository from another project:
 - Read `style.md` first.
 - Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` second.
 - Read `agents.md` if the consumer is an agent or LLM workflow.
+- Read `SVELTE_NODE_HTTP_PROXY.md` when work touches SvelteKit/Node HTTP API proxying or configurable API base paths.
 - Read `index.html`, `styles.css`, and `script.js` only when you need implementation examples.
 
 ## System Summary
@@ -58,6 +60,7 @@ This repository is intentionally documented for LLM-first consumption.
 
 - `style.md` is the shortest source of truth for UI decisions.
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md` is the source of truth for implementation conventions.
+- `SVELTE_NODE_HTTP_PROXY.md` is the source of truth for the SvelteKit Node API proxy pattern.
 - `agents.md` tells agents to prefer those docs over scanning the whole demo.
 
 ## Notes
