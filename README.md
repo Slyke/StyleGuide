@@ -3,6 +3,7 @@
 ## What This Repo Contains
 
 - `index.html`: demo page with the controls and examples
+- `design.md`: Google DESIGN.md-style machine-readable tokens and design rationale for LLM consumers
 - `styles.css`: token-driven light and dark theme implementation
 - `script.js`: theme, font, and demo interaction behavior
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
@@ -15,8 +16,9 @@
 
 If you are using this repository from another project:
 
-- Read `style.md` first.
-- Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` second.
+- Read `design.md` first when an LLM or tool needs portable design tokens.
+- Read `style.md` second for the stricter local UI contract.
+- Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` third for implementation conventions.
 - Read `agents.md` if the consumer is an agent or LLM workflow.
 - Read `SVELTE_NODE_HTTP_PROXY.md` when work touches SvelteKit/Node HTTP API proxying or configurable API base paths.
 - Read `index.html`, `styles.css`, and `script.js` only when you need implementation examples.
@@ -58,7 +60,8 @@ Then keep component styling token-driven and aligned with `style.md`.
 
 This repository is intentionally documented for LLM-first consumption.
 
-- `style.md` is the shortest source of truth for UI decisions.
+- `design.md` is the portable design-token source for LLMs and compatible tooling.
+- `style.md` is the shortest local source of truth for UI decisions.
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md` is the source of truth for implementation conventions.
 - `SVELTE_NODE_HTTP_PROXY.md` is the source of truth for the SvelteKit Node API proxy pattern.
 - `agents.md` tells agents to prefer those docs over scanning the whole demo.
@@ -68,4 +71,4 @@ This repository is intentionally documented for LLM-first consumption.
 - Theme switching should happen at the root, not per component.
 - Font switching should change the whole page, not isolated elements.
 - Blue, green, warning, and danger tones should remain semantically stable.
-- If the reusable system changes, update `style.md` so downstream projects stay aligned.
+- If reusable design tokens or component rules change, update `design.md` and `style.md` so downstream projects stay aligned.
