@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-font="system-stack">
+<html lang="en" data-theme="dark" data-font="system-stack" data-content-width="standard">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,7 @@
       try {
         const savedTheme = localStorage.getItem("styleguid-theme");
         const savedFont = localStorage.getItem("styleguid-font");
+        const savedContentWidth = localStorage.getItem("styleguid-content-width");
 
         if (savedTheme === "light" || savedTheme === "dark") {
           document.documentElement.dataset.theme = savedTheme;
@@ -15,6 +16,10 @@
 
         if (savedFont) {
           document.documentElement.dataset.font = savedFont;
+        }
+
+        if (["min", "1080", "standard", "1440", "1920", "full"].includes(savedContentWidth)) {
+          document.documentElement.dataset.contentWidth = savedContentWidth;
         }
       } catch (error) {
         console.warn("Theme preference unavailable.", error);
@@ -80,9 +85,21 @@
               </select>
             </label>
 
+            <label class="toolbar-field" for="content-width-selector">
+              <span class="toolbar-label">Content Width</span>
+              <select id="content-width-selector" class="toolbar-select">
+                <option value="min">Narrow reading width</option>
+                <option value="1080">App viewport / 1080px</option>
+                <option value="standard">Default guide width</option>
+                <option value="1440">Wide workspace / 1440px</option>
+                <option value="1920">Large display / 1920px</option>
+                <option value="full">Full browser width</option>
+              </select>
+            </label>
+
             <span class="helper-text hero-note">
-              Lists common monospace families. Browsers fall back if a font is
-              unavailable on the current OS.
+              Font and content width apply at the root so the whole guide
+              can be checked under the same theme, type, and layout constraints.
             </span>
           </div>
 
@@ -1064,7 +1081,7 @@
           <div class="card stack">
             <span class="kicker">Disabled Actions</span>
             <p>
-              Disabled buttons use the mqttctl pattern: dashed border, low
+              Disabled buttons use the shared disabled pattern: dashed border, low
               saturation, no hover lift, and no active shadow. The disabled
               control sets below extend that same rule to other controls.
             </p>
@@ -2042,6 +2059,330 @@
         </div>
       </section>
 
+      <section class="panel" id="inspection-controls">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Data Review</p>
+            <h2>Dense Record Inspection</h2>
+          </div>
+          <span class="helper-text">expand context, filter fields, inspect values</span>
+        </div>
+
+        <p class="section-note">
+          Use these patterns when dense tables need in-place review of
+          long identifiers, structured payloads, inherited filters, and removable
+          assignments without sending the user to a separate page.
+        </p>
+
+        <div class="inspection-control-grid">
+          <article class="card stack">
+            <span class="kicker">Expandable Context</span>
+            <details class="disclosure-panel" open>
+              <summary>
+                <span>Inherited Filters</span>
+                <span class="badge badge-mid">3 active</span>
+              </summary>
+              <div class="disclosure-body">
+                <p>
+                  Use disclosure panels for secondary rule lists or audit context
+                  that helps explain a selected record without crowding the
+                  primary table.
+                </p>
+                <div class="table-wrap compact-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Pattern</th>
+                        <th>Permission</th>
+                        <th>Rank</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>records/*/summary</code></td>
+                        <td>Read</td>
+                        <td>10</td>
+                      </tr>
+                      <tr>
+                        <td><code>events/recent/*</code></td>
+                        <td>Read</td>
+                        <td>8</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+            <details class="disclosure-panel">
+              <summary>
+                <span>Review Notes</span>
+                <span class="badge badge-warning">review</span>
+              </summary>
+              <div class="disclosure-body">
+                <p>
+                  Closed disclosures should keep a stable row height so scanning
+                  remains predictable even when supporting notes are collapsed.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card stack">
+            <span class="kicker">Field Multi-Select</span>
+            <details class="dropdown-multi-select" data-multi-select>
+              <summary>
+                <span data-multi-select-summary>3 options selected</span>
+              </summary>
+              <div class="dropdown-multi-select-menu">
+                <div class="dropdown-multi-select-actions">
+                  <button
+                    type="button"
+                    class="button button-ghost dropdown-multi-select-action"
+                    data-multi-select-action="all"
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    class="button button-ghost dropdown-multi-select-action"
+                    data-multi-select-action="none"
+                  >
+                    None
+                  </button>
+                </div>
+                <label class="dropdown-multi-select-option">
+                  <input
+                    type="checkbox"
+                    value="Identifier"
+                    data-multi-select-option
+                    checked
+                  />
+                  <span class="dropdown-multi-select-marker"></span>
+                  <span class="dropdown-multi-select-code">ID</span>
+                  <span>Identifier</span>
+                </label>
+                <label class="dropdown-multi-select-option">
+                  <input
+                    type="checkbox"
+                    value="Payload"
+                    data-multi-select-option
+                    checked
+                  />
+                  <span class="dropdown-multi-select-marker"></span>
+                  <span class="dropdown-multi-select-code">PL</span>
+                  <span>Payload</span>
+                </label>
+                <label class="dropdown-multi-select-option">
+                  <input
+                    type="checkbox"
+                    value="Metadata"
+                    data-multi-select-option
+                    checked
+                  />
+                  <span class="dropdown-multi-select-marker"></span>
+                  <span class="dropdown-multi-select-code">MD</span>
+                  <span>Metadata</span>
+                </label>
+                <label class="dropdown-multi-select-option">
+                  <input
+                    type="checkbox"
+                    value="Audit"
+                    data-multi-select-option
+                  />
+                  <span class="dropdown-multi-select-marker"></span>
+                  <span class="dropdown-multi-select-code">AU</span>
+                  <span>Audit</span>
+                </label>
+              </div>
+            </details>
+            <p class="section-note">
+              Use this control when users need to choose several comparable
+              fields while staying in a compact form row.
+            </p>
+          </article>
+
+          <article class="card stack">
+            <span class="kicker">Removable Assignments</span>
+            <div class="removable-badge-row" data-removable-badges>
+              <span class="badge removable-badge">
+                team: support
+                <button
+                  type="button"
+                  class="badge-action"
+                  data-remove-badge
+                  aria-label="Remove support team assignment"
+                >
+                  Remove
+                </button>
+              </span>
+              <span class="badge removable-badge badge-start">
+                scope: records/read
+                <button
+                  type="button"
+                  class="badge-action"
+                  data-remove-badge
+                  aria-label="Remove records read scope"
+                >
+                  Remove
+                </button>
+              </span>
+              <span class="badge removable-badge badge-warning">
+                review: required
+                <button
+                  type="button"
+                  class="badge-action"
+                  data-remove-badge
+                  aria-label="Remove review requirement"
+                >
+                  Remove
+                </button>
+              </span>
+            </div>
+            <p class="section-note">
+              The badge identifies the assignment; the nested raised action
+              makes removal discoverable without turning every badge into a
+              primary button.
+            </p>
+          </article>
+        </div>
+
+        <div class="inspection-surface-layout">
+          <article class="card stack">
+            <span class="kicker">Full Value Dialog</span>
+            <p>
+              Open a dialog when a clipped cell value needs enough space for
+              copying, review, or comparison while preserving table context.
+            </p>
+            <div class="stack-row">
+              <button
+                type="button"
+                class="button button-primary"
+                data-inspection-trigger
+                data-inspection-title="Value"
+                data-inspection-description="Full structured value for the selected table row."
+                data-inspection-copy-label="Copy Value"
+                data-inspection-value='{"recordId":"rec-1842","state":"active","owner":"support","reviewRequired":true}'
+              >
+                Open Value Dialog
+              </button>
+            </div>
+          </article>
+
+          <div class="table-wrap inspection-table-wrap">
+            <table class="inspection-table">
+              <thead>
+                <tr>
+                  <th>Record</th>
+                  <th>Value Preview</th>
+                  <th>State</th>
+                  <th>Review</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-tone-row" data-row-tone="start">
+                  <td>
+                    <button
+                      type="button"
+                      class="inspection-cell-button"
+                      data-inspection-trigger
+                      data-inspection-title="Record"
+                      data-inspection-description="Full identifier for the selected row."
+                      data-inspection-copy-label="Copy Identifier"
+                      data-inspection-value="records/customer-1842/summary"
+                    >
+                      records/customer-1842/summary
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="inspection-cell-button"
+                      data-inspection-trigger
+                      data-inspection-title="Value"
+                      data-inspection-description="Full structured value for the selected row."
+                      data-inspection-copy-label="Copy Value"
+                      data-inspection-value='{"recordId":"rec-1842","state":"active","owner":"support","reviewRequired":true}'
+                    >
+                      {"state":"active","owner":"support"}
+                    </button>
+                  </td>
+                  <td>Active</td>
+                  <td>Required</td>
+                </tr>
+                <tr class="table-tone-row" data-row-tone="mid">
+                  <td>
+                    <button
+                      type="button"
+                      class="inspection-cell-button"
+                      data-inspection-trigger
+                      data-inspection-title="Record"
+                      data-inspection-description="Full identifier for the selected archived row."
+                      data-inspection-copy-label="Copy Identifier"
+                      data-inspection-value="records/customer-2197/history"
+                    >
+                      records/customer-2197/history
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="inspection-cell-button"
+                      data-inspection-trigger
+                      data-inspection-title="Value"
+                      data-inspection-description="Full archived value for the selected row."
+                      data-inspection-copy-label="Copy Value"
+                      data-inspection-value="archived after duplicate import; owner notified"
+                    >
+                      archived after duplicate import; owner notified
+                    </button>
+                  </td>
+                  <td>Archived</td>
+                  <td>Complete</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <dialog
+          class="modal-dialog"
+          id="inspection-modal"
+          aria-labelledby="inspection-modal-title"
+          aria-describedby="inspection-modal-description"
+        >
+          <div class="modal-header">
+            <div>
+              <p class="eyebrow">Inspection</p>
+              <h3 id="inspection-modal-title">Value</h3>
+              <p id="inspection-modal-description" class="helper-text">
+                Full structured value for the selected table row.
+              </p>
+            </div>
+            <form method="dialog">
+              <button type="submit" class="button button-ghost">Close</button>
+            </form>
+          </div>
+          <textarea
+            id="inspection-modal-value"
+            class="modal-text"
+            rows="12"
+            readonly
+          ></textarea>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="button button-secondary"
+              id="inspection-modal-copy"
+            >
+              Copy Value
+            </button>
+            <span class="helper-text" id="inspection-modal-status">
+              ready
+            </span>
+          </div>
+        </dialog>
+      </section>
+
       <section class="panel">
         <div class="section-heading">
           <div>
@@ -2150,6 +2491,92 @@
               <div class="swatch swatch-gamma">
                 <span class="swatch-label">gamma</span>
               </div>
+            </div>
+          </div>
+
+          <div class="card stack">
+            <span class="kicker">Large Toggle Buttons</span>
+            <div class="swatch-toggle-grid" aria-label="Large swatch toggle examples">
+              <button
+                type="button"
+                class="swatch-toggle swatch-bg"
+                aria-pressed="false"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">bg</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-panel"
+                aria-pressed="true"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">panel</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-neutral"
+                aria-pressed="true"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">neutral</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-start"
+                aria-pressed="false"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">start</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-mid"
+                aria-pressed="true"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">mid</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-warning"
+                aria-pressed="false"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">warn</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-danger"
+                aria-pressed="true"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">end</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-alpha"
+                aria-pressed="false"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">alpha</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-beta"
+                aria-pressed="true"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">beta</span>
+              </button>
+              <button
+                type="button"
+                class="swatch-toggle swatch-gamma"
+                aria-pressed="false"
+                data-swatch-toggle
+              >
+                <span class="swatch-label">gamma</span>
+              </button>
             </div>
           </div>
 

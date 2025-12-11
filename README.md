@@ -42,7 +42,8 @@ The current demo supports:
 - dark mode
 - light mode
 - page-wide font selection
-- shared control styling for buttons, inputs, selects, textareas, sliders, toggles, tabs, alerts, badges, tables, and cards
+- page-wide content width selection
+- shared control styling for buttons, inputs, selects, textareas, sliders, toggles, tabs, alerts, badges, tables, cards, details/summary disclosures, dropdown multi-selects, removable badge actions, modal dialogs, and table-cell inspection buttons
 
 ## Usage
 
@@ -51,7 +52,7 @@ Open `index.html` in a browser to inspect the demo.
 Carry the system into another project by preserving the root contract:
 
 ```html
-<html data-theme="dark" data-font="system-stack">
+<html data-theme="dark" data-font="system-stack" data-content-width="standard">
 ```
 
 Then keep component styling token-driven and aligned with `style.md`.

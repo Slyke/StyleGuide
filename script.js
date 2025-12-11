@@ -3,8 +3,12 @@ const themeToggle = document.querySelector("#theme-toggle");
 const themeToggleState = document.querySelector("#theme-toggle-state");
 const themeHelper = document.querySelector("#theme-helper");
 const fontSelector = document.querySelector("#font-selector");
+const contentWidthSelector = document.querySelector("#content-width-selector");
 const fontOptions = fontSelector
   ? new Set(Array.from(fontSelector.options, (option) => option.value))
+  : new Set();
+const contentWidthOptions = contentWidthSelector
+  ? new Set(Array.from(contentWidthSelector.options, (option) => option.value))
   : new Set();
 const rangeInputs = document.querySelectorAll('input[type="range"][data-output]');
 const toggleInputs = document.querySelectorAll(
@@ -14,6 +18,16 @@ const tableRowChecks = document.querySelectorAll(
   'input[type="checkbox"][data-row-select]'
 );
 const tabLists = document.querySelectorAll('[role="tablist"]');
+const multiSelects = document.querySelectorAll("[data-multi-select]");
+const removableBadgeGroups = document.querySelectorAll("[data-removable-badges]");
+const inspectionTriggers = document.querySelectorAll("[data-inspection-trigger]");
+const swatchToggles = document.querySelectorAll("[data-swatch-toggle]");
+const inspectionModal = document.querySelector("#inspection-modal");
+const inspectionModalTitle = document.querySelector("#inspection-modal-title");
+const inspectionModalDescription = document.querySelector("#inspection-modal-description");
+const inspectionModalValue = document.querySelector("#inspection-modal-value");
+const inspectionModalCopy = document.querySelector("#inspection-modal-copy");
+const inspectionModalStatus = document.querySelector("#inspection-modal-status");
 
 const syncThemeUi = (theme) => {
   const nextTheme = theme === "light" ? "light" : "dark";
@@ -74,6 +88,32 @@ if (fontSelector) {
   });
 }
 
+const syncContentWidthUi = (contentWidthKey) => {
+  const nextContentWidth = contentWidthOptions.has(contentWidthKey)
+    ? contentWidthKey
+    : "standard";
+
+  root.dataset.contentWidth = nextContentWidth;
+
+  if (contentWidthSelector) {
+    contentWidthSelector.value = nextContentWidth;
+  }
+};
+
+syncContentWidthUi(root.dataset.contentWidth);
+
+if (contentWidthSelector) {
+  contentWidthSelector.addEventListener("change", () => {
+    syncContentWidthUi(contentWidthSelector.value);
+
+    try {
+      localStorage.setItem("styleguid-content-width", contentWidthSelector.value);
+    } catch (error) {
+      console.warn("Content width preference unavailable.", error);
+    }
+  });
+}
+
 rangeInputs.forEach((rangeInput) => {
   const rangeOutput = document.getElementById(rangeInput.dataset.output || "");
 
@@ -122,6 +162,185 @@ tableRowChecks.forEach((rowCheck) => {
   syncRow();
   rowCheck.addEventListener("change", syncRow);
 });
+
+multiSelects.forEach((multiSelect) => {
+  const summary = multiSelect.querySelector("[data-multi-select-summary]");
+  const options = Array.from(
+    multiSelect.querySelectorAll("[data-multi-select-option]")
+  );
+  const actionButtons = multiSelect.querySelectorAll(
+    "[data-multi-select-action]"
+  );
+
+  if (!summary || options.length === 0) {
+    return;
+  }
+
+  const syncMultiSelect = () => {
+    const selectedOptions = options.filter((option) => option.checked);
+
+    options.forEach((option) => {
+      const optionLabel = option.closest(".dropdown-multi-select-option");
+
+      if (optionLabel) {
+        optionLabel.classList.toggle("is-selected", option.checked);
+      }
+    });
+
+    if (selectedOptions.length === 0) {
+      summary.textContent = "No options selected";
+    } else if (selectedOptions.length === 1) {
+      summary.textContent = `${selectedOptions[0].value} selected`;
+    } else {
+      summary.textContent = `${selectedOptions.length} options selected`;
+    }
+  };
+
+  options.forEach((option) => {
+    option.addEventListener("change", syncMultiSelect);
+  });
+
+  actionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const shouldCheck = button.dataset.multiSelectAction === "all";
+
+      options.forEach((option) => {
+        option.checked = shouldCheck;
+      });
+
+      syncMultiSelect();
+    });
+  });
+
+  syncMultiSelect();
+});
+
+removableBadgeGroups.forEach((badgeGroup) => {
+  badgeGroup.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const action = target.closest("[data-remove-badge]");
+
+    if (!action || !badgeGroup.contains(action)) {
+      return;
+    }
+
+    const badge = action.closest(".removable-badge");
+
+    if (!badge) {
+      return;
+    }
+
+    badge.remove();
+
+    if (badgeGroup.querySelector(".removable-badge")) {
+      return;
+    }
+
+    const emptyState = document.createElement("span");
+    emptyState.className = "helper-text";
+    emptyState.textContent = "all assignments removed";
+    badgeGroup.append(emptyState);
+  });
+});
+
+swatchToggles.forEach((swatchToggle) => {
+  swatchToggle.addEventListener("click", () => {
+    const isPressed = swatchToggle.getAttribute("aria-pressed") === "true";
+
+    swatchToggle.setAttribute("aria-pressed", String(!isPressed));
+  });
+});
+
+const openInspectionModal = ({ trigger }) => {
+  if (
+    !inspectionModal
+    || !inspectionModalTitle
+    || !inspectionModalDescription
+    || !inspectionModalValue
+  ) {
+    return;
+  }
+
+  inspectionModalTitle.textContent = trigger.dataset.inspectionTitle ?? "Inspect";
+  inspectionModalDescription.textContent =
+    trigger.dataset.inspectionDescription ?? "Full value for inspection.";
+  inspectionModalValue.value = trigger.dataset.inspectionValue ?? "";
+
+  if (inspectionModalCopy) {
+    inspectionModalCopy.textContent = trigger.dataset.inspectionCopyLabel ?? "Copy";
+  }
+
+  if (inspectionModalStatus) {
+    inspectionModalStatus.textContent = "ready";
+  }
+
+  if (typeof inspectionModal.showModal === "function") {
+    if (!inspectionModal.open) {
+      inspectionModal.showModal();
+    }
+  } else {
+    inspectionModal.setAttribute("open", "");
+  }
+
+  inspectionModalValue.focus();
+};
+
+inspectionTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    openInspectionModal({ trigger });
+  });
+});
+
+if (inspectionModal) {
+  const closeInspectionModal = () => {
+    if (typeof inspectionModal.close === "function") {
+      inspectionModal.close();
+    } else {
+      inspectionModal.removeAttribute("open");
+    }
+  };
+
+  inspectionModal.addEventListener("click", (event) => {
+    if (event.target === inspectionModal) {
+      closeInspectionModal();
+    }
+  });
+
+  inspectionModal.addEventListener("close", () => {
+    if (inspectionModalStatus) {
+      inspectionModalStatus.textContent = "ready";
+    }
+  });
+}
+
+if (inspectionModalCopy && inspectionModalValue) {
+  inspectionModalCopy.addEventListener("click", () => {
+    if (!navigator.clipboard) {
+      if (inspectionModalStatus) {
+        inspectionModalStatus.textContent = "copy unavailable";
+      }
+
+      return;
+    }
+
+    void navigator.clipboard.writeText(inspectionModalValue.value).then(() => {
+      if (inspectionModalStatus) {
+        inspectionModalStatus.textContent = "copied";
+      }
+    }).catch((error) => {
+      if (inspectionModalStatus) {
+        inspectionModalStatus.textContent = "copy failed";
+      }
+
+      console.warn("Clipboard unavailable.", error);
+    });
+  });
+}
 
 tabLists.forEach((tabList) => {
   const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));

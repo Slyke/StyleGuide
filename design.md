@@ -11,12 +11,14 @@ colors:
   dark-panel: "#0c1014"
   dark-panel-strong: "#10161c"
   dark-border: "#202835"
+  dark-backdrop: "rgba(4, 5, 6, 0.72)"
   dark-text: "#eef6ff"
   dark-muted: "#a4b0c2"
   light-bg: "#eef3f9"
   light-panel: "#f8fbff"
   light-panel-strong: "#edf3fa"
   light-border: "#c8d4e3"
+  light-backdrop: "rgba(19, 34, 55, 0.34)"
   light-text: "#132237"
   light-muted: "#465a73"
   start: "#00b6ff"
@@ -77,6 +79,13 @@ spacing:
   xl: "2rem"
   xxl: "3rem"
   container: "76rem"
+content-width:
+  min: "48rem"
+  1080: "1080px"
+  standard: "76rem"
+  1440: "1440px"
+  1920: "1920px"
+  full: "100%"
 components:
   button-primary:
     backgroundColor: "{colors.start-fill-strong}"
@@ -109,6 +118,44 @@ components:
     rounded: "{rounded.md}"
     padding: "0.8rem 0.9rem"
     height: "2.9rem"
+  disclosure-panel:
+    backgroundColor: "{colors.dark-panel-strong}"
+    textColor: "{colors.dark-text}"
+    rounded: "{rounded.md}"
+    summaryHeight: "2.9rem"
+    bodyPadding: "{spacing.md}"
+  dropdown-multi-select:
+    backgroundColor: "{colors.dark-panel-strong}"
+    selectedColor: "{colors.mid}"
+    focusColor: "{colors.warning}"
+    rounded: "{rounded.md}"
+    menuPadding: "0.7rem"
+  removable-badge-action:
+    backgroundColor: "{colors.mid-fill-strong}"
+    textColor: "{colors.mid-ink}"
+    rounded: "{rounded.full}"
+    height: "1.45rem"
+  modal-dialog:
+    backgroundColor: "{colors.dark-panel}"
+    textColor: "{colors.dark-text}"
+    backdropColor: "{colors.dark-backdrop}"
+    rounded: "{rounded.lg}"
+    maxWidth: "46rem"
+  inspection-cell-button:
+    backgroundColor: "transparent"
+    textColor: "inherit"
+    hoverColor: "{colors.start-fill-strong}"
+    focusColor: "{colors.warning}"
+    rounded: "{rounded.sm}"
+  swatch-toggle:
+    typography: "{typography.label}"
+    rounded: "{rounded.md}"
+    minHeight: "5rem"
+    offState: "raised keycap with lighter or softer companion face"
+    onState: "inset keycap with stronger, more saturated swatch face"
+    onAttribute: "aria-pressed=true"
+    onIndicatorColor: "{colors.mid}"
+    onIndicatorPlacement: "top-right"
 ---
 
 # Styleguid Design System
@@ -144,7 +191,7 @@ Use hierarchy through size, weight, casing, and spacing rather than font-family 
 
 ## Layout
 
-Use a constrained shell with a maximum width of 76rem and responsive padding. Page sections are full-width bands or unframed layouts inside that shell. Avoid cards inside cards.
+Use a constrained shell with root-driven content width. Supported widths are min, 1080, standard, 1440, 1920, and full. Page sections are full-width bands or unframed layouts inside that shell. Avoid cards inside cards.
 
 Controls should sit in compact rows or predictable grids. Repeated item groups may use cards. Tool surfaces should prioritize scanning, comparison, and repeated action over decorative hero composition.
 
@@ -174,7 +221,19 @@ Badges, helper labels, and status tags are passive. They should be smaller, flat
 
 Inputs, selects, and textareas use neutral control backgrounds, crisp borders, and theme text. Hover may bias toward start. Focus must bias toward warning. Tone-specific inputs may use tone fill and border, but they should still read as inputs.
 
+Disclosure panels should use native details/summary where possible. Summary rows are compact control surfaces with warning focus, start hover, and mid open indicators. Expanded disclosure bodies should read as the local continuation of the same surface, not as nested cards.
+
+Dropdown multi-select menus may also use details/summary for open state. Selected options map to mid, focus maps to warning, and bulk actions inside the menu use the raised keycap treatment because they are true controls.
+
+Compact removable badge actions are allowed only as nested actions inside a passive badge. The badge remains flat and label-like; the nested action receives raised keycap button treatment, pointer cursor, focus ring, and mid action tone.
+
+Modal dialogs use a tokenized backdrop and a panel-like dialog surface for focused inspection tasks. They should preserve copyable values in textareas or code-like blocks and keep close/copy actions clearly visible.
+
+Table-cell path and payload inspection buttons are low-chrome buttons inside table cells. They should preserve table density, clamp previews, use hover/focus affordance, and open modal inspection for full values.
+
 Switches, checkboxes, radios, sliders, tabs, alerts, tables, swatches, and code blocks should inherit from the shared token set. Selected table rows may use row-level semantic tones, but the selected color must map back to a defined semantic or accent token.
+
+Large swatch toggle buttons are controls, not passive swatches. Keep the swatch label and color family, but show state through both geometry and color: off/out is raised with the lighter or softer companion face, while on/in uses aria-pressed=true, inset geometry, a stronger saturated face, and a small mid-green status dot in the top-right. For neutral dark swatches, pressed/in must move darker, not lighter: bg maps back to --color-bg and panel maps back to --color-panel.
 
 Function accent chips are controls, not labels. They should use the same raised chrome as buttons while preserving their secondary accent family.
 

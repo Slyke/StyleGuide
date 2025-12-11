@@ -43,13 +43,22 @@ This system defines a monospace UI with:
 Apply state at the root element, ideally `html`:
 
 ```html
-<html data-theme="dark" data-font="system-stack">
+<html data-theme="dark" data-font="system-stack" data-content-width="standard">
 ```
 
 Supported `data-theme` values:
 
 - `dark`
 - `light`
+
+Supported `data-content-width` values:
+
+- `min`: narrow reading width
+- `1080`: app viewport width
+- `standard`: default guide width
+- `1440`: wide workspace width
+- `1920`: large display width
+- `full`: full browser width
 
 Supported `data-font` values:
 
@@ -134,6 +143,11 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 - Secondary accents must stay visibly separate from `start`, `mid`, `warning`, and `danger`.
 - Secondary accents should also stay distinct from each other instead of collapsing into near-neighbor hues.
 - Tables may use row-level hover and checkbox-selected highlighting, but the row color should still map back to neutral or one of the semantic tones.
+- Details/summary disclosure panels should use compact summary rows, warning focus, start hover, and mid open indicators.
+- Dropdown multi-select menus should map selected options to `mid`, keyboard focus to `warning`, and bulk menu actions to raised button chrome.
+- Compact removable badge action buttons may sit inside badges, but the badge must still read as a passive label and only the nested raised keycap button should read as pressable.
+- Modal dialogs should use a tokenized backdrop, a panel-like dialog surface, visible close/copy actions, and copyable inspection text.
+- Table-cell path and payload inspection buttons should stay low-chrome, clamp previews, preserve table density, and open modal inspection for full values.
 - When secondary accents are part of a guide, show them across multiple surfaces such as alerts, stat blocks, table rows, swatches, and color-pair tests.
 - Disabled controls should read as intentionally unavailable with dashed borders or tracks, low saturation, and no hover or active elevation.
 - Disabled controls should preserve their underlying tone family while muted so unavailable states still read correctly.
