@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CSS Style Guide</title>
+    <title>Phox-Styleguide</title>
     <script>
       try {
-        const savedTheme = localStorage.getItem("styleguid-theme");
-        const savedFont = localStorage.getItem("styleguid-font");
-        const savedContentWidth = localStorage.getItem("styleguid-content-width");
+        const savedTheme = localStorage.getItem("phox-styleguide-theme");
+        const savedFont = localStorage.getItem("phox-styleguide-font");
+        const savedContentWidth = localStorage.getItem("phox-styleguide-content-width");
 
         if (savedTheme === "light" || savedTheme === "dark") {
           document.documentElement.dataset.theme = savedTheme;
@@ -31,7 +31,7 @@
     <main class="guide-shell">
       <header class="hero panel">
         <div class="hero-copy">
-          <p class="eyebrow">Style Guide / Theme Tokens</p>
+          <p class="eyebrow">Phox-Styleguide / Theme Tokens</p>
           <h1>Light + Dark UI Baseline</h1>
           <p class="hero-text">
             The same controls, states, and tone system rendered through shared

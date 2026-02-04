@@ -57,7 +57,7 @@ if (themeToggle) {
     syncThemeUi(nextTheme);
 
     try {
-      localStorage.setItem("styleguid-theme", nextTheme);
+      localStorage.setItem("phox-styleguide-theme", nextTheme);
     } catch (error) {
       console.warn("Theme preference unavailable.", error);
     }
@@ -81,7 +81,7 @@ if (fontSelector) {
     syncFontUi(fontSelector.value);
 
     try {
-      localStorage.setItem("styleguid-font", fontSelector.value);
+      localStorage.setItem("phox-styleguide-font", fontSelector.value);
     } catch (error) {
       console.warn("Font preference unavailable.", error);
     }
@@ -107,7 +107,7 @@ if (contentWidthSelector) {
     syncContentWidthUi(contentWidthSelector.value);
 
     try {
-      localStorage.setItem("styleguid-content-width", contentWidthSelector.value);
+      localStorage.setItem("phox-styleguide-content-width", contentWidthSelector.value);
     } catch (error) {
       console.warn("Content width preference unavailable.", error);
     }

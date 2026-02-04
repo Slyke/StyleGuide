@@ -1,7 +1,7 @@
 ---
 version: alpha
-name: Styleguid
-description: Machine-readable design system for the Styleguid monospace light/dark UI baseline, following the Google DESIGN.md pattern of YAML tokens plus ordered Markdown guidance.
+name: Phox-Styleguide
+description: Machine-readable design system for the Phox-Styleguide monospace light/dark UI baseline, following the Google DESIGN.md pattern of YAML tokens plus ordered Markdown guidance.
 colors:
   primary: "#00b6ff"
   secondary: "#39ff79"
@@ -158,11 +158,11 @@ components:
     onIndicatorPlacement: "top-right"
 ---
 
-# Styleguid Design System
+# Phox-Styleguide Design System
 
 ## Overview
 
-Styleguid is a compact technical UI baseline for token-driven tools. It should feel precise, inspectable, and work-focused: monochrome structure, semantic neon states, and controls that clearly separate pressable actions from passive labels.
+Phox-Styleguide is a compact technical UI baseline for token-driven tools. It should feel precise, inspectable, and work-focused: monochrome structure, semantic neon states, and controls that clearly separate pressable actions from passive labels.
 
 This file follows the Google DESIGN.md structure: YAML front matter provides portable tokens for LLM and tool consumers, while the Markdown sections explain how to apply them. Read style.md for the stricter local contract. Use index.html only as the runnable demo and visual reference.
 
