@@ -6,7 +6,8 @@ Before making UI, CSS, theme, font, or component-style changes in projects that 
 2. Read [`CODING_STYLE.md`](./CODING_STYLE.md).
 3. Treat `style.md` as the canonical UI style contract.
 4. Treat `CODING_STYLE.md` as the canonical implementation style contract.
-5. Reuse the existing semantic tokens and interaction rules before inventing new styling patterns.
+5. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
+6. Reuse the existing semantic tokens and interaction rules before inventing new styling patterns.
 
 ## Required Agent Behavior
 
@@ -14,6 +15,7 @@ Before making UI, CSS, theme, font, or component-style changes in projects that 
 - Do not introduce gradients unless the project explicitly overrides this style system.
 - Keep theme switching token-driven through root state such as `data-theme`.
 - Keep font switching root-driven through `data-font`.
+- Prefer contract docs over scanning the full demo implementation.
 - Preserve the semantic meanings of:
   - `start`
   - `mid`
