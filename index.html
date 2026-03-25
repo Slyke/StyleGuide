@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-font="system-stack">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +7,14 @@
     <script>
       try {
         const savedTheme = localStorage.getItem("styleguid-theme");
+        const savedFont = localStorage.getItem("styleguid-font");
 
         if (savedTheme === "light" || savedTheme === "dark") {
           document.documentElement.dataset.theme = savedTheme;
+        }
+
+        if (savedFont) {
+          document.documentElement.dataset.font = savedFont;
         }
       } catch (error) {
         console.warn("Theme preference unavailable.", error);
@@ -31,21 +36,63 @@
           </p>
         </div>
 
-        <div class="hero-actions">
-          <button
-            type="button"
-            class="button theme-toggle"
-            id="theme-toggle"
-            aria-pressed="false"
-          >
-            <span class="theme-toggle-name">Theme</span>
-            <span class="theme-toggle-state" id="theme-toggle-state">Dark</span>
-          </button>
-          <button type="button" class="button button-primary">Start</button>
-          <button type="button" class="button button-secondary">
-            Mid / Info
-          </button>
-          <button type="button" class="button button-ghost">Ghost</button>
+        <div class="hero-side">
+          <div class="hero-tools">
+            <button
+              type="button"
+              class="button theme-toggle"
+              id="theme-toggle"
+              aria-pressed="false"
+            >
+              <span class="theme-toggle-name">Theme</span>
+              <span class="theme-toggle-state" id="theme-toggle-state">Dark</span>
+            </button>
+
+            <label class="toolbar-field" for="font-selector">
+              <span class="toolbar-label">Font</span>
+              <select id="font-selector" class="toolbar-select">
+                <optgroup label="Browser / System">
+                  <option value="system-stack">System Mono Stack</option>
+                  <option value="ui-mono">UI Monospace</option>
+                  <option value="generic-mono">Generic Monospace</option>
+                </optgroup>
+                <optgroup label="Apple">
+                  <option value="sf-mono">SF Mono / SFMono-Regular</option>
+                  <option value="menlo">Menlo</option>
+                  <option value="monaco">Monaco</option>
+                </optgroup>
+                <optgroup label="Windows">
+                  <option value="cascadia-mono">Cascadia Mono / Code</option>
+                  <option value="consolas">Consolas</option>
+                  <option value="lucida-console">Lucida Console</option>
+                  <option value="courier-new">Courier New</option>
+                </optgroup>
+                <optgroup label="Android / ChromeOS">
+                  <option value="roboto-mono">Roboto Mono</option>
+                  <option value="droid-sans-mono">Droid Sans Mono</option>
+                  <option value="noto-sans-mono">Noto Sans Mono</option>
+                </optgroup>
+                <optgroup label="Linux">
+                  <option value="ubuntu-mono">Ubuntu Mono</option>
+                  <option value="dejavu-sans-mono">DejaVu Sans Mono</option>
+                  <option value="liberation-mono">Liberation Mono</option>
+                </optgroup>
+              </select>
+            </label>
+
+            <span class="helper-text hero-note">
+              Lists common monospace families. Browsers fall back if a font is
+              unavailable on the current OS.
+            </span>
+          </div>
+
+          <div class="hero-actions">
+            <button type="button" class="button button-primary">Start</button>
+            <button type="button" class="button button-secondary">
+              Mid / Info
+            </button>
+            <button type="button" class="button button-ghost">Ghost</button>
+          </div>
         </div>
       </header>
 
