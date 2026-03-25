@@ -16,6 +16,7 @@ This system defines a monospace UI with:
 - root-driven theme switching
 - root-driven font switching
 - four semantic color tones
+- secondary function accents kept separate from semantic status tones
 - flat surfaces with no gradients
 - shared rules that work in plain HTML/CSS and can be carried into Svelte
 
@@ -126,6 +127,12 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 
 - Buttons, inputs, selects, textareas, tabs, switches, sliders, badges, alerts, tables, cards, and code blocks should inherit from shared theme tokens.
 - Custom controls should use semantic tone tokens instead of inventing local accent palettes.
+- Neutral controls may use passive steel or gray tokens for baseline, utility, or non-semantic states.
+- Secondary accents such as `accent-alpha`, `accent-beta`, and `accent-gamma` may be used for function grouping or categorization, but not for status semantics.
+- Secondary accents must stay visibly separate from `start`, `mid`, `warning`, and `danger`.
+- Secondary accents should also stay distinct from each other instead of collapsing into near-neighbor hues.
+- Tables may use row-level hover and checkbox-selected highlighting, but the row color should still map back to neutral or one of the semantic tones.
+- When secondary accents are part of a guide, show them across multiple surfaces such as alerts, stat blocks, table rows, swatches, and color-pair tests.
 - Tone meaning must stay legible for users who may confuse green and yellow unless contrast and hue separation are deliberate.
 - Blue and green must stay visibly distinct.
 - Green and warning must stay visibly distinct.

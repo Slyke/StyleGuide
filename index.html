@@ -332,7 +332,7 @@
             <div class="tone-card-head">
               <div>
                 <p class="kicker">Mid / Info</p>
-                <h3>Teal Controls</h3>
+                <h3>Green Controls</h3>
               </div>
               <span class="badge badge-mid">mid</span>
             </div>
@@ -581,6 +581,328 @@
       <section class="panel">
         <div class="section-heading">
           <div>
+            <p class="eyebrow">Functions</p>
+            <h2>Function Accent Sets</h2>
+          </div>
+          <span class="helper-text">secondary accents, not status colors</span>
+        </div>
+
+        <p class="section-note">
+          Inspired by function highlight panels. These accents are condensed to
+          three distinct secondary families plus a neutral utility set. They
+          are for grouping and labeling, and stay outside the semantic start /
+          mid / warning / danger state map.
+        </p>
+
+        <div class="function-chip-grid" aria-label="Function accent samples">
+          <button type="button" class="function-chip" data-accent="neutral">
+            Neutral Utility
+          </button>
+          <button type="button" class="function-chip" data-accent="alpha">
+            Accent Alpha
+          </button>
+          <button type="button" class="function-chip" data-accent="beta">
+            Accent Beta
+          </button>
+          <button type="button" class="function-chip" data-accent="gamma">
+            Accent Gamma
+          </button>
+        </div>
+
+        <div class="tone-grid">
+          <article class="tone-card card" data-accent="neutral">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Base / Utility</p>
+                <h3>Neutral Utility</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="neutral">
+                neutral
+              </span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Neutral Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Neutral Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="neutral.input.value"
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Neutral Select</span>
+                <select class="tone-input">
+                  <option>Option One</option>
+                  <option>Option Two</option>
+                  <option>Option Three</option>
+                </select>
+              </label>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Passive option</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="accent-neutral-choice"
+                    checked
+                  />
+                  <span>Default choice</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="accent-neutral-toggle-label">
+                    Neutral Toggle
+                  </span>
+                  <span class="helper-text" id="accent-neutral-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="accent-neutral-toggle-label"
+                    data-toggle-output="accent-neutral-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="alpha">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Secondary / Accent</p>
+                <h3>Accent Alpha</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="alpha">
+                alpha
+              </span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Alpha Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Alpha Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="alpha.input.value"
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Alpha Select</span>
+                <select class="tone-input">
+                  <option>Option One</option>
+                  <option>Option Two</option>
+                  <option>Option Three</option>
+                </select>
+              </label>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Pinned option</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="accent-alpha-choice"
+                    checked
+                  />
+                  <span>Primary choice</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="accent-alpha-toggle-label">
+                    Alpha Toggle
+                  </span>
+                  <span class="helper-text" id="accent-alpha-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="accent-alpha-toggle-label"
+                    data-toggle-output="accent-alpha-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="beta">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Secondary / Accent</p>
+                <h3>Accent Beta</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="beta">
+                beta
+              </span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Beta Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Beta Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="beta.input.value"
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Beta Select</span>
+                <select class="tone-input">
+                  <option>Option One</option>
+                  <option>Option Two</option>
+                  <option>Option Three</option>
+                </select>
+              </label>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Linked option</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="accent-beta-choice"
+                    checked
+                  />
+                  <span>Default choice</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="accent-beta-toggle-label">
+                    Beta Toggle
+                  </span>
+                  <span class="helper-text" id="accent-beta-toggle-state">
+                    enabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    checked
+                    aria-labelledby="accent-beta-toggle-label"
+                    data-toggle-output="accent-beta-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="tone-card card" data-accent="gamma">
+            <div class="tone-card-head">
+              <div>
+                <p class="kicker">Secondary / Accent</p>
+                <h3>Accent Gamma</h3>
+              </div>
+              <span class="badge accent-badge" data-accent="gamma">
+                gamma
+              </span>
+            </div>
+
+            <div class="tone-controls">
+              <button type="button" class="button tone-button">
+                Gamma Button
+              </button>
+
+              <label class="field tone-field">
+                <span class="field-label">Gamma Input</span>
+                <input
+                  class="tone-input"
+                  type="text"
+                  placeholder="gamma.input.value"
+                />
+              </label>
+
+              <label class="field tone-field">
+                <span class="field-label">Gamma Select</span>
+                <select class="tone-input">
+                  <option>Option One</option>
+                  <option>Option Two</option>
+                  <option>Option Three</option>
+                </select>
+              </label>
+
+              <div class="choice-pair">
+                <label class="choice">
+                  <input class="tone-choice-input" type="checkbox" checked />
+                  <span>Optional state</span>
+                </label>
+                <label class="choice">
+                  <input
+                    class="tone-choice-input"
+                    type="radio"
+                    name="accent-gamma-choice"
+                    checked
+                  />
+                  <span>Alternate choice</span>
+                </label>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span class="field-label" id="accent-gamma-toggle-label">
+                    Gamma Toggle
+                  </span>
+                  <span class="helper-text" id="accent-gamma-toggle-state">
+                    disabled
+                  </span>
+                </div>
+                <label class="switch tone-switch">
+                  <input
+                    type="checkbox"
+                    aria-labelledby="accent-gamma-toggle-label"
+                    data-toggle-output="accent-gamma-toggle-state"
+                  />
+                  <span class="switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
             <p class="eyebrow">States</p>
             <h2>Hover, Focus & Selected</h2>
           </div>
@@ -689,7 +1011,7 @@
                 hidden
               >
                 <p>
-                  Error and end states sit in a pink-red range so they stay
+                  Error and end states sit in a strong red range so they stay
                   visibly separate from both amber and blue.
                 </p>
               </section>
@@ -705,9 +1027,9 @@
             </p>
             <div class="stack-row">
               <span class="badge badge-start">Blue = Start</span>
-              <span class="badge badge-mid">Teal = Mid</span>
+              <span class="badge badge-mid">Green = Mid</span>
               <span class="badge badge-warning">Amber = 75%</span>
-              <span class="badge badge-danger">Pink Red = End</span>
+              <span class="badge badge-danger">Red = End</span>
             </div>
           </div>
         </div>
@@ -736,8 +1058,27 @@
               from green.
             </div>
             <div class="alert alert-danger">
-              <strong>End / Error:</strong> Error states use a pink-red tone
+              <strong>End / Error:</strong> Error states use a strong red tone
               with stronger contrast.
+            </div>
+          </div>
+
+          <div class="card stack">
+            <div class="alert alert-accent accent-surface" data-accent="neutral">
+              <strong>Neutral:</strong> Utility surfaces stay quiet and support
+              the stronger semantic and accent families.
+            </div>
+            <div class="alert alert-accent accent-surface" data-accent="alpha">
+              <strong>Accent Alpha:</strong> Secondary family A reads as grouped
+              but does not replace a semantic status tone.
+            </div>
+            <div class="alert alert-accent accent-surface" data-accent="beta">
+              <strong>Accent Beta:</strong> Secondary family B separates from
+              both blue and green while staying vivid.
+            </div>
+            <div class="alert alert-accent accent-surface" data-accent="gamma">
+              <strong>Accent Gamma:</strong> Secondary family C stays warmer and
+              earthier than warning amber.
             </div>
           </div>
 
@@ -750,43 +1091,145 @@
               <span class="field-label">Meter</span>
               <meter min="0" max="100" value="78">78%</meter>
             </label>
+            <div class="stats-grid">
+              <div class="stat-card accent-surface" data-accent="neutral">
+                <span class="field-label">Neutral</span>
+                <strong class="stat-value">64%</strong>
+                <span class="stat-meta">Baseline density</span>
+              </div>
+              <div class="stat-card accent-surface" data-accent="alpha">
+                <span class="field-label">Alpha</span>
+                <strong class="stat-value">12</strong>
+                <span class="stat-meta">Grouped surfaces</span>
+              </div>
+              <div class="stat-card accent-surface" data-accent="beta">
+                <span class="field-label">Beta</span>
+                <strong class="stat-value">3.4k</strong>
+                <span class="stat-meta">Accent hits</span>
+              </div>
+              <div class="stat-card accent-surface" data-accent="gamma">
+                <span class="field-label">Gamma</span>
+                <strong class="stat-value">Ready</strong>
+                <span class="stat-meta">Warm support tone</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="table-wrap">
-          <table>
+          <table class="state-table">
             <thead>
               <tr>
-                <th>Token</th>
+                <th>Mark</th>
+                <th>Row</th>
                 <th>Usage</th>
-                <th>Value</th>
+                <th>Primary Token</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><code>--color-bg</code></td>
-                <td>Application background</td>
-                <td>#040506</td>
+              <tr class="table-tone-row" data-row-tone="neutral" data-selected="true">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" checked data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td>
+                  <span class="badge accent-badge" data-accent="neutral">
+                    neutral
+                  </span>
+                </td>
+                <td>Passive controls, baseline panels, non-semantic utility state</td>
+                <td><code>--color-control-bg</code></td>
               </tr>
-              <tr>
+              <tr class="table-tone-row" data-row-tone="start" data-selected="false">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td><span class="badge badge-start">start</span></td>
+                <td>Primary actions, hover energy, initial active states</td>
                 <td><code>--color-start</code></td>
-                <td>Start, hover, primary action</td>
-                <td>#00b6ff</td>
               </tr>
-              <tr>
+              <tr class="table-tone-row" data-row-tone="mid" data-selected="true">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" checked data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td><span class="badge badge-mid">mid</span></td>
+                <td>In-progress information, checked state, selected state</td>
                 <td><code>--color-mid</code></td>
-                <td>Midpoint, info, selected state</td>
-                <td>#39ff79</td>
               </tr>
-              <tr>
+              <tr class="table-tone-row" data-row-tone="warning" data-selected="false">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td><span class="badge badge-warning">warning</span></td>
+                <td>Keyboard focus, review state, caution at 75%</td>
                 <td><code>--color-warning</code></td>
-                <td>75%, caution, focus attention</td>
-                <td>#ffbc3a</td>
               </tr>
-              <tr>
+              <tr class="table-tone-row" data-row-tone="danger" data-selected="false">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td><span class="badge badge-danger">danger</span></td>
+                <td>End state, error feedback, destructive actions</td>
                 <td><code>--color-danger</code></td>
-                <td>End state, error, destructive tone</td>
-                <td>#ff1f5a</td>
+              </tr>
+              <tr class="table-tone-row" data-row-tone="alpha" data-selected="true">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" checked data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td>
+                  <span class="badge accent-badge" data-accent="alpha">
+                    alpha
+                  </span>
+                </td>
+                <td>Secondary accent family A for grouped controls and support surfaces</td>
+                <td><code>--color-accent-alpha</code></td>
+              </tr>
+              <tr class="table-tone-row" data-row-tone="beta" data-selected="false">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td>
+                  <span class="badge accent-badge" data-accent="beta">
+                    beta
+                  </span>
+                </td>
+                <td>Secondary accent family B for alternate grouping and differentiation</td>
+                <td><code>--color-accent-beta</code></td>
+              </tr>
+              <tr class="table-tone-row" data-row-tone="gamma" data-selected="true">
+                <td>
+                  <label class="table-select">
+                    <input type="checkbox" checked data-row-select />
+                    <span>Pin</span>
+                  </label>
+                </td>
+                <td>
+                  <span class="badge accent-badge" data-accent="gamma">
+                    gamma
+                  </span>
+                </td>
+                <td>Secondary accent family C for warm grouped surfaces without warning semantics</td>
+                <td><code>--color-accent-gamma</code></td>
               </tr>
             </tbody>
           </table>
@@ -829,6 +1272,33 @@
               staying readable against the surrounding UI.
             </p>
           </article>
+
+          <article class="combo-card combo-card-alpha-bg">
+            <p class="kicker">Neutral Text / Alpha Background</p>
+            <h3>Neutral On Alpha</h3>
+            <p>
+              Neutral text over the alpha surface keeps the block readable while
+              the background still feels clearly secondary.
+            </p>
+          </article>
+
+          <article class="combo-card combo-card-beta-bg">
+            <p class="kicker">Alpha Text / Beta Background</p>
+            <h3>Alpha On Beta</h3>
+            <p>
+              Alpha text over beta shows that the two secondary families stay
+              separate instead of collapsing into one hue lane.
+            </p>
+          </article>
+
+          <article class="combo-card combo-card-gamma-bg">
+            <p class="kicker">Neutral Text / Gamma Background</p>
+            <h3>Neutral On Gamma</h3>
+            <p>
+              Neutral text over gamma keeps the warmer support tone away from
+              warning while preserving usable contrast.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -850,6 +1320,9 @@
               <div class="swatch swatch-panel">
                 <span class="swatch-label">panel</span>
               </div>
+              <div class="swatch swatch-neutral">
+                <span class="swatch-label">neutral</span>
+              </div>
               <div class="swatch swatch-start">
                 <span class="swatch-label">start</span>
               </div>
@@ -861,6 +1334,15 @@
               </div>
               <div class="swatch swatch-danger">
                 <span class="swatch-label">end</span>
+              </div>
+              <div class="swatch swatch-alpha">
+                <span class="swatch-label">alpha</span>
+              </div>
+              <div class="swatch swatch-beta">
+                <span class="swatch-label">beta</span>
+              </div>
+              <div class="swatch swatch-gamma">
+                <span class="swatch-label">gamma</span>
               </div>
             </div>
           </div>
