@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Style Guide</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="guide-shell">
+      <header class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Style Guide / Theme Tokens</p>
+          <h1>Dark UI Baseline</h1>
+          <p class="hero-text">
+            Starter reference for typography, spacing, form controls, states,
+            and layout primitives. The token model is ready for a future light
+            theme and easy Svelte extraction.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <button type="button" class="button button-primary">
+            Primary Action
+          </button>
+          <button type="button" class="button button-secondary">
+            Secondary
+          </button>
+          <button type="button" class="button button-ghost">Ghost</button>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Typography</p>
+            <h2>Text Samples</h2>
+          </div>
+          <span class="badge badge-info">monospace</span>
+        </div>
+
+        <div class="type-grid">
+          <div class="card">
+            <span class="kicker">Heading</span>
+            <h3>Display title with clear hierarchy</h3>
+            <p>
+              Paragraph text should remain calm, readable, and high-contrast
+              without drifting into pure white.
+            </p>
+          </div>
+
+          <div class="card">
+            <span class="kicker">Inline Elements</span>
+            <p>
+              This is a <span class="accent-text">span accent</span>, an
+              <a href="#forms">anchor link</a>, and an
+              <code>inline code token</code>.
+            </p>
+            <div class="stack-row">
+              <span class="badge">Default</span>
+              <span class="badge badge-success">Success</span>
+              <span class="badge badge-warning">Warning</span>
+              <span class="badge badge-danger">Danger</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="forms">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Controls</p>
+            <h2>Form Elements</h2>
+          </div>
+          <span class="helper-text">dark theme</span>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Text Input</span>
+            <input type="text" placeholder="Example text" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">Email</span>
+            <input type="email" placeholder="name@example.com" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">Password</span>
+            <input type="password" value="hunter2" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">Search</span>
+            <input type="search" placeholder="Search styles..." />
+          </label>
+
+          <label class="field field-wide">
+            <span class="field-label">Textarea</span>
+            <textarea rows="5" placeholder="Long-form content"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Select</span>
+            <select>
+              <option>Default option</option>
+              <option>Alternative option</option>
+              <option>Experimental option</option>
+            </select>
+          </label>
+
+          <fieldset class="choice-group">
+            <legend class="field-label">Checkboxes</legend>
+            <label class="choice">
+              <input type="checkbox" checked />
+              <span>Receive updates</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" />
+              <span>Enable telemetry</span>
+            </label>
+          </fieldset>
+
+          <fieldset class="choice-group">
+            <legend class="field-label">Radio Buttons</legend>
+            <label class="choice">
+              <input type="radio" name="density" checked />
+              <span>Comfortable</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="density" />
+              <span>Compact</span>
+            </label>
+          </fieldset>
+
+          <div class="field">
+            <div class="field-head">
+              <span class="field-label" id="range-label">Range</span>
+              <output id="range-output" for="scale-range">56</output>
+            </div>
+            <input
+              id="scale-range"
+              type="range"
+              min="0"
+              max="100"
+              value="56"
+              aria-labelledby="range-label"
+            />
+          </div>
+
+          <div class="field">
+            <div class="field-head">
+              <span class="field-label" id="toggle-label">Toggle</span>
+              <span class="helper-text" id="toggle-state">enabled</span>
+            </div>
+            <label class="switch">
+              <input
+                id="feature-toggle"
+                type="checkbox"
+                checked
+                aria-labelledby="toggle-label"
+              />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Feedback</p>
+            <h2>Status & Data</h2>
+          </div>
+        </div>
+
+        <div class="feedback-grid">
+          <div class="card stack">
+            <div class="alert alert-info">
+              <strong>Info:</strong> Token names are stable and ready to map to
+              a component library.
+            </div>
+            <div class="alert alert-warning">
+              <strong>Warning:</strong> Light theme values still need to be
+              defined.
+            </div>
+            <div class="alert alert-danger">
+              <strong>Error:</strong> Disabled states should be reviewed once
+              components are split out.
+            </div>
+          </div>
+
+          <div class="card stack">
+            <label class="meter-block">
+              <span class="field-label">Progress</span>
+              <progress max="100" value="68">68%</progress>
+            </label>
+            <label class="meter-block">
+              <span class="field-label">Meter</span>
+              <meter min="0" max="100" value="74">74%</meter>
+            </label>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Usage</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--color-bg</code></td>
+                <td>Application background</td>
+                <td>#0b0f14</td>
+              </tr>
+              <tr>
+                <td><code>--color-panel</code></td>
+                <td>Cards and surfaces</td>
+                <td>#131922</td>
+              </tr>
+              <tr>
+                <td><code>--color-accent</code></td>
+                <td>Interactive highlight</td>
+                <td>#7dd3fc</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Layout</p>
+            <h2>Blocks & Lists</h2>
+          </div>
+        </div>
+
+        <div class="layout-grid">
+          <div class="card stack">
+            <span class="kicker">Card</span>
+            <div class="swatch-row">
+              <div class="swatch">
+                <span class="swatch-label">bg</span>
+              </div>
+              <div class="swatch swatch-panel">
+                <span class="swatch-label">panel</span>
+              </div>
+              <div class="swatch swatch-accent">
+                <span class="swatch-label">accent</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <span class="kicker">List</span>
+            <ul class="plain-list">
+              <li>
+                Spacing scale: <code>--space-1</code> through
+                <code>--space-6</code>
+              </li>
+              <li>Radius scale: subtle rounded corners</li>
+              <li>Shadows: used sparingly on panels and hover states</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <span class="kicker">Code Block</span>
+            <pre><code>:root {
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  --color-bg: #0b0f14;
+  --color-panel: #131922;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
