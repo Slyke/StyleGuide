@@ -474,21 +474,29 @@ th,
 }
 
 .button {
+  --button-bg: var(--color-panel-strong);
+  --button-border: var(--color-border-strong);
+  --button-text: var(--color-text);
+  --button-hover-bg: var(--color-start-soft);
+  --button-hover-border: var(--color-start);
+  --button-hover-shadow: var(--shadow-hover);
+  --button-active-bg: var(--color-mid-soft);
+  --button-active-border: var(--color-mid);
   appearance: none;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--button-border);
   border-radius: var(--radius-md);
   padding: 0.8rem 1rem;
   min-height: 2.75rem;
-  background: var(--color-panel-strong);
-  color: var(--color-text);
+  background: var(--button-bg);
+  color: var(--button-text);
   cursor: pointer;
 }
 
 .button:hover {
   transform: translateY(-1px);
-  border-color: var(--color-start);
-  background: var(--color-start-soft);
-  box-shadow: var(--shadow-hover);
+  border-color: var(--button-hover-border);
+  background: var(--button-hover-bg);
+  box-shadow: var(--button-hover-shadow);
 }
 
 .button:focus-visible,
@@ -502,35 +510,25 @@ textarea:focus-visible {
 }
 
 .button:active {
-  border-color: var(--color-mid);
-  background: var(--color-mid-soft);
+  border-color: var(--button-active-border);
+  background: var(--button-active-bg);
   transform: translateY(0);
 }
 
 .button-primary {
-  border-color: var(--color-start-border);
-  background: var(--color-start-fill);
-  color: var(--color-start-ink);
+  --button-bg: var(--color-start-fill);
+  --button-border: var(--color-start-border);
+  --button-text: var(--color-start-ink);
 }
 
 .button-secondary {
-  border-color: var(--color-mid-border);
-  background: var(--color-mid-fill);
-  color: var(--color-mid-ink);
-}
-
-.button-secondary:hover {
-  border-color: var(--color-start);
-  background: var(--color-start-soft);
-}
-
-.button-secondary:active {
-  border-color: var(--color-mid);
-  background: var(--color-mid-soft);
+  --button-bg: var(--color-mid-fill);
+  --button-border: var(--color-mid-border);
+  --button-text: var(--color-mid-ink);
 }
 
 .button-ghost {
-  background: transparent;
+  --button-bg: transparent;
 }
 
 .type-grid,
@@ -838,16 +836,22 @@ textarea:focus-visible {
   gap: var(--space-2);
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select,
 textarea {
+  --field-bg: var(--color-control-bg);
+  --field-border: var(--color-border);
+  --field-text: var(--color-text);
+  --field-hover-bg: var(--color-start-soft);
+  --field-hover-border: var(--color-start);
+  --field-hover-shadow: var(--shadow-hover);
   width: 100%;
   min-height: 2.9rem;
   padding: 0.8rem 0.9rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-control-bg);
-  color: var(--color-text);
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  color: var(--field-text);
 }
 
 textarea {
@@ -860,12 +864,12 @@ textarea::placeholder {
   color: var(--color-text-faint);
 }
 
-input:hover,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
 select:hover,
 textarea:hover {
-  border-color: var(--color-start);
-  background: var(--color-start-soft);
-  box-shadow: var(--shadow-hover);
+  border-color: var(--field-hover-border);
+  background: var(--field-hover-bg);
+  box-shadow: var(--field-hover-shadow);
 }
 
 .choice-group {
@@ -901,37 +905,73 @@ textarea:hover {
 }
 
 .tone-card .tone-button {
-  border-color: var(--tone-border);
-  background: var(--tone-soft);
-  color: var(--tone-text);
-}
-
-.tone-card .tone-button:hover {
-  border-color: var(--tone-color);
-  background: var(--tone-soft);
-  box-shadow:
+  --button-bg: var(--tone-soft);
+  --button-border: var(--tone-border);
+  --button-text: var(--tone-text);
+  --button-hover-bg: var(--tone-soft);
+  --button-hover-border: var(--tone-color);
+  --button-hover-shadow:
     0 0 0 1px var(--tone-soft),
     0 0 16px var(--tone-soft);
+  --button-active-bg: var(--tone-soft);
+  --button-active-border: var(--tone-color);
 }
 
-.tone-card .tone-button:active {
-  border-color: var(--tone-color);
-  background: var(--tone-soft);
+.button:disabled,
+.button:disabled:hover,
+.button:disabled:focus-visible,
+.button:disabled:active {
+  border-color: var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  opacity: 0.42;
+  filter: saturate(0.15);
+  border-style: dashed;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .tone-card .tone-input {
-  border-color: var(--tone-border);
-  background: var(--tone-soft);
+  --field-bg: var(--tone-soft);
+  --field-border: var(--tone-border);
+  --field-text: var(--tone-text);
+  --field-hover-bg: var(--tone-soft);
+  --field-hover-border: var(--tone-color);
+  --field-hover-shadow: 0 0 0 1px var(--tone-soft);
 }
 
-.tone-card .tone-input:hover {
-  border-color: var(--tone-color);
-  background: var(--tone-soft);
-  box-shadow: 0 0 0 1px var(--tone-soft);
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled:hover,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled:focus-visible,
+select:disabled,
+select:disabled:hover,
+select:disabled:focus-visible,
+textarea:disabled,
+textarea:disabled:hover,
+textarea:disabled:focus-visible {
+  border-color: var(--field-border);
+  background: var(--field-bg);
+  color: var(--field-text);
+  opacity: 0.42;
+  filter: saturate(0.15);
+  border-style: dashed;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .tone-card .tone-choice-input {
   accent-color: var(--tone-color);
+}
+
+.choice input:disabled {
+  opacity: 0.42;
+  filter: saturate(0.15);
+  cursor: not-allowed;
+}
+
+.choice input:disabled ~ span {
+  opacity: 0.68;
 }
 
 input[type="range"] {
@@ -998,7 +1038,35 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 0 0 0.2rem var(--tone-soft);
 }
 
+input[type="range"]:disabled,
+input[type="range"]:disabled:hover {
+  opacity: 0.42;
+  filter: saturate(0.15);
+  cursor: not-allowed;
+}
+
+input[type="range"]:disabled::-webkit-slider-runnable-track {
+  border-style: dashed;
+}
+
+input[type="range"]:disabled::-moz-range-track {
+  border-style: dashed;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb,
+input[type="range"]:disabled::-moz-range-thumb {
+  box-shadow: none;
+}
+
 .switch {
+  --switch-track-bg: var(--color-control-strong);
+  --switch-track-border: var(--color-border-strong);
+  --switch-hover-bg: var(--color-start-soft);
+  --switch-hover-border: var(--color-start);
+  --switch-checked-bg: var(--color-mid-soft);
+  --switch-checked-border: var(--color-mid);
+  --switch-thumb-bg: var(--color-text);
+  --switch-thumb-active: var(--color-switch-thumb-active);
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -1018,13 +1086,13 @@ input[type="range"]::-moz-range-thumb {
   width: 100%;
   height: 100%;
   border-radius: 999px;
-  border: 1px solid var(--color-border-strong);
-  background: var(--color-control-strong);
+  border: 1px solid var(--switch-track-border);
+  background: var(--switch-track-bg);
 }
 
 .switch:hover .switch-track {
-  border-color: var(--color-start);
-  background: var(--color-start-soft);
+  border-color: var(--switch-hover-border);
+  background: var(--switch-hover-bg);
 }
 
 .switch-track::after {
@@ -1035,7 +1103,7 @@ input[type="range"]::-moz-range-thumb {
   width: 1.35rem;
   height: 1.35rem;
   border-radius: 50%;
-  background: var(--color-text);
+  background: var(--switch-thumb-bg);
   transform: translateY(-50%);
   transition:
     transform var(--transition),
@@ -1048,32 +1116,42 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .switch input:checked + .switch-track {
-  background: var(--color-mid-soft);
-  border-color: var(--color-mid);
+  background: var(--switch-checked-bg);
+  border-color: var(--switch-checked-border);
 }
 
 .switch input:checked + .switch-track::after {
   transform: translate(1.45rem, -50%);
-  background: var(--color-switch-thumb-active);
+  background: var(--switch-thumb-active);
 }
 
-.tone-card .tone-switch .switch-track {
-  border-color: var(--tone-border);
-  background: var(--color-tone-switch-base);
+.switch input:disabled {
+  cursor: not-allowed;
 }
 
-.tone-card .tone-switch:hover .switch-track {
-  border-color: var(--tone-color);
-  background: var(--tone-soft);
+.switch input:disabled + .switch-track,
+.switch input:disabled:focus-visible + .switch-track {
+  border-color: var(--switch-track-border);
+  background: var(--switch-track-bg);
+  opacity: 0.42;
+  filter: saturate(0.15);
+  border-style: dashed;
+  box-shadow: none;
 }
 
-.tone-card .tone-switch input:checked + .switch-track {
-  background: var(--tone-soft);
-  border-color: var(--tone-color);
+.switch input:disabled:checked + .switch-track {
+  background: var(--switch-checked-bg);
+  border-color: var(--switch-checked-border);
 }
 
-.tone-card .tone-switch input:checked + .switch-track::after {
-  background: var(--tone-color);
+.tone-card .tone-switch {
+  --switch-track-bg: var(--color-tone-switch-base);
+  --switch-track-border: var(--tone-border);
+  --switch-hover-bg: var(--tone-soft);
+  --switch-hover-border: var(--tone-color);
+  --switch-checked-bg: var(--tone-soft);
+  --switch-checked-border: var(--tone-color);
+  --switch-thumb-active: var(--tone-color);
 }
 
 .tab-list {
