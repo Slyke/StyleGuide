@@ -1,13 +1,23 @@
 # Agent Instructions
 
-Before making UI, CSS, theme, font, or component-style changes in projects that reference this repository:
+Before making UI, CSS, JS/TS, theme, font, component-style, or logging/error-handling changes in projects that reference this repository:
 
 1. Read [`style.md`](./style.md).
 2. Read [`CODING_STYLE.md`](./CODING_STYLE.md).
-3. Treat `style.md` as the canonical UI style contract.
-4. Treat `CODING_STYLE.md` as the canonical implementation style contract.
-5. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
-6. Reuse the existing semantic tokens and interaction rules before inventing new styling patterns.
+3. Read [`logging/logging.md`](./logging/logging.md) when the work touches logging or structured errors.
+4. Treat `style.md` as the canonical UI style contract.
+5. Treat `CODING_STYLE.md` as the canonical implementation style contract.
+6. Treat `logging/logging.md` as the canonical logging and error-handling guide for copied logger setups.
+7. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
+8. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
+
+## WSL2 Command Environment
+
+If this repository is run in WSL2 or another Linux environment:
+
+- Non-interactive shells may not load `~/.bashrc` and may therefore skip `nvm` initialization.
+- Before `node` or `npm` commands, initialize `nvm` explicitly:
+  `export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"`
 
 ## Required Agent Behavior
 
@@ -16,6 +26,7 @@ Before making UI, CSS, theme, font, or component-style changes in projects that 
 - Keep theme switching token-driven through root state such as `data-theme`.
 - Keep font switching root-driven through `data-font`.
 - Prefer contract docs over scanning the full demo implementation.
+- Use repo-relative paths that start with `./` unless explicitly told to use an absolute path.
 - Preserve the semantic meanings of:
   - `start`
   - `mid`
