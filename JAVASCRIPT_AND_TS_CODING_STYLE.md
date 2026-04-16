@@ -120,3 +120,16 @@ void runBackgroundTask().catch((err) => {
     correlationId
   });
 });
+```
+
+## JSON
+
+Prefer JSON5 for human-authored project config, local data, fixtures, and translation source files when the project controls the parser.
+
+Use `.json5` extensions for files containing comments, trailing commas, unquoted keys, single quotes, or multiline strings.
+
+Do not use JSON5 syntax in tool-owned or standards-required JSON files such as `package.json`, `package-lock.json`, generated manifests, API payloads, public JSON endpoints, or files consumed directly by third-party tools unless that tool explicitly supports JSON5.
+
+For frontend translation files, JSON5 may be used as the source format, but emit or bundle strict JSON/JS objects for runtime if needed.
+
+After parsing JSON5 config, validate the result with the project’s schema/type validator.
