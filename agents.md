@@ -41,3 +41,18 @@ If this repository is run in WSL2 or another Linux environment:
 - Update `CODING_STYLE.md` only when the coding conventions themselves change.
 - Keep documentation and implementation aligned.
 - If a project intentionally diverges, document the divergence explicitly instead of silently drifting from the guide.
+
+## Language support
+Unless otherwise specified:
+- Create an `en-US.json` file for user-facing strings.
+- Keep it flat, using keys in the format below.
+- Use `./interpolation.js` to place dynamic values into rendered text when required.
+
+Example language file:
+```
+{
+  "project_name-page_title": "My Project",
+  "project_name-page_description": "Example of some text",
+  "project_name-some_interpolation-label": "Example of some {$interpolation}"
+}
+```

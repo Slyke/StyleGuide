@@ -7,6 +7,7 @@ Monospace UI style guide and reference implementation for plain HTML/CSS with a 
 - `index.html`: demo page with the controls and examples
 - `styles.css`: token-driven light and dark theme implementation
 - `script.js`: theme, font, and demo interaction behavior
+- `interpolation.js`: string interpolation helper for locale text
 - `style.md`: canonical UI contract for humans and LLMs
 - `CODING_STYLE.md`: implementation style rules
 - `agents.md`: instructions for agents consuming this repo
