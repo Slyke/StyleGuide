@@ -34,6 +34,39 @@ const normalizeLevels = ({ levels }) => {
   return [];
 };
 
+const resolveLevels = ({ configuredLevels, envLevels, fallback = [] }) => {
+  if (configuredLevels !== undefined) {
+    return normalizeLevels({ levels: configuredLevels });
+  }
+
+  if (envLevels !== undefined && envLevels !== '') {
+    return normalizeLevels({ levels: envLevels });
+  }
+
+  return normalizeLevels({ levels: fallback });
+};
+
+const parseJsonObject = ({ value, fallback = {} }) => {
+  if (value === undefined || value === null || value === '') {
+    return fallback;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const normalizeHeaders = ({ headers }) => {
+  return Object.fromEntries(
+    Object.entries(headers || {})
+      .filter(([, value]) => value !== undefined && value !== null)
+      .map(([key, value]) => [key, String(value)])
+  );
+};
+
 const mergeDefined = ({ base, override }) => {
   const merged = { ...base };
 
@@ -110,7 +143,8 @@ const formatTextLog = ({ template, entry }) => {
     message: entry.message,
     correlationId: entry.correlationId ?? '',
     errorCode: entry.errorCode ?? '',
-    errorKey: entry.errorKey ?? ''
+    errorKey: entry.errorKey ?? '',
+    loggerKey: entry.loggerKey ?? ''
   };
 
   let rendered = template.replace(/\{\$([a-zA-Z0-9_]+)\}/g, (match, token) => {
@@ -148,6 +182,23 @@ const shouldEmitLevel = ({ sink, level }) => {
   return sink.levels.length === 0 || sink.levels.includes(level);
 };
 
+const shouldEmitForGate = ({ gate, sinkName }) => {
+  if (!gate || gate.enabled !== false) {
+    const sinkValue = gate ? gate[sinkName] : undefined;
+    if (sinkValue !== undefined) {
+      return Boolean(sinkValue);
+    }
+
+    if (sinkName === 'http' && gate && gate.curl !== undefined) {
+      return Boolean(gate.curl);
+    }
+
+    return true;
+  }
+
+  return false;
+};
+
 const sendHttpLog = ({ sink, payload, contentType }) => {
   if (!sink.url) {
     return;
@@ -163,6 +214,7 @@ const sendHttpLog = ({ sink, payload, contentType }) => {
       path: `${parsedUrl.pathname}${parsedUrl.search}`,
       timeout: sink.timeoutMs,
       headers: {
+        ...sink.headers,
         'content-type': contentType,
         'content-length': Buffer.byteLength(payload)
       }
@@ -218,7 +270,7 @@ const resolveLoggingConfig = ({ settings = {} }) => {
     url: process.env.LOG_HTTP_URL,
     method: process.env.LOG_HTTP_METHOD,
     timeoutMs: process.env.LOG_HTTP_TIMEOUT_MS ? Number(process.env.LOG_HTTP_TIMEOUT_MS) : undefined,
-    levels: normalizeLevels({ levels: process.env.LOG_HTTP_LEVELS })
+    headers: parseJsonObject({ value: process.env.LOG_HTTP_HEADERS })
   };
   const envKubernetes = {
     enabled: asBoolean({ value: process.env.LOG_K8S_METADATA_ENABLED, fallback: false }),
@@ -249,7 +301,11 @@ const resolveLoggingConfig = ({ settings = {} }) => {
           base: {},
           override: sinks.console || {}
         }),
-        levels: normalizeLevels({ levels: (sinks.console || {}).levels ?? envConsole.levels })
+        levels: resolveLevels({
+          configuredLevels: (sinks.console || {}).levels,
+          envLevels: process.env.LOG_CONSOLE_LEVELS,
+          fallback: []
+        })
       },
       file: {
         ...mergeDefined({
@@ -265,7 +321,11 @@ const resolveLoggingConfig = ({ settings = {} }) => {
           base: {},
           override: sinks.file || {}
         }),
-        levels: normalizeLevels({ levels: (sinks.file || {}).levels ?? envFile.levels })
+        levels: resolveLevels({
+          configuredLevels: (sinks.file || {}).levels,
+          envLevels: process.env.LOG_FILE_LEVELS,
+          fallback: []
+        })
       },
       http: {
         ...mergeDefined({
@@ -275,7 +335,8 @@ const resolveLoggingConfig = ({ settings = {} }) => {
             url: '',
             method: 'POST',
             timeoutMs: 2500,
-            levels: ['error']
+            levels: ['error'],
+            headers: {}
           },
           override: envHttp
         }),
@@ -283,9 +344,21 @@ const resolveLoggingConfig = ({ settings = {} }) => {
           base: {},
           override: sinks.http || {}
         }),
-        levels: normalizeLevels({ levels: (sinks.http || {}).levels ?? envHttp.levels ?? ['error'] })
+        headers: normalizeHeaders({
+          headers: {
+            ...envHttp.headers,
+            ...((sinks.http || {}).headers || {}),
+            ...((sinks.http || {}).optionalHeaders || {})
+          }
+        }),
+        levels: resolveLevels({
+          configuredLevels: (sinks.http || {}).levels,
+          envLevels: process.env.LOG_HTTP_LEVELS,
+          fallback: ['error']
+        })
       }
     },
+    gates: logging.gates || {},
     kubernetes: mergeDefined({
       base: envKubernetes,
       override: logging.kubernetes || {}
@@ -303,6 +376,7 @@ const emitLog = ({ entry, config }) => {
   if (
     config.sinks.console.enabled
     && shouldEmitLevel({ sink: config.sinks.console, level: entry.level })
+    && shouldEmitForGate({ gate: entry.gate, sinkName: 'console' })
   ) {
     const consoleMethod = getConsoleMethod({ level: entry.level });
     const payload = config.sinks.console.format === 'json' ? jsonPayload.trimEnd() : textPayload;
@@ -313,6 +387,7 @@ const emitLog = ({ entry, config }) => {
     config.sinks.file.enabled
     && config.sinks.file.path
     && shouldEmitLevel({ sink: config.sinks.file, level: entry.level })
+    && shouldEmitForGate({ gate: entry.gate, sinkName: 'file' })
   ) {
     fs.mkdirSync(path.dirname(config.sinks.file.path), { recursive: true });
     const payload = config.sinks.file.format === 'text' ? `${textPayload}\n` : jsonPayload;
@@ -322,6 +397,7 @@ const emitLog = ({ entry, config }) => {
   if (
     config.sinks.http.enabled
     && shouldEmitLevel({ sink: config.sinks.http, level: entry.level })
+    && shouldEmitForGate({ gate: entry.gate, sinkName: 'http' })
   ) {
     const payload = config.sinks.http.format === 'text' ? textPayload : jsonPayload.trimEnd();
     const contentType = config.sinks.http.format === 'text' ? 'text/plain' : 'application/json';
@@ -337,15 +413,34 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
   const config = resolveLoggingConfig({ settings });
   const kubernetes = resolveKubernetesMetadata({ kubernetes: config.kubernetes });
 
+  const resolveGate = ({ gate, loggerKey, errorKey }) => {
+    const gateKey = gate || loggerKey || errorKey;
+    if (!gateKey) {
+      return { gateKey: undefined, gateConfig: undefined };
+    }
+
+    return {
+      gateKey,
+      gateConfig: config.gates[gateKey]
+    };
+  };
+
   const generateLog = ({
     level = 'info',
     caller = 'unknown',
+    loggerKey,
+    gate,
     message = '',
     correlationId,
     context,
     error
   } = {}) => {
-    const normalizedLevel = String(level).toLowerCase();
+    const resolvedGate = resolveGate({
+      gate,
+      loggerKey,
+      errorKey: error ? error.errorKey : undefined
+    });
+    const normalizedLevel = String(resolvedGate.gateConfig?.level || level).toLowerCase();
     const entry = {
       timestamp: new Date().toISOString(),
       level: normalizedLevel,
@@ -355,6 +450,21 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
 
     if (correlationId !== undefined) {
       entry.correlationId = correlationId;
+    }
+
+    if (loggerKey !== undefined) {
+      entry.loggerKey = loggerKey;
+    }
+
+    if (resolvedGate.gateKey !== undefined) {
+      entry.gateKey = resolvedGate.gateKey;
+    }
+
+    if (resolvedGate.gateConfig !== undefined) {
+      Object.defineProperty(entry, 'gate', {
+        value: resolvedGate.gateConfig,
+        enumerable: false
+      });
     }
 
     if (context !== undefined) {
@@ -383,6 +493,7 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
     caller = 'unknown',
     reason = 'Unexpected error',
     errorKey = 'ERR_UNKNOWN',
+    gate,
     err,
     includeStackTrace = false,
     correlationId,
@@ -411,6 +522,8 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
     generateLog({
       level: 'error',
       caller,
+      loggerKey: errorKey,
+      gate,
       message: reason,
       correlationId,
       context,
@@ -424,6 +537,7 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
     caller = 'unknown',
     reason = 'Unexpected error',
     errorKey = 'ERR_UNKNOWN',
+    gate,
     err,
     includeStackTrace = false,
     correlationId,
@@ -433,6 +547,7 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
       caller,
       reason,
       errorKey,
+      gate,
       err,
       includeStackTrace,
       correlationId,
