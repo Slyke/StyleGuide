@@ -129,29 +129,72 @@ const readDocumentApiBasePath = () => {
   return document.documentElement.dataset.apiBasePath ?? '/api';
 };
 
-export const apiRequest = async <T>({
+const isJsonContentType = ({ contentType }: { contentType: string }) => (
+  /(^|[/+])json($|;)/i.test(contentType)
+);
+
+type ApiRequestResult<T> = {
+  requestUrl: string;
+  ok: boolean;
+  status: number;
+  statusText: string;
+  headers: Headers;
+  contentType: string;
+  isJsonResponse: boolean;
+  responseText: string;
+  payload: T | null;
+  jsonParseError: unknown | null;
+};
+
+export const apiRequest = async <T = unknown>({
   url,
   method = 'GET',
+  headers,
   body,
   apiBasePath = readDocumentApiBasePath()
 }: {
   url: string;
   method?: string;
+  headers?: HeadersInit;
   body?: unknown;
   apiBasePath?: string;
-}) => {
-  const response = await fetch(buildApiUrl({ url, apiBasePath }), {
+}): Promise<ApiRequestResult<T>> => {
+  // Callers inspect ok/status/payload/jsonParseError and decide whether to throw,
+  // emit responseText, or log with generateError at the workflow boundary.
+  // Transport and body-read rejections also belong to the caller.
+  const requestUrl = buildApiUrl({ url, apiBasePath });
+  const response = await fetch(requestUrl, {
     method,
-    headers: body ? { 'content-type': 'application/json' } : undefined,
-    body: body ? JSON.stringify(body) : undefined
+    headers: headers ?? (body !== undefined ? { 'content-type': 'application/json' } : undefined),
+    body: body !== undefined ? JSON.stringify(body) : undefined
   });
 
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok || payload.ok === false) {
-    throw new Error(payload.reason ?? payload.errorKey ?? `Request failed with ${response.status}`);
+  const responseText = await response.text();
+  const contentType = response.headers.get('content-type') ?? '';
+  const isJsonResponse = isJsonContentType({ contentType });
+  let payload: T | null = null;
+  let jsonParseError: unknown | null = null;
+
+  if (responseText && isJsonResponse) {
+    try {
+      payload = JSON.parse(responseText) as T;
+    } catch (err) {
+      jsonParseError = err;
+    }
   }
 
-  return payload as T;
+  return {
+    requestUrl,
+    ok: response.ok,
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+    contentType,
+    isJsonResponse,
+    responseText,
+    payload,
+    jsonParseError
+  };
 };
 ```
 
@@ -269,6 +312,8 @@ Add focused tests for:
 - target URL building preserves upstream URL path prefixes
 - target URL building preserves query strings
 - `buildApiUrl` rewrites `/api/...` but leaves non-API and absolute URLs alone
+- request helpers preserve caller-provided headers and only default to JSON headers when headers are omitted
+- API helpers return status, parsed payload, parse errors, and raw response text so callers decide the outcome
 - lock or config validation rejects absolute URLs and root-only API prefixes for path settings
 
 If the app uses SSE or downloads, add at least one integration-level check that the proxy does not buffer or corrupt the response body.

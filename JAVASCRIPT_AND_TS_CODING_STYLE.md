@@ -33,7 +33,7 @@ Do not wrap lines just to satisfy an artificially short width.
 Keep straightforward assignments on one line when they remain readable.
 
 ```js
-element.textContent = "Open a Reddit tab to view or change its account routing.";
+element.textContent = "Open a tab to view or change its account routing.";
 ```
 
 ## Explicit Grouping
@@ -71,7 +71,7 @@ When settling a `Promise` or promise-like flow, always return immediately after 
 
 This applies to `Promise` executors, callbacks inside a `Promise`, deferred-style helpers, and any wrapper that completes asynchronous work. Returning prevents the callback from continuing into later logic after the operation has already been settled.
 
-Make async failure ownership obvious. An `await` does not need a local `try/catch` when the caller deliberately owns the failure path, but fire-and-forget work must attach a visible `.catch(...)` that logs or handles the error. Use local `try/catch` when the current function can add useful context, convert the error to a structured error, recover, or clean up.
+Make async failure ownership obvious. An `await` does not need a local `try/catch` when the caller deliberately owns the failure path. When the current function owns the failure path, use local `try/catch` or an adjacent `.catch(...)` on the awaited promise to log with `generateError`, add useful context, convert the error to a structured error, recover, or clean up. If a reusable helper intentionally leaves failure handling to its caller, make that contract explicit near the awaited operation or in the exported API documentation. Fire-and-forget work must attach a visible `.catch(...)` that logs or handles the error.
 
 Consider adding structured error and logging gates where appropriate, especially around callback failures or high-volume success events.
 
