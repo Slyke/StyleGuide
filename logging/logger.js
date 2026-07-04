@@ -1,11 +1,62 @@
 'use strict';
 
+const dgram = require('dgram');
 const fs = require('fs');
-const path = require('path');
 const http = require('http');
 const https = require('https');
+const net = require('net');
+const os = require('os');
+const path = require('path');
+const tls = require('tls');
 
 const DEFAULT_TEXT_FORMAT = '[{$timestamp}] {$level} {$caller} {$message}';
+const SYSLOG_FACILITY_CODES = {
+  kern: 0,
+  user: 1,
+  mail: 2,
+  daemon: 3,
+  auth: 4,
+  syslog: 5,
+  lpr: 6,
+  news: 7,
+  uucp: 8,
+  cron: 9,
+  authpriv: 10,
+  ftp: 11,
+  ntp: 12,
+  audit: 13,
+  security: 13,
+  alert: 14,
+  console: 14,
+  clock: 15,
+  solariscron: 15,
+  local0: 16,
+  local1: 17,
+  local2: 18,
+  local3: 19,
+  local4: 20,
+  local5: 21,
+  local6: 22,
+  local7: 23
+};
+const SYSLOG_SEVERITY_CODES = {
+  emerg: 0,
+  emergency: 0,
+  panic: 0,
+  alert: 1,
+  crit: 2,
+  critical: 2,
+  fatal: 2,
+  err: 3,
+  error: 3,
+  warn: 4,
+  warning: 4,
+  notice: 5,
+  info: 6,
+  informational: 6,
+  debug: 7,
+  trace: 7
+};
 
 const asBoolean = ({ value, fallback = false }) => {
   if (value === undefined || value === null || value === '') {
@@ -199,6 +250,121 @@ const shouldEmitForGate = ({ gate, sinkName }) => {
   return false;
 };
 
+const normalizeSyslogProtocol = ({ protocol }) => {
+  const normalized = String(protocol || 'udp').toLowerCase();
+  return ['udp', 'tcp', 'tls'].includes(normalized) ? normalized : 'udp';
+};
+
+const normalizeSyslogFraming = ({ framing }) => {
+  const normalized = String(framing || 'octet-counted').toLowerCase();
+  return normalized === 'newline' ? 'newline' : 'octet-counted';
+};
+
+const normalizeSyslogSocketType = ({ socketType }) => {
+  const normalized = String(socketType || 'udp4').toLowerCase();
+  return ['udp4', 'udp6'].includes(normalized) ? normalized : 'udp4';
+};
+
+const resolveSyslogPort = ({ port, protocol }) => {
+  const resolvedPort = Number(port);
+  if (Number.isInteger(resolvedPort) && resolvedPort > 0) {
+    return resolvedPort;
+  }
+
+  return protocol === 'tls' ? 6514 : 514;
+};
+
+const getSyslogFacilityCode = ({ facility }) => {
+  const numericFacility = Number(facility);
+  if (
+    Number.isInteger(numericFacility)
+    && numericFacility >= 0
+    && numericFacility <= 23
+  ) {
+    return numericFacility;
+  }
+
+  const normalized = String(facility || 'local0').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return SYSLOG_FACILITY_CODES[normalized] ?? SYSLOG_FACILITY_CODES.local0;
+};
+
+const getSyslogSeverityCode = ({ level, defaultSeverity }) => {
+  const normalizedLevel = String(level || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (SYSLOG_SEVERITY_CODES[normalizedLevel] !== undefined) {
+    return SYSLOG_SEVERITY_CODES[normalizedLevel];
+  }
+
+  const normalizedDefault = String(defaultSeverity || 'info').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return SYSLOG_SEVERITY_CODES[normalizedDefault] ?? SYSLOG_SEVERITY_CODES.info;
+};
+
+const sanitizeSyslogHeaderValue = ({ value, fallback, maxLength }) => {
+  const resolvedValue = value === undefined || value === null || value === '' ? fallback : value;
+  const sanitized = String(resolvedValue ?? '-').replace(/[^\x21-\x7e]/g, '_');
+  const truncated = maxLength ? sanitized.slice(0, maxLength) : sanitized;
+  return truncated || '-';
+};
+
+const escapeSyslogStructuredDataValue = ({ value }) => {
+  return String(value)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\]/g, '\\]');
+};
+
+const formatSyslogStructuredData = ({ entry }) => {
+  const params = Object.entries({
+    level: entry.level,
+    caller: entry.caller,
+    loggerKey: entry.loggerKey,
+    errorKey: entry.errorKey,
+    errorCode: entry.errorCode,
+    correlationId: entry.correlationId,
+    gateKey: entry.gateKey
+  })
+    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => `${key}="${escapeSyslogStructuredDataValue({ value })}"`);
+
+  return params.length > 0 ? `[log ${params.join(' ')}]` : '-';
+};
+
+const getDefaultSyslogAppName = () => {
+  const scriptName = process.argv[1] ? path.basename(process.argv[1]) : '';
+  return scriptName || 'node';
+};
+
+const formatSyslogMessage = ({ sink, entry, payload }) => {
+  const facilityCode = getSyslogFacilityCode({ facility: sink.facility });
+  const severityCode = getSyslogSeverityCode({
+    level: entry.level,
+    defaultSeverity: sink.defaultSeverity
+  });
+  const pri = (facilityCode * 8) + severityCode;
+  const hostname = sanitizeSyslogHeaderValue({
+    value: sink.hostname,
+    fallback: os.hostname(),
+    maxLength: 255
+  });
+  const appName = sanitizeSyslogHeaderValue({
+    value: sink.appName,
+    fallback: getDefaultSyslogAppName(),
+    maxLength: 48
+  });
+  const procId = sanitizeSyslogHeaderValue({
+    value: sink.procId,
+    fallback: process.pid,
+    maxLength: 128
+  });
+  const msgId = sanitizeSyslogHeaderValue({
+    value: sink.msgId,
+    fallback: entry.loggerKey ?? entry.errorKey ?? 'log',
+    maxLength: 32
+  });
+  const structuredData = formatSyslogStructuredData({ entry });
+
+  return `<${pri}>1 ${entry.timestamp} ${hostname} ${appName} ${procId} ${msgId} ${structuredData} ${payload}`;
+};
+
 const sendHttpLog = ({ sink, payload, contentType }) => {
   if (!sink.url) {
     return;
@@ -229,6 +395,77 @@ const sendHttpLog = ({ sink, payload, contentType }) => {
     request.destroy();
   });
   request.end(payload);
+};
+
+const closeSyslogUdpSocket = ({ socket }) => {
+  try {
+    socket.close();
+  } catch {
+    // Logging failures should never interrupt the caller.
+  }
+};
+
+const sendSyslogUdpLog = ({ sink, message }) => {
+  if (!sink.host) {
+    return;
+  }
+
+  const socket = dgram.createSocket(sink.socketType);
+  socket.on('error', () => {
+    closeSyslogUdpSocket({ socket });
+  });
+  socket.send(Buffer.from(message, 'utf8'), sink.port, sink.host, () => {
+    closeSyslogUdpSocket({ socket });
+  });
+};
+
+const sendSyslogStreamLog = ({ sink, message }) => {
+  if (!sink.host) {
+    return;
+  }
+
+  const framedMessage = sink.framing === 'newline'
+    ? `${message}\n`
+    : `${Buffer.byteLength(message)} ${message}`;
+  const connectionOptions = {
+    host: sink.host,
+    port: sink.port
+  };
+  let connection;
+  const onConnect = () => {
+    connection.end(framedMessage);
+  };
+
+  if (sink.protocol === 'tls') {
+    connection = tls.connect(
+      {
+        ...connectionOptions,
+        servername: sink.servername || sink.host,
+        ...(sink.tlsOptions || {})
+      },
+      onConnect
+    );
+  } else {
+    connection = net.createConnection(connectionOptions, onConnect);
+  }
+
+  if (sink.timeoutMs) {
+    connection.setTimeout(sink.timeoutMs);
+  }
+
+  connection.on('error', () => {});
+  connection.on('timeout', () => {
+    connection.destroy();
+  });
+};
+
+const sendSyslogLog = ({ sink, message }) => {
+  if (sink.protocol === 'udp') {
+    sendSyslogUdpLog({ sink, message });
+    return;
+  }
+
+  sendSyslogStreamLog({ sink, message });
 };
 
 const resolveKubernetesMetadata = ({ kubernetes }) => {
@@ -272,6 +509,23 @@ const resolveLoggingConfig = ({ settings = {} }) => {
     timeoutMs: process.env.LOG_HTTP_TIMEOUT_MS ? Number(process.env.LOG_HTTP_TIMEOUT_MS) : undefined,
     headers: parseJsonObject({ value: process.env.LOG_HTTP_HEADERS })
   };
+  const envSyslog = {
+    enabled: asBoolean({ value: process.env.LOG_SYSLOG_ENABLED, fallback: false }),
+    format: process.env.LOG_SYSLOG_FORMAT,
+    protocol: process.env.LOG_SYSLOG_PROTOCOL,
+    host: process.env.LOG_SYSLOG_HOST,
+    port: process.env.LOG_SYSLOG_PORT ? Number(process.env.LOG_SYSLOG_PORT) : undefined,
+    facility: process.env.LOG_SYSLOG_FACILITY,
+    appName: process.env.LOG_SYSLOG_APP_NAME,
+    hostname: process.env.LOG_SYSLOG_HOSTNAME,
+    procId: process.env.LOG_SYSLOG_PROC_ID,
+    msgId: process.env.LOG_SYSLOG_MSG_ID,
+    defaultSeverity: process.env.LOG_SYSLOG_DEFAULT_SEVERITY,
+    timeoutMs: process.env.LOG_SYSLOG_TIMEOUT_MS ? Number(process.env.LOG_SYSLOG_TIMEOUT_MS) : undefined,
+    framing: process.env.LOG_SYSLOG_FRAMING,
+    socketType: process.env.LOG_SYSLOG_SOCKET_TYPE,
+    servername: process.env.LOG_SYSLOG_SERVERNAME
+  };
   const envKubernetes = {
     enabled: asBoolean({ value: process.env.LOG_K8S_METADATA_ENABLED, fallback: false }),
     podName: process.env.K8S_POD_NAME,
@@ -284,6 +538,29 @@ const resolveLoggingConfig = ({ settings = {} }) => {
 
   const logging = settings.logging || {};
   const sinks = logging.sinks || {};
+  const mergedSyslogSink = mergeDefined({
+    base: mergeDefined({
+      base: {
+        enabled: false,
+        format: 'json',
+        protocol: 'udp',
+        host: 'localhost',
+        port: undefined,
+        facility: 'local0',
+        appName: getDefaultSyslogAppName(),
+        hostname: os.hostname(),
+        procId: String(process.pid),
+        msgId: 'app-log',
+        defaultSeverity: 'info',
+        timeoutMs: 2500,
+        framing: 'octet-counted',
+        socketType: 'udp4'
+      },
+      override: envSyslog
+    }),
+    override: sinks.syslog || {}
+  });
+  const syslogProtocol = normalizeSyslogProtocol({ protocol: mergedSyslogSink.protocol });
 
   return {
     logTextFormat: logging.logTextFormat ?? process.env.LOG_TEXT_FORMAT ?? DEFAULT_TEXT_FORMAT,
@@ -356,6 +633,21 @@ const resolveLoggingConfig = ({ settings = {} }) => {
           envLevels: process.env.LOG_HTTP_LEVELS,
           fallback: ['error']
         })
+      },
+      syslog: {
+        ...mergedSyslogSink,
+        protocol: syslogProtocol,
+        port: resolveSyslogPort({
+          port: mergedSyslogSink.port,
+          protocol: syslogProtocol
+        }),
+        framing: normalizeSyslogFraming({ framing: mergedSyslogSink.framing }),
+        socketType: normalizeSyslogSocketType({ socketType: mergedSyslogSink.socketType }),
+        levels: resolveLevels({
+          configuredLevels: (sinks.syslog || {}).levels,
+          envLevels: process.env.LOG_SYSLOG_LEVELS,
+          fallback: ['warn', 'error']
+        })
       }
     },
     gates: logging.gates || {},
@@ -405,6 +697,24 @@ const emitLog = ({ entry, config }) => {
       sink: config.sinks.http,
       payload,
       contentType
+    });
+  }
+
+  if (
+    config.sinks.syslog.enabled
+    && shouldEmitLevel({ sink: config.sinks.syslog, level: entry.level })
+    && shouldEmitForGate({ gate: entry.gate, sinkName: 'syslog' })
+  ) {
+    const payload = config.sinks.syslog.format === 'text' ? textPayload : jsonPayload.trimEnd();
+    const message = formatSyslogMessage({
+      sink: config.sinks.syslog,
+      entry,
+      payload
+    });
+
+    sendSyslogLog({
+      sink: config.sinks.syslog,
+      message
     });
   }
 };
