@@ -11,6 +11,7 @@
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md`: implementation style rules for JS and TS
 - `SVELTE_NODE_HTTP_PROXY.md`: SvelteKit Node HTTP API proxy pattern for configurable browser-to-API routing
 - `deployment.md`: deployment, version metadata, startup diagnostics, health endpoint, and image tagging contract
+- `mcp-SPEC.md`: MCP server project specification for tools that front upstream systems
 - `agents.md`: instructions for agents consuming this repo
 
 ## Primary Entry Points
@@ -23,6 +24,7 @@ If you are using this repository from another project:
 - Read `agents.md` if the consumer is an agent or LLM workflow.
 - Read `SVELTE_NODE_HTTP_PROXY.md` when work touches SvelteKit/Node HTTP API proxying or configurable API base paths.
 - Read `deployment.md` when work touches Docker builds, releases, startup diagnostics, health endpoints, image tags, or deployable service metadata.
+- Read `mcp-SPEC.md` when work touches MCP servers, MCP tools, upstream-client wrappers, or MCP deployment patterns.
 - Read `index.html`, `styles.css`, and `script.js` only when you need implementation examples.
 
 ## System Summary
@@ -68,6 +70,7 @@ This repository is intentionally documented for LLM-first consumption.
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md` is the source of truth for implementation conventions.
 - `SVELTE_NODE_HTTP_PROXY.md` is the source of truth for the SvelteKit Node API proxy pattern.
 - `deployment.md` is the source of truth for deployment metadata, startup version logging, health endpoint metadata, and image publishing.
+- `mcp-SPEC.md` is the source of truth for MCP server project structure, safety, auth, tools, and deployment expectations.
 - `agents.md` tells agents to prefer those docs over scanning the whole demo.
 
 ## Notes

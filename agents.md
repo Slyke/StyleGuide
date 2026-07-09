@@ -1,6 +1,6 @@
 # Agent Instructions
 
-Before making UI, CSS, JS/TS, theme, font, component-style, logging/error-handling, deployment, or health endpoint changes in projects that reference this repository:
+Before making UI, CSS, JS/TS, theme, font, component-style, logging/error-handling, deployment, health endpoint, or MCP server changes in projects that reference this repository:
 
 1. Read [`design.md`](./design.md) when the work touches UI, CSS, theme, typography, layout, or component visuals.
 2. Read [`style.md`](./style.md) for the stricter local UI contract.
@@ -10,12 +10,14 @@ Before making UI, CSS, JS/TS, theme, font, component-style, logging/error-handli
 6. Read [`deployment.md`](./deployment.md) when the work touches Docker builds, releases, startup diagnostics, health endpoints, image tags, or deployable service metadata.
 7. Treat `design.md` as the portable design-token source for LLM and tool consumers.
 8. Treat `style.md` as the canonical local UI style contract.
-9. Treat `JAVASCRIPT_AND_TS_CODING_STYLE.md` as the canonical implementation style contract.
-10. Treat `SVELTE_NODE_HTTP_PROXY.md` as the canonical SvelteKit Node API proxy contract.
-11. Treat `logging/logging.md` as the canonical logging and error-handling guide for copied logger setups.
-12. Treat `deployment.md` as the canonical deployment metadata, startup diagnostics, health endpoint, and image publishing contract.
-13. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
-14. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
+9. Read [`mcp-SPEC.md`](./mcp-SPEC.md) when the work touches MCP servers or MCP tools.
+10. Treat `JAVASCRIPT_AND_TS_CODING_STYLE.md` as the canonical implementation style contract.
+11. Treat `SVELTE_NODE_HTTP_PROXY.md` as the canonical SvelteKit Node API proxy contract.
+12. Treat `logging/logging.md` as the canonical logging and error-handling guide for copied logger setups.
+13. Treat `deployment.md` as the canonical deployment metadata, startup diagnostics, health endpoint, and image publishing contract.
+14. Treat `mcp-SPEC.md` as the canonical MCP server project specification.
+15. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
+16. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
 
 ## WSL2 Command Environment
 
