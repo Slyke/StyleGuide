@@ -20,6 +20,23 @@ This specification describes a reusable production pattern for an MCP server tha
 - The server SHOULD support graceful shutdown on `SIGINT` and `SIGTERM`.
 - Each MCP request SHOULD create a fresh transport/session object unless the project has a clear session-state requirement.
 
+## Bundled Application Sidecars
+
+When an MCP server is bundled with an application whose API owns the domain logic, the MCP implementation SHOULD be a standalone subproject and separate process/container rather than an in-process API route.
+
+- The application API and MCP sidecar MUST remain independently startable and configurable.
+- MCP MUST have a master `enabled` setting. When disabled, it MUST open no MCP listeners and MUST NOT affect API or UI availability.
+- The application API MAY expose independently configurable HTTP and HTTPS listeners. The MCP sidecar MUST use a configured upstream base URL so deployments can select either transport.
+- The MCP sidecar SHOULD default its client-facing transport to HTTPS. A plaintext HTTP listener MAY be enabled independently for trusted local, LAN, pod, or sidecar deployments.
+- Client-to-MCP and MCP-to-API authentication MUST use separate credentials. MCP clients use named, scoped Bearer tokens; the sidecar uses a dedicated upstream API key or service credential that is never returned to clients.
+- A client-facing token MUST NOT be reused as the upstream API credential. Configuration validation SHOULD reject credential reuse.
+- The upstream API credential MUST have only the permissions required by the registered tools. Upstream systems with higher-impact capabilities SHOULD provide a dedicated service identity or key scope.
+- The API and MCP containers MAY share a mounted certificate volume. Certificate generation SHOULD be handled by an idempotent init container or one-shot Compose service before either listener starts.
+- When the sidecar calls an HTTPS upstream using a private or self-signed certificate, TLS verification MUST remain enabled by default and the shared certificate or private CA SHOULD be mounted as an explicit trust anchor.
+- Generated certificates MUST contain subject alternative names for every configured container/service DNS name used by verified upstream connections.
+- Compose and Kubernetes examples SHOULD model the API, MCP sidecar, certificate initialization, shared certificate mount, separate secret inputs, health checks, and dependency/readiness ordering.
+- Local development examples SHOULD prefer HTTP for the container-local upstream hop while retaining HTTPS for client-facing MCP. Deployment examples SHOULD show how to switch the upstream URL to verified HTTPS without code changes.
+
 ## Configuration
 
 - Configuration MUST be loadable from both environment variables and a checked-in example config file.
@@ -131,6 +148,7 @@ This specification describes a reusable production pattern for an MCP server tha
 - Provide a Dockerfile or equivalent container build path.
 - Follow `deployment.md` for build metadata, startup version and commit logging, health endpoint metadata, and image tag conventions.
 - Provide Kubernetes deployment examples when the project is expected to run in clusters.
+- Bundled application MCP servers SHOULD ship as a dedicated sidecar image/service rather than adding MCP dependencies to the application API image.
 - Health and readiness probes SHOULD be documented.
 - If HTTPS is enabled, support mounted certificates and safe local development certificate generation.
 - The default container should run as a non-root user when practical.
