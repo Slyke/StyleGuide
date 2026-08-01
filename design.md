@@ -92,15 +92,17 @@ components:
     textColor: "{colors.start-ink}"
     typography: "{typography.control}"
     rounded: "{rounded.md}"
-    padding: "0.78rem 1rem"
-    height: "2.75rem"
+    padding: "0.55rem 0.85rem 0.48rem"
+    minHeight: "2.5rem"
   button-secondary:
     backgroundColor: "{colors.mid-fill-strong}"
     textColor: "{colors.mid-ink}"
     typography: "{typography.control}"
     rounded: "{rounded.md}"
-    padding: "0.78rem 1rem"
-    height: "2.75rem"
+    padding: "0.55rem 0.85rem 0.48rem"
+    minHeight: "2.5rem"
+  action-row:
+    followingContentGap: "{spacing.md}"
   panel:
     backgroundColor: "{colors.dark-panel}"
     textColor: "{colors.dark-text}"
@@ -130,6 +132,25 @@ components:
     focusColor: "{colors.warning}"
     rounded: "{rounded.md}"
     menuPadding: "0.7rem"
+  searchable-grouped-select:
+    backgroundColor: "{colors.dark-panel-strong}"
+    activeOptionColor: "{colors.start}"
+    selectedColor: "{colors.mid}"
+    focusColor: "{colors.warning}"
+    groupLabelTypography: "{typography.label}"
+    rounded: "{rounded.md}"
+    menuPadding: "0.7rem"
+    maxMenuHeight: "18rem"
+  section-heading-controls:
+    placement: "inside the section card, at the trailing edge of its heading"
+    actions:
+      - "move-up"
+      - "move-down"
+      - "collapse-expand"
+    typography: "{typography.control}"
+    rounded: "{rounded.md}"
+    collapsedIcon: "+"
+    expandedIcon: "−"
   removable-badge-action:
     backgroundColor: "{colors.mid-fill-strong}"
     textColor: "{colors.mid-ink}"
@@ -201,7 +222,9 @@ Fixed-format UI elements, such as toolbars, boards, counters, tabs, and button g
 
 The system is mostly flat. Depth comes from tonal layers, crisp borders, and restrained shadows.
 
-Pressable controls are the main exception. Buttons and action chips should read as raised keycaps at rest, with a visible top glint, heavier bottom edge, and downward active movement. Passive labels, badges, and status tags should remain flatter so they are not confused with buttons.
+Pressable controls are the main exception. Buttons and action chips should read as raised keycaps at rest, with a visible top glint, crisp unblurred bottom offset, heavier bottom edge, and downward active movement. Do not use soft exterior shadows or glows on controls. Passive labels, badges, and status tags should remain flatter so they are not confused with buttons.
+
+When an action row is followed by another content block, reserve at least `spacing.md` (`1rem`) between them. Control elevation is visual and must not substitute for layout spacing.
 
 Keyboard focus uses warning-colored emphasis. Hover uses start-colored emphasis. Selected, checked, and switched-on states bias toward mid. Disabled controls lose elevation, use dashed borders or tracks, keep their tone family muted, and do not animate as active controls.
 
@@ -215,7 +238,7 @@ Do not mix sharp industrial corners with heavily rounded decorative shapes. Do n
 
 ## Components
 
-Buttons are raised keycaps. Primary buttons use start. Secondary informational buttons use mid. Ghost buttons use neutral control surfaces but keep the same pressable chrome. Destructive buttons should use danger only when the action is truly destructive.
+Buttons are compact raised keycaps. Primary buttons use start. Secondary informational buttons use mid. Ghost buttons use neutral control surfaces but keep the same pressable chrome. Destructive buttons should use danger only when the action is truly destructive.
 
 Badges, helper labels, and status tags are passive. They should be smaller, flatter, and dot-marked where useful. They should never compete visually with primary buttons.
 
@@ -224,6 +247,10 @@ Inputs, selects, and textareas use neutral control backgrounds, crisp borders, a
 Disclosure panels should use native details/summary where possible. Summary rows are compact control surfaces with warning focus, start hover, and mid open indicators. Expanded disclosure bodies should read as the local continuation of the same surface, not as nested cards.
 
 Dropdown multi-select menus may also use details/summary for open state. Selected options map to mid, focus maps to warning, and bulk actions inside the menu use the raised keycap treatment because they are true controls.
+
+Searchable grouped selects are single-select comboboxes for longer option sets. Keep the selected value in a trigger and place the search field first in the open menu. Divide related options with compact group labels, filter option labels and supporting descriptions together, hide empty groups, and show a clear empty state when nothing matches. Constrain long result sets to a scrolling menu rather than growing the page indefinitely. Hover and the keyboard-active option map to start, the committed selection maps to mid, and focus maps to warning. Support Arrow Up, Arrow Down, Home, End, Enter, and Escape, expose the active option with `aria-activedescendant`, and announce the filtered result count with a polite live region.
+
+Every independently reorderable or collapsible section card places its section controls inside the card at the trailing edge of the heading row. The compact control cluster contains move up, move down, and collapse/expand actions without an additional visible label. Use accessible names and tooltips for the icon-only buttons, disable move actions at the first and last boundaries, keep the heading visible when collapsed, and change the collapse icon from minus to plus when content is hidden. Reordering should update the document order and preserve focus on the moved control.
 
 Compact removable badge actions are allowed only as nested actions inside a passive badge. The badge remains flat and label-like; the nested action receives raised keycap button treatment, pointer cursor, focus ring, and mid action tone.
 

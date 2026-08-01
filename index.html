@@ -25,6 +25,7 @@
         console.warn("Theme preference unavailable.", error);
       }
     </script>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -163,9 +164,10 @@
         </div>
 
         <p class="section-note">
-          Buttons and other controls keep a raised keycap treatment at rest,
-          while labels stay flatter, smaller, and dot-marked so pressable UI
-          reads differently from passive tags before hover.
+          Buttons and other controls use compact raised keycaps with a crisp,
+          unblurred bottom edge. Action rows leave a full spacing step before
+          following content, while labels stay flatter, smaller, and dot-marked
+          so pressable UI reads differently from passive tags before hover.
         </p>
 
         <div class="form-grid">
@@ -2199,6 +2201,189 @@
               Use this control when users need to choose several comparable
               fields while staying in a compact form row.
             </p>
+          </article>
+
+          <article class="card stack searchable-select-card">
+            <span class="kicker">Grouped Searchable Select</span>
+            <p>
+              Search option names and supporting text while preserving useful
+              groups in a compact single-select menu.
+            </p>
+            <div class="searchable-select" data-searchable-select>
+              <button
+                type="button"
+                class="searchable-select-trigger"
+                id="example-searchable-select-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="example-searchable-select-popover"
+                data-searchable-select-trigger
+              >
+                <span data-searchable-select-value>
+                  Atlas · Planning workspace
+                </span>
+                <span class="searchable-select-chevron" aria-hidden="true">
+                  &gt;
+                </span>
+              </button>
+              <div
+                class="searchable-select-popover"
+                id="example-searchable-select-popover"
+                data-searchable-select-popover
+                hidden
+              >
+                <label class="searchable-select-search">
+                  <span class="visually-hidden">Search example options</span>
+                  <input
+                    type="search"
+                    placeholder="Search workspaces and teams..."
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded="false"
+                    aria-controls="example-searchable-select-listbox"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-searchable-select-input
+                  />
+                </label>
+                <div
+                  class="searchable-select-listbox"
+                  id="example-searchable-select-listbox"
+                  role="listbox"
+                  aria-label="Example grouped options"
+                  data-searchable-select-listbox
+                >
+                  <div
+                    class="searchable-select-group"
+                    role="group"
+                    aria-labelledby="searchable-group-workspaces"
+                    data-searchable-select-group
+                  >
+                    <p
+                      class="searchable-select-group-label"
+                      id="searchable-group-workspaces"
+                    >
+                      Workspaces
+                    </p>
+                    <div
+                      class="searchable-select-option is-active"
+                      id="searchable-option-atlas"
+                      role="option"
+                      aria-selected="true"
+                      data-searchable-select-option
+                      data-searchable-select-label="Atlas"
+                      data-searchable-select-description="Planning workspace"
+                    >
+                      <span class="searchable-select-option-code">AT</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Atlas</strong>
+                        <small>Planning workspace</small>
+                      </span>
+                    </div>
+                    <div
+                      class="searchable-select-option"
+                      id="searchable-option-beacon"
+                      role="option"
+                      aria-selected="false"
+                      data-searchable-select-option
+                      data-searchable-select-label="Beacon"
+                      data-searchable-select-description="Research workspace"
+                    >
+                      <span class="searchable-select-option-code">BE</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Beacon</strong>
+                        <small>Research workspace</small>
+                      </span>
+                    </div>
+                    <div
+                      class="searchable-select-option"
+                      id="searchable-option-cedar"
+                      role="option"
+                      aria-selected="false"
+                      data-searchable-select-option
+                      data-searchable-select-label="Cedar"
+                      data-searchable-select-description="Shared reference space"
+                    >
+                      <span class="searchable-select-option-code">CE</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Cedar</strong>
+                        <small>Shared reference space</small>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div
+                    class="searchable-select-group"
+                    role="group"
+                    aria-labelledby="searchable-group-teams"
+                    data-searchable-select-group
+                  >
+                    <p
+                      class="searchable-select-group-label"
+                      id="searchable-group-teams"
+                    >
+                      Teams
+                    </p>
+                    <div
+                      class="searchable-select-option"
+                      id="searchable-option-design"
+                      role="option"
+                      aria-selected="false"
+                      data-searchable-select-option
+                      data-searchable-select-label="Design"
+                      data-searchable-select-description="Interface standards"
+                    >
+                      <span class="searchable-select-option-code">DS</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Design</strong>
+                        <small>Interface standards</small>
+                      </span>
+                    </div>
+                    <div
+                      class="searchable-select-option"
+                      id="searchable-option-operations"
+                      role="option"
+                      aria-selected="false"
+                      data-searchable-select-option
+                      data-searchable-select-label="Operations"
+                      data-searchable-select-description="Service review"
+                    >
+                      <span class="searchable-select-option-code">OP</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Operations</strong>
+                        <small>Service review</small>
+                      </span>
+                    </div>
+                    <div
+                      class="searchable-select-option"
+                      id="searchable-option-support"
+                      role="option"
+                      aria-selected="false"
+                      data-searchable-select-option
+                      data-searchable-select-label="Support"
+                      data-searchable-select-description="Request queue"
+                    >
+                      <span class="searchable-select-option-code">SU</span>
+                      <span class="searchable-select-option-copy">
+                        <strong>Support</strong>
+                        <small>Request queue</small>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p class="searchable-select-empty" data-searchable-select-empty hidden>
+                  No matching options
+                </p>
+                <p
+                  class="searchable-select-status"
+                  role="status"
+                  aria-live="polite"
+                  data-searchable-select-status
+                >
+                  6 options available
+                </p>
+              </div>
+            </div>
           </article>
 
           <article class="card stack">

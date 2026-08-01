@@ -7,6 +7,7 @@
 - `styles.css`: token-driven light and dark theme implementation
 - `script.js`: theme, font, and demo interaction behavior
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
+- `configuration.md`: JSON5 config/secrets environment-reference and Docker Compose `.env` contract
 - `style.md`: canonical UI contract for humans and LLMs
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md`: implementation style rules for JS and TS
 - `SVELTE_NODE_HTTP_PROXY.md`: SvelteKit Node HTTP API proxy pattern for configurable browser-to-API routing
@@ -21,6 +22,7 @@ If you are using this repository from another project:
 - Read `design.md` first when an LLM or tool needs portable design tokens.
 - Read `style.md` second for the stricter local UI contract.
 - Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` third for implementation conventions.
+- Read `configuration.md` when work touches config files, secrets files, environment variables, `.env`, or Docker Compose.
 - Read `agents.md` if the consumer is an agent or LLM workflow.
 - Read `SVELTE_NODE_HTTP_PROXY.md` when work touches SvelteKit/Node HTTP API proxying or configurable API base paths.
 - Read `deployment.md` when work touches Docker builds, releases, startup diagnostics, health endpoints, image tags, or deployable service metadata.
@@ -68,6 +70,7 @@ This repository is intentionally documented for LLM-first consumption.
 - `design.md` is the portable design-token source for LLMs and compatible tooling.
 - `style.md` is the shortest local source of truth for UI decisions.
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md` is the source of truth for implementation conventions.
+- `configuration.md` is the source of truth for JSON5 environment references and optional Compose `.env` loading.
 - `SVELTE_NODE_HTTP_PROXY.md` is the source of truth for the SvelteKit Node API proxy pattern.
 - `deployment.md` is the source of truth for deployment metadata, startup version logging, health endpoint metadata, and image publishing.
 - `mcp-SPEC.md` is the source of truth for MCP server project structure, safety, auth, tools, and deployment expectations.

@@ -137,6 +137,8 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 ## Component Contract
 
 - Buttons, inputs, selects, textareas, tabs, switches, sliders, badges, alerts, tables, cards, and code blocks should inherit from shared theme tokens.
+- Buttons use compact raised-keycap chrome with a `2.35rem` minimum height, a top glint, a heavier bottom edge, and only a crisp unblurred bottom offset. Do not use soft exterior button shadows or glows; keyboard focus uses a crisp outline.
+- Action rows followed by another content block must reserve at least `1rem` of vertical layout space; elevation does not count as spacing.
 - Custom controls should use semantic tone tokens instead of inventing local accent palettes.
 - Neutral controls may use passive steel or gray tokens for baseline, utility, or non-semantic states.
 - Secondary accents such as `accent-alpha`, `accent-beta`, and `accent-gamma` may be used for function grouping or categorization, but not for status semantics.
@@ -145,6 +147,8 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 - Tables may use row-level hover and checkbox-selected highlighting, but the row color should still map back to neutral or one of the semantic tones.
 - Details/summary disclosure panels should use compact summary rows, warning focus, start hover, and mid open indicators.
 - Dropdown multi-select menus should map selected options to `mid`, keyboard focus to `warning`, and bulk menu actions to raised button chrome.
+- Searchable grouped selects should keep search inside the open menu, match both option labels and supporting descriptions, hide groups with no matches, constrain long results to a scrolling listbox, and expose a clear no-results state. Keyboard-active options use `start`, committed selections use `mid`, focus uses `warning`, and Arrow keys, Home, End, Enter, and Escape must work with `aria-activedescendant` and a polite result-count announcement.
+- Reorderable or collapsible section cards should place move-up, move-down, and collapse/expand controls inside the card at the trailing edge of its heading. Keep the cluster unlabeled visually, give every icon-only button an accessible name and tooltip, disable boundary move actions, keep headings visible while collapsed, and swap the minus icon for plus when collapsed.
 - Compact removable badge action buttons may sit inside badges, but the badge must still read as a passive label and only the nested raised keycap button should read as pressable.
 - Modal dialogs should use a tokenized backdrop, a panel-like dialog surface, visible close/copy actions, and copyable inspection text.
 - Table-cell path and payload inspection buttons should stay low-chrome, clamp previews, preserve table density, and open modal inspection for full values.

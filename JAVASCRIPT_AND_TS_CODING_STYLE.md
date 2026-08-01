@@ -133,3 +133,7 @@ Do not use JSON5 syntax in tool-owned or standards-required JSON files such as `
 For frontend translation files, JSON5 may be used as the source format, but emit or bundle strict JSON/JS objects for runtime if needed.
 
 After parsing JSON5 config, validate the result with the project’s schema/type validator.
+
+For application config and secrets, follow [`configuration.md`](./configuration.md): resolve exact whole-value `${ENV_VAR}` references recursively after JSON5 parsing and before schema validation.
+
+Do not create a second, hand-maintained environment-variable mapping for every config property. Reserve explicit direct overrides for values needed before config files can load, intentional compatibility aliases, and operational controls that are not represented in file config.

@@ -19,6 +19,12 @@ Before making UI, CSS, JS/TS, theme, font, component-style, logging/error-handli
 15. Only read `index.html`, `styles.css`, or `script.js` if the contract is insufficient or a concrete example is required.
 16. Reuse the existing semantic tokens and interaction rules before inventing new patterns.
 
+## Configuration Work
+
+Read [`configuration.md`](./configuration.md) when work touches JSON5 config, secrets, environment variables, `.env`, or Docker Compose. Treat it as the canonical environment-reference and Compose `.env` contract.
+
+Prefer config-file `${ENV_VAR}` references over duplicating every config property as a direct environment override. Docker Compose projects should inject an optional root `.env` into application services and continue normally when the file is absent.
+
 ## WSL2 Command Environment
 
 If this repository is run in WSL2 or another Linux environment:

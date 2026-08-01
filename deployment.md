@@ -14,6 +14,8 @@ Use this guide for services that need repeatable image publishing, traceable run
 - If the project exposes `/health`, `/healthz`, or `/readyz`, each endpoint should return `ok`, `version`, and `buildHash` or equivalent commit hash metadata.
 - Include Kubernetes logging metadata environment variables in startup diagnostics when they are available and the logger does not already attach them.
 - Configure logging sinks and gates so the startup diagnostics event is actually emitted to the intended outputs.
+- Docker Compose application services should load a repository-root `.env` when it exists and should still start when it does not.
+- Keep `.env` out of Git and the Docker build context; never copy it in a Dockerfile.
 - Keep secrets out of startup diagnostics and health responses. Log only booleans such as `apiTokenConfigured`, not secret values.
 - Tag pushed images with `latest`, the release version, and the release version plus Git hash.
 
@@ -103,6 +105,10 @@ CMD ["node", "src/index.js"]
 ```
 
 The final image should load `./build-info.json` at runtime. If the file is missing in local development, fall back to the package version and `BUILD_HASH` or `unknown`.
+
+## Docker Compose Environment Files
+
+Follow the optional Compose `.env` pattern in [`configuration.md`](./configuration.md). This belongs in `compose.yml` or `docker-compose.yml`, not in a Dockerfile. Compose must inject the variables into the application service because its automatic `.env` lookup for YAML interpolation alone does not guarantee that arbitrary variables are present inside the container.
 
 ## Runtime Build Info Loader
 
