@@ -49,7 +49,8 @@ If this repository is run in WSL2 or another Linux environment:
 - Prefer updating shared variables and shared component rules over adding one-off exceptions.
 - Follow the coding conventions defined in `JAVASCRIPT_AND_TS_CODING_STYLE.md` when editing JS, TS, or similar implementation files.
 - Deployable software should log its version and Git commit hash on startup, using the `deployment.md` build metadata pattern.
-- If a project exposes `/health`, `/healthz`, or `/readyz`, those endpoints should return `ok`, `version`, and `buildHash` or equivalent Git commit hash metadata.
+- Prefer exactly `/livez` and `/readyz`: liveness is dependency-free process/listener status, while readiness checks every dependency required for traffic. Do not add a redundant `/healthz` alias without a platform requirement.
+- Public probes should include service identity, `ok`, version/build metadata, and correlation metadata without exposing configuration revisions, counts, key IDs, tenant data, or topology.
 
 ## If Extending The System
 

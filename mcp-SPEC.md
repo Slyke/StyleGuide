@@ -14,8 +14,9 @@ This specification describes a reusable production pattern for an MCP server tha
 
 - Runtime SHOULD be a maintained LTS runtime for the language, such as Node.js 22 or newer for JavaScript projects.
 - The server SHOULD expose Streamable HTTP MCP at `/mcp`.
-- Health endpoints SHOULD be available at `/healthz` and `/readyz`.
-- Health responses SHOULD include `ok`, `version`, and `buildHash` when build metadata is available.
+- Probe endpoints SHOULD be available at `/livez` and `/readyz`; a redundant `/healthz` alias SHOULD NOT be added unless required by the deployment platform.
+- `/livez` SHOULD be dependency-free process/listener status. `/readyz` SHOULD check the upstream API and every other dependency required to serve MCP requests.
+- Probe responses SHOULD include service identity, `ok`, `version`, `buildHash`, and correlation metadata when available, without exposing internal counts, revisions, keys, tenants, or topology.
 - HTTP SHOULD be enabled for trusted LAN or sidecar deployments; HTTPS SHOULD be supported for direct remote access.
 - The server SHOULD support graceful shutdown on `SIGINT` and `SIGTERM`.
 - Each MCP request SHOULD create a fresh transport/session object unless the project has a clear session-state requirement.

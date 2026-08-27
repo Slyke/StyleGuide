@@ -11,7 +11,9 @@ Use this guide for services that need repeatable image publishing, traceable run
   - `buildHash`: the Git commit hash for the built source.
 - Load the generated build metadata on startup from the runtime image.
 - Emit a startup log entry that includes `version` and `buildHash` before the service starts handling normal work.
-- If the project exposes `/health`, `/healthz`, or `/readyz`, each endpoint should return `ok`, `version`, and `buildHash` or equivalent commit hash metadata.
+- Expose `/livez` for process liveness and `/readyz` for traffic readiness. Do not add a redundant `/healthz` alias unless a platform integration explicitly requires it.
+- `/livez` must be cheap and dependency-free. `/readyz` owns database, cache, upstream, and other required dependency checks.
+- Both probes should return `ok`, service identity, `version`, `buildHash` or equivalent commit hash metadata, and the call's correlation ID.
 - Include Kubernetes logging metadata environment variables in startup diagnostics when they are available and the logger does not already attach them.
 - Configure logging sinks and gates so the startup diagnostics event is actually emitted to the intended outputs.
 - Docker Compose application services should load a repository-root `.env` when it exists and should still start when it does not.
@@ -272,19 +274,31 @@ env:
     value: your-deployment-name
 ```
 
-## Health Endpoints
+## Probe Endpoints
 
-If a project has any health endpoint, including `/health`, `/healthz`, or `/readyz`, return a compact response that confirms the process is alive and identifies the running build:
+Use exactly two probes unless an external platform imposes another path:
+
+- `GET /livez` confirms only that the process and HTTP listener can answer. It must not call databases, caches, APIs, queues, DNS, certificate services, or other dependencies. A successful handler returns HTTP 200.
+- `GET /readyz` determines whether the instance should receive traffic. It checks every dependency required to serve normal requests and returns HTTP 500 when any required check fails.
+
+Do not make liveness fail for an external outage. Restarting a healthy process cannot repair PostgreSQL, Redis, or another service; readiness should remove the instance from traffic while it recovers.
+
+The compact liveness shape is:
 
 ```json
 {
   "ok": true,
+  "probe": "liveness",
+  "service": "example-api",
   "version": "0.4.2",
-  "buildHash": "abc1234def56"
+  "buildHash": "abc1234def56",
+  "correlation_id": "0198f3f5-d9af-7a5b-8f1c-fcb2d40c8241"
 }
 ```
 
-Use the same build-info loader as startup diagnostics. Do not add secret values, full environment dumps, or noisy internals to health responses. When readiness has a separate dependency check, keep `ok` tied to that endpoint meaning and still include `version` and `buildHash`.
+Readiness may add a `checks` object with boolean status, a short description, and bounded latency for each dependency. Keep it operationally useful but publicly safe. Do not expose configuration revisions, record counts, key counts, key IDs, tenant names, topology, full error messages, connection strings, or other internals. Put detailed runtime state behind an authenticated administrator status endpoint.
+
+Use the same build-info loader as startup diagnostics. Each call gets one correlation ID. A browser-facing frontend proxy should generate it and forward it to the API; a directly exposed API should accept a valid configured format and generate one when absent or malformed. Return the same ID in `x-correlation-id` and, for application-owned JSON, `correlation_id`. Do not introduce a second request-ID alias unless the system has a distinct, documented semantic need for it.
 
 ## Image Publishing
 
@@ -341,6 +355,8 @@ Before considering a deployment complete:
 - Confirm startup logs include `version` and `buildHash`.
 - Confirm Kubernetes metadata appears once in startup logs when the environment provides `K8S_*` values.
 - Confirm logging sinks or gates emit `SERVICE_BOOT_DIAGNOSTICS` to the outputs required by the deployment.
-- Confirm `/health`, `/healthz`, and `/readyz` include `ok`, `version`, and `buildHash` when the project exposes them.
+- Confirm `/livez` succeeds without making dependency calls and includes service identity, `ok`, `version`, `buildHash`, and correlation metadata.
+- Confirm `/readyz` checks every required dependency, returns HTTP 500 for a failed required check, and does not expose sensitive runtime details.
+- Confirm liveness remains HTTP 200 during a simulated external dependency outage while readiness becomes HTTP 500.
 - Confirm the pushed registry tags include `latest`, `$VERSION`, and `$VERSION-$SHA`.
 - Prefer deploying the `$VERSION-$SHA` tag when exact rollback behavior matters.

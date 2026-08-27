@@ -212,7 +212,7 @@ Install the proxy in `hooks.server.ts` after request locals are initialized and 
 Typical order:
 
 1. create or load request context
-2. set correlation ID and auth/session locals
+2. generate one correlation ID at the browser-facing edge and store it in request locals
 3. run the API proxy handler
 4. fall through to SvelteKit `resolve(event)` for non-proxy paths
 
@@ -258,9 +258,11 @@ Useful forwarded headers:
 - `x-forwarded-host`: original browser-facing host
 - `x-forwarded-proto`: original browser-facing protocol
 - `x-forwarded-for`: append the client address when available
-- `x-correlation-id`: current request correlation ID if the project uses one
+- `x-correlation-id`: the UUID generated for the current browser-facing call; overwrite browser input before forwarding it to the API
 
 Let Node fetch set the upstream `host`, `content-length`, and transfer headers.
+
+The upstream API should return the same `x-correlation-id`, use it in logs and audit records, and generate its own only when no valid edge value was supplied. Avoid an identical `x-request-id` compatibility alias unless request IDs have a separate documented lifecycle.
 
 ## CORS
 
