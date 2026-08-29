@@ -99,9 +99,9 @@ themes:
       panel: "0 18px 40px rgba(0, 0, 0, 0.34)"
       hover: "0 0 0 1px rgba(0, 182, 255, 0.2)"
       focus: "0 0 0 3px rgba(255, 188, 58, 0.28)"
-      controlRest: "inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -2px 0 rgba(0, 0, 0, 0.42), 0 0.28rem 0 rgba(0, 0, 0, 0.46)"
-      controlHover: "inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -2px 0 rgba(0, 0, 0, 0.48), 0 0.32rem 0 rgba(0, 0, 0, 0.5)"
-      controlActive: "inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 2px 6px rgba(0, 0, 0, 0.34), inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0.08rem 0 rgba(0, 0, 0, 0.38)"
+      controlRest: none
+      controlHover: none
+      controlActive: none
       linkHover: "0 0 10px rgba(0, 182, 255, 0.28)"
   light:
     colorScheme: light
@@ -184,9 +184,9 @@ themes:
       panel: "0 12px 28px rgba(16, 32, 55, 0.08)"
       hover: "0 0 0 1px rgba(0, 126, 219, 0.14)"
       focus: "0 0 0 3px rgba(204, 122, 0, 0.2)"
-      controlRest: "inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -2px 0 rgba(166, 182, 201, 0.44), 0 0.24rem 0 rgba(137, 154, 174, 0.44)"
-      controlHover: "inset 0 1px 0 rgba(255, 255, 255, 0.96), inset 0 -2px 0 rgba(150, 168, 190, 0.5), 0 0.28rem 0 rgba(137, 154, 174, 0.5)"
-      controlActive: "inset 0 1px 0 rgba(255, 255, 255, 0.58), inset 0 2px 6px rgba(137, 154, 174, 0.24), inset 0 0 0 1px rgba(16, 32, 55, 0.08), 0 0.08rem 0 rgba(137, 154, 174, 0.34)"
+      controlRest: none
+      controlHover: none
+      controlActive: none
       linkHover: none
 typography:
   defaultStack: "ui-monospace, SF Mono, SFMono-Regular, Menlo, Monaco, Cascadia Mono, Cascadia Code, Consolas, Lucida Console, Roboto Mono, Droid Sans Mono, Noto Sans Mono, Ubuntu Mono, DejaVu Sans Mono, Liberation Mono, Courier New, monospace"
@@ -446,7 +446,7 @@ Fixed-format toolbars, tab groups, counters, tables, and button groups must use 
 
 ## Pressable controls
 
-Buttons, tabs, function chips, removable badge actions, and swatch toggles are raised keycaps. At rest they have a visible one-pixel top glint, a one-pixel bottom shade, a heavy bottom border, the theme `controlRest` shadow, and no blurred exterior glow. Hover biases toward start unless the component intentionally preserves a semantic or accent family, raises by `0.06rem`, and uses `controlHover`. Active state moves down `0.16rem` and uses `controlActive`. Keyboard focus uses a crisp warning outline or warning focus shadow without replacing the underlying tone.
+Buttons, tabs, function chips, removable badge actions, and swatch toggles use compact keycap geometry without control shadows. At rest they have a visible one-pixel top glint, a one-pixel bottom shade, and a heavy bottom border. Hover biases toward start unless the component intentionally preserves a semantic or accent family and raises by `0.06rem`; active state moves down `0.16rem`. Keyboard focus uses a crisp warning outline or warning focus ring without replacing the underlying tone.
 
 The neutral button surface is `panelStrong`; primary uses start strong fill/border/ink; secondary uses mid strong fill/border/ink; ghost uses `controlBg` and the neutral border. Buttons are inline-flex, centered, bold, and use the exact metrics from the YAML. Destructive styling is reserved for truly destructive actions.
 

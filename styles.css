@@ -67,19 +67,9 @@ html[data-theme="dark"] {
   --shadow-panel: 0 18px 40px rgba(0, 0, 0, 0.34);
   --shadow-hover: 0 0 0 1px rgba(0, 182, 255, 0.2);
   --shadow-focus: 0 0 0 3px rgba(255, 188, 58, 0.28);
-  --shadow-control-rest:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.42),
-    0 0.28rem 0 rgba(0, 0, 0, 0.46);
-  --shadow-control-hover:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.48),
-    0 0.32rem 0 rgba(0, 0, 0, 0.5);
-  --shadow-control-active:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 2px 6px rgba(0, 0, 0, 0.34),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
-    0 0.08rem 0 rgba(0, 0, 0, 0.38);
+  --shadow-control-rest: 0 0 0 transparent;
+  --shadow-control-hover: 0 0 0 transparent;
+  --shadow-control-active: 0 0 0 transparent;
   --shadow-link-hover: 0 0 10px rgba(0, 182, 255, 0.28);
   --color-link-hover: #89e9ff;
   --color-inline-code-bg: rgba(0, 182, 255, 0.12);
@@ -176,19 +166,9 @@ html[data-theme="light"] {
   --shadow-panel: 0 12px 28px rgba(16, 32, 55, 0.08);
   --shadow-hover: 0 0 0 1px rgba(0, 126, 219, 0.14);
   --shadow-focus: 0 0 0 3px rgba(204, 122, 0, 0.2);
-  --shadow-control-rest:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -2px 0 rgba(166, 182, 201, 0.44),
-    0 0.24rem 0 rgba(137, 154, 174, 0.44);
-  --shadow-control-hover:
-    inset 0 1px 0 rgba(255, 255, 255, 0.96),
-    inset 0 -2px 0 rgba(150, 168, 190, 0.5),
-    0 0.28rem 0 rgba(137, 154, 174, 0.5);
-  --shadow-control-active:
-    inset 0 1px 0 rgba(255, 255, 255, 0.58),
-    inset 0 2px 6px rgba(137, 154, 174, 0.24),
-    inset 0 0 0 1px rgba(16, 32, 55, 0.08),
-    0 0.08rem 0 rgba(137, 154, 174, 0.34);
+  --shadow-control-rest: 0 0 0 transparent;
+  --shadow-control-hover: 0 0 0 transparent;
+  --shadow-control-active: 0 0 0 transparent;
   --shadow-link-hover: none;
   --color-link-hover: #005e9d;
   --color-inline-code-bg: rgba(0, 126, 219, 0.1);
