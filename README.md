@@ -7,6 +7,8 @@
 - `styles.css`: token-driven light and dark theme implementation
 - `script.js`: theme, font, and demo interaction behavior
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
+- `logging/logging.md`: portable logging and structured-error contract
+- `logging/rust/`: reusable Rust logger, JSON5 configuration/error-code tools, and Cargo helpers
 - `configuration.md`: JSON5 config/secrets environment-reference and Docker Compose `.env` contract
 - `style.md`: canonical UI contract for humans and LLMs
 - `JAVASCRIPT_AND_TS_CODING_STYLE.md`: implementation style rules for JS and TS
@@ -22,6 +24,7 @@ If you are using this repository from another project:
 - Read `design.md` first when an LLM or tool needs portable design tokens.
 - Read `style.md` second for the stricter local UI contract.
 - Read `JAVASCRIPT_AND_TS_CODING_STYLE.md` third for implementation conventions.
+- Read `logging/logging.md` when work touches logging or structured errors; use [`logging/rust/README.md`](./logging/rust/README.md) for Rust integration and Cargo commands.
 - Read `configuration.md` when work touches config files, secrets files, environment variables, `.env`, or Docker Compose.
 - Read `agents.md` if the consumer is an agent or LLM workflow.
 - Read `SVELTE_NODE_HTTP_PROXY.md` when work touches SvelteKit/Node HTTP API proxying or configurable API base paths.

@@ -4,6 +4,20 @@ Use this when you have copied the logger files into another repo and need to wir
 
 Important: an error or logger key should never be reused. Each code path that produces a structured error or gated log should have its own unique key.
 
+## Rust implementation
+
+The reusable Rust implementation lives in [`./rust`](./rust/README.md). It includes
+a standalone Cargo library, async logging/error wrappers, console/stdout/stderr,
+file, HTTP/HTTPS, and UDP/TCP/TLS syslog sinks, plus JSON5 configuration and
+error-code catalogs with the [environment-reference contract](../configuration.md).
+
+From the repository root, run `cargo logger-test`, `cargo logger-check`, or
+`cargo logger-example`. Error-code helpers include `cargo error-add`,
+`cargo error-edit`, `cargo error-delete`, and `cargo error-validate`. See the
+[Rust README](./rust/README.md) for integration, configuration, and command options.
+
+The JavaScript setup is documented below.
+
 ## 1. Copy required files
 
 Copy these files into your backend project:
