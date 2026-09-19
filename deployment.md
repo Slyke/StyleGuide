@@ -309,7 +309,7 @@ USERNAME=YOURUSERNAME
 DOMAIN=registry.example.com
 IMAGE_NAME=your-service
 # VERSION="dev"
-VERSION=v0.4.2
+VERSION=v0.1.0
 
 git tag -a "$VERSION" -m "$VERSION"
 git push origin "$VERSION"
@@ -317,7 +317,7 @@ git push origin "$VERSION"
 
 SHA=$(git rev-parse --short=12 HEAD)
 
-docker build -t "$IMAGE_NAME:build" -f ./Dockerfile .
+docker build --build-arg BUILD_HASH="$SHA" --build-arg BUILD_VERSION="$VERSION" -t "$IMAGE_NAME:build" -f ./Dockerfile .
 
 for TAG in latest "$VERSION" "$VERSION-$SHA"; do
   docker tag "$IMAGE_NAME:build" "$USERNAME/$IMAGE_NAME:$TAG"
