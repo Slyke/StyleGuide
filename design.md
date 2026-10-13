@@ -449,7 +449,7 @@ layout:
   pagePaddingMobile: "1.5rem 0"
   sectionGap: "1.5rem"
 motion:
-  transition: "120ms ease-out"
+  transition: "60ms ease-out"
   controlHoverTranslateY: "-0.06rem"
   controlActiveTranslateY: "0.16rem"
 semanticTones:
@@ -557,7 +557,7 @@ Before the first paint, read the four persistence keys in the YAML front matter.
 
 Apply `box-sizing: border-box` to every element and pseudo-element. The document and body use the active background, active text, and selected page-wide font stack. The body has zero margin and a minimum height of `100vh`. Buttons, inputs, selects, textareas, progress, meter, and dialogs inherit the page font. Text selection uses the active start color as its background and the page background as its text color.
 
-All panels, cards, choice groups, table wrappers, alerts, swatches, tabs, buttons, swatch toggles, function chips, disclosures, multi-select containers/options, badge actions, inspection cell buttons, dialogs, fields, and switch tracks transition background color, border color, box shadow, text color, and transform with the shared `120ms ease-out` timing.
+All panels, cards, choice groups, table wrappers, alerts, swatches, tabs, buttons, swatch toggles, function chips, disclosures, multi-select containers/options, badge actions, inspection cell buttons, dialogs, fields, and switch tracks transition background color, border color, box shadow, text color, and transform with the shared `60ms ease-out` timing.
 
 ## Toolbar state and option contract
 

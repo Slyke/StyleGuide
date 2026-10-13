@@ -100,7 +100,7 @@ html[data-theme="dark"] {
   --container: 76rem;
   --content-gutter: 2rem;
   --content-gutter-mobile: 1rem;
-  --transition: 120ms ease-out;
+  --transition: 60ms ease-out;
 }
 
 html[data-theme="light"] {

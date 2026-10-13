@@ -116,7 +116,7 @@ Use these tone meanings consistently across alerts, buttons, toggles, inputs, ta
 - Pressable controls should read as raised keycaps at rest, with a visible top glint, heavier bottom edge, and downward active movement.
 - Disabled interactive controls should use dashed borders or tracks, reduced saturation, and no lift.
 - Motion should stay fast and restrained.
-- Current baseline transition timing is `120ms ease-out`.
+- Current baseline transition timing is `60ms ease-out`.
 
 ## Theme Intent
 
