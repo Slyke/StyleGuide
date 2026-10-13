@@ -609,6 +609,8 @@ Apply `box-sizing: border-box` to every element and pseudo-element. The document
 
 All panels, cards, choice groups, table wrappers, alerts, swatches, tabs, buttons, swatch toggles, function chips, disclosures, multi-select containers/options, badge actions, inspection cell buttons, dialogs, fields, and switch tracks transition background color, border color, box shadow, text color, and transform with the shared `60ms ease-out` timing.
 
+Native selects are the exception: transition only border color and box shadow. Do not animate their background, text color, or transform, because repainting a native option popup can reset its highlighted index while open.
+
 ## Toolbar state and option contract
 
 The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), Retro (`retro`), and Professional (`professional`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
@@ -702,7 +704,7 @@ A removable badge may contain one nested **Remove** action. Keep the outer badge
 
 ## Fields, choices, ranges, and switches
 
-Text-like inputs, selects, and textareas use `controlBg`, the neutral border, active text, medium radius, and the exact field dimensions. Placeholder text uses `textFaint`. Hover biases the border and surface toward start; keyboard focus changes the border and crisp focus ring to warning. Textareas resize vertically. Tone inputs use the owning tone soft fill, border, and ink while retaining field geometry.
+Text-like inputs, selects, and textareas use `controlBg`, the neutral border, active text, medium radius, and the exact field dimensions. Placeholder text uses `textFaint`. Inputs and textareas bias the border and surface toward start on hover. Native selects have no hover styling: enabled active presses use the shared field interaction tokens, except during visible keyboard focus, which retains the warning border and crisp focus ring. Native selects animate only border color and box shadow so pointer entry/exit cannot repaint and reset the open option popup. Textareas resize vertically. Tone inputs use the owning tone soft fill, border, and ink while retaining field geometry.
 
 Checkboxes and radios use native semantics and mid as the neutral checked accent; tone cards override the checked accent with their owning tone. Choices are flex rows with `0.5rem` gaps and muted labels that become full text on hover.
 

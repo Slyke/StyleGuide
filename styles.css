@@ -652,7 +652,6 @@ pre {
 .inspection-cell-button,
 .modal-dialog,
 input,
-select,
 textarea,
 .switch-track {
   transition:
@@ -1293,8 +1292,20 @@ textarea::placeholder {
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
-select:hover,
 textarea:hover {
+  border-color: var(--field-hover-border);
+  background: var(--field-hover-bg);
+  box-shadow: var(--field-hover-shadow);
+}
+
+/* Native option popups can rebuild when the select's surface animates. */
+select {
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+select:enabled:active:not(:focus-visible) {
   border-color: var(--field-hover-border);
   background: var(--field-hover-bg);
   box-shadow: var(--field-hover-shadow);
@@ -1379,7 +1390,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled,
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled:hover,
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):disabled:focus-visible,
 select:disabled,
-select:disabled:hover,
+select:disabled:active,
 select:disabled:focus-visible,
 textarea:disabled,
 textarea:disabled:hover,

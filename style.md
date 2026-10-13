@@ -161,6 +161,7 @@ ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
 ## Component Contract
 
 - Buttons, inputs, selects, textareas, tabs, switches, sliders, badges, alerts, tables, cards, and code blocks should inherit from shared theme tokens.
+- Native selects use active-press feedback instead of hover styling. Keep keyboard focus mapped to warning, and animate only the border and focus shadow; surface/text transitions can rebuild an open native option popup and reset its highlighted index.
 - Buttons use compact raised-keycap chrome with a `2.35rem` minimum height, a top glint, a heavier bottom edge, and only a crisp unblurred bottom offset. Do not use soft exterior button shadows or glows; keyboard focus uses a crisp outline.
 - Action rows followed by another content block must reserve at least `1rem` of vertical layout space; elevation does not count as spacing.
 - Custom controls should use semantic tone tokens instead of inventing local accent palettes.
