@@ -1,21 +1,24 @@
 ---
 version: alpha
-name: Phox-Styleguide
-description: Standalone, machine-readable reconstruction contract for the Phox-Styleguide monospace light/dark technical UI.
+name: D4rk-Styleguide
+description: Standalone, machine-readable reconstruction contract for the D4rk-Styleguide light/dark technical UI with selectable monospace, sans-serif, and serif typography.
 source-of-truth: design.md
 reconstruction:
   fidelity: "Reproduce the complete reference page structure, styling, states, accessibility, and behavior from this file alone."
   defaultTheme: dark
+  defaultPalette: d4rk
   defaultFont: system-stack
   defaultContentWidth: standard
   rootAttributes:
     theme: data-theme
+    palette: data-palette
     font: data-font
     contentWidth: data-content-width
   persistence:
-    theme: phox-styleguide-theme
-    font: phox-styleguide-font
-    contentWidth: phox-styleguide-content-width
+    theme: d4rk-styleguide-theme
+    palette: d4rk-styleguide-palette
+    font: d4rk-styleguide-font
+    contentWidth: d4rk-styleguide-content-width
   responsiveBreakpoint: "800px"
 themes:
   dark:
@@ -188,9 +191,193 @@ themes:
       controlHover: none
       controlActive: none
       linkHover: none
+themeFamilies:
+  default: d4rk
+  inheritance: "Start with themes[mode], apply sharedOverrides for non-D4rk families, then apply family shape, shadows, colors, and modes[mode].colors."
+  sharedOverrides:
+    controlBg: "ref:bgElevated"
+    controlStrong: "ref:panelStrong"
+    preBg: "ref:bg"
+    preText: "ref:text"
+  d4rk:
+    label: D4rk
+    description: "The original neon technical baseline; inherits the complete mode and shape tokens unchanged."
+  terminal:
+    label: Terminal
+    description: "Phosphor greens, crisp edges, and flat console surfaces."
+    shape:
+      radiusSm: "0"
+      radiusMd: "0.15rem"
+      radiusLg: "0.25rem"
+    shadows:
+      panel: "none"
+    colors:
+      preText: "ref:midInk"
+      inlineCodeBg: "ref:midFill"
+      inlineCodeText: "ref:midInk"
+    modes:
+      dark:
+        colors:
+          bg: "#050b08"
+          bgElevated: "#0a1510"
+          panel: "#0b1912"
+          panelStrong: "#10251a"
+          border: "#2a513a"
+          borderStrong: "#477b57"
+          text: "#dcffe5"
+          textMuted: "#a5c9af"
+          textFaint: "#86ac91"
+      light:
+        colors:
+          bg: "#e5eee5"
+          bgElevated: "#f6fff5"
+          panel: "#f0f8ed"
+          panelStrong: "#deebdc"
+          border: "#aec8ad"
+          borderStrong: "#719570"
+          text: "#17361f"
+          textMuted: "#395c40"
+          textFaint: "#526c54"
+  bubbly:
+    label: Bubbly
+    description: "Lilac and rose surfaces with generous, rounded corners."
+    shape:
+      radiusSm: "0.85rem"
+      radiusMd: "1.5rem"
+      radiusLg: "2rem"
+    shadows:
+      panel: "0 12px 28px var(--color-neutral-fill)"
+    modes:
+      dark:
+        colors:
+          bg: "#1b1427"
+          bgElevated: "#2b203b"
+          panel: "#251c34"
+          panelStrong: "#392b4b"
+          border: "#514163"
+          borderStrong: "#756089"
+          text: "#fff1fc"
+          textMuted: "#d8bedf"
+          textFaint: "#b59ec4"
+      light:
+        colors:
+          bg: "#f7edf9"
+          bgElevated: "#fffbff"
+          panel: "#fff7fd"
+          panelStrong: "#f0e0f4"
+          border: "#d9c1e0"
+          borderStrong: "#ac85ba"
+          text: "#40214e"
+          textMuted: "#735880"
+          textFaint: "#80658d"
+  paper:
+    label: Paper
+    description: "Warm parchment, quiet ink, and understated, square-edged surfaces."
+    shape:
+      radiusSm: "0.15rem"
+      radiusMd: "0.3rem"
+      radiusLg: "0.45rem"
+    shadows:
+      panel: "none"
+    modes:
+      dark:
+        colors:
+          bg: "#1d1b18"
+          bgElevated: "#282520"
+          panel: "#24211d"
+          panelStrong: "#302c26"
+          border: "#494239"
+          borderStrong: "#776b5c"
+          text: "#f5ecd9"
+          textMuted: "#c6bba7"
+          textFaint: "#b0a18a"
+      light:
+        colors:
+          bg: "#eee8db"
+          bgElevated: "#fffdf5"
+          panel: "#f8f3e8"
+          panelStrong: "#e9e1d1"
+          border: "#cfc4b1"
+          borderStrong: "#a39379"
+          text: "#322d25"
+          textMuted: "#63594a"
+          textFaint: "#776a55"
+  ocean:
+    label: Ocean
+    description: "Deep navy, sea-glass surfaces, and gently rounded edges."
+    shape:
+      radiusSm: "0.5rem"
+      radiusMd: "0.9rem"
+      radiusLg: "1.5rem"
+    shadows:
+      panel: "0 12px 28px var(--color-neutral-fill)"
+    modes:
+      dark:
+        colors:
+          bg: "#061922"
+          bgElevated: "#0b2632"
+          panel: "#0a222d"
+          panelStrong: "#103340"
+          border: "#235565"
+          borderStrong: "#3f7b8b"
+          text: "#e2f8fa"
+          textMuted: "#aacdd5"
+          textFaint: "#82adb9"
+      light:
+        colors:
+          bg: "#e7f3f5"
+          bgElevated: "#f7feff"
+          panel: "#effbfc"
+          panelStrong: "#d9edf0"
+          border: "#adced5"
+          borderStrong: "#709fa9"
+          text: "#163d47"
+          textMuted: "#426772"
+          textFaint: "#557983"
+  retro:
+    label: Retro
+    description: "Warm arcade tones, squared corners, and crisp offset panel shadows."
+    shape:
+      radiusSm: "0"
+      radiusMd: "0"
+      radiusLg: "0"
+    shadows:
+      panel: "4px 4px 0 var(--color-border-strong)"
+    modes:
+      dark:
+        colors:
+          bg: "#211811"
+          bgElevated: "#302319"
+          panel: "#2a1e15"
+          panelStrong: "#3c2b1c"
+          border: "#6b4c30"
+          borderStrong: "#a77949"
+          text: "#ffedce"
+          textMuted: "#dfbf91"
+          textFaint: "#c5a273"
+      light:
+        colors:
+          bg: "#f3dfb7"
+          bgElevated: "#fff4d8"
+          panel: "#ffedc7"
+          panelStrong: "#ecd2a0"
+          border: "#c6a270"
+          borderStrong: "#99703d"
+          text: "#422f1c"
+          textMuted: "#715333"
+          textFaint: "#80623e"
 typography:
   defaultStack: "ui-monospace, SF Mono, SFMono-Regular, Menlo, Monaco, Cascadia Mono, Cascadia Code, Consolas, Lucida Console, Roboto Mono, Droid Sans Mono, Noto Sans Mono, Ubuntu Mono, DejaVu Sans Mono, Liberation Mono, Courier New, monospace"
   fontOptions:
+    system-sans: "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Arial, sans-serif"
+    segoe-ui: "\"Segoe UI\", Arial, sans-serif"
+    arial: "Arial, Helvetica, sans-serif"
+    verdana: "Verdana, Geneva, sans-serif"
+    trebuchet-ms: "\"Trebuchet MS\", Arial, sans-serif"
+    system-serif: "ui-serif, Georgia, \"Times New Roman\", serif"
+    georgia: "Georgia, \"Times New Roman\", serif"
+    palatino: "Palatino, \"Palatino Linotype\", \"Book Antiqua\", Georgia, serif"
+    times-new-roman: "\"Times New Roman\", Times, serif"
     system-stack: "ui-monospace, SF Mono, SFMono-Regular, Menlo, Monaco, Cascadia Mono, Cascadia Code, Consolas, Lucida Console, Roboto Mono, Droid Sans Mono, Noto Sans Mono, Ubuntu Mono, DejaVu Sans Mono, Liberation Mono, Courier New, monospace"
     ui-mono: "ui-monospace, monospace"
     generic-mono: "monospace"
@@ -354,29 +541,32 @@ components:
     selectedIndicatorSize: "0.62rem"
 ---
 
-# Phox-Styleguide Standalone Design Contract
+# D4rk-Styleguide Standalone Design Contract
 
 ## Reconstruction mandate
 
 This document is the complete source of truth for recreating the reference interface. A consumer must not need the original HTML, CSS, JavaScript, another Markdown file, or unstated visual assumptions. Reproduce the root state model, ordered page anatomy, component inventory, exact token values, interaction behavior, accessibility semantics, and responsive changes specified below.
 
-The result is a compact technical style-guide UI, not a marketing page. It uses monochrome structure, flat layered surfaces, semantic neon tones, full-page monospace typography, and raised keycap geometry for actions. Do not introduce gradients, decorative blobs, ornamental artwork, ambient control glows beyond the explicitly documented function-chip and status-dot halos, or unrelated accent colors.
+The result is a compact technical style-guide UI, not a marketing page. It uses monochrome structure, flat layered surfaces, semantic neon tones, page-wide selectable typography, and raised keycap geometry for actions. Do not introduce gradients, decorative blobs, ornamental artwork, ambient control glows beyond the explicitly documented function-chip and status-dot halos, or unrelated accent colors.
 
 ## Root and document contract
 
-Use an HTML document titled **Phox-Styleguide**, with language set to English, UTF-8 encoding, and the standard responsive viewport declaration. The root element starts with `data-theme="dark"`, `data-font="system-stack"`, and `data-content-width="standard"`. Set `color-scheme` from the active theme.
+Use an HTML document titled **D4rk-Styleguide**, with language set to English, UTF-8 encoding, and the standard responsive viewport declaration. The root element starts with `data-palette="d4rk"`, `data-theme="dark"`, `data-font="system-stack"`, and `data-content-width="standard"`. `data-palette` identifies the theme family; `data-theme` retains the existing light/dark mode contract. Set `color-scheme` from the active mode.
 
-Before the first paint, read the three persistence keys in the YAML front matter. Apply a saved theme only when it is `light` or `dark`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Storage failures must not break the page.
+Before the first paint, read the four persistence keys in the YAML front matter. Apply a saved mode only when it is `light` or `dark`, and a saved palette only when it is `d4rk`, `terminal`, `bubbly`, `paper`, `ocean`, or `retro`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Use the D4rk persistence keys for all preferences. Storage failures must not break the page.
 
-Apply `box-sizing: border-box` to every element and pseudo-element. The document and body use the active background, active text, and selected page-wide mono stack. The body has zero margin and a minimum height of `100vh`. Buttons, inputs, selects, textareas, progress, meter, and dialogs inherit the page font. Text selection uses the active start color as its background and the page background as its text color.
+Apply `box-sizing: border-box` to every element and pseudo-element. The document and body use the active background, active text, and selected page-wide font stack. The body has zero margin and a minimum height of `100vh`. Buttons, inputs, selects, textareas, progress, meter, and dialogs inherit the page font. Text selection uses the active start color as its background and the page background as its text color.
 
 All panels, cards, choice groups, table wrappers, alerts, swatches, tabs, buttons, swatch toggles, function chips, disclosures, multi-select containers/options, badge actions, inspection cell buttons, dialogs, fields, and switch tracks transition background color, border color, box shadow, text color, and transform with the shared `120ms ease-out` timing.
 
 ## Toolbar state and option contract
 
-The theme control is a raised button with a `10rem` minimum width. Its left label is “Theme”; its right state is a `1.5rem`-minimum pill with `0.1rem 0.55rem` padding, start border/fill/ink, `0.75rem` uppercase text, and `0.1em` tracking. Dark sets `aria-pressed="false"`, state text “Dark,” and the Forms heading helper to “dark theme active.” Light sets `aria-pressed="true"`, state text “Light,” and that helper to “light theme active.” Clicking toggles the root theme and persists the new value.
+The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), and Retro (`retro`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
 
 Toolbar fields are one-column grids with `0.5rem` gaps. Desktop toolbar selects span the available width and have an `18rem` minimum width. The font selector groups options exactly as follows:
+
+- Sans Serif: System Sans (`system-sans`), Segoe UI (`segoe-ui`), Arial (`arial`), Verdana (`verdana`), Trebuchet MS (`trebuchet-ms`).
+- Serif: System Serif (`system-serif`), Georgia (`georgia`), Palatino (`palatino`), Times New Roman (`times-new-roman`).
 
 - Browser / System: System Mono Stack (`system-stack`), UI Monospace (`ui-mono`), Generic Monospace (`generic-mono`).
 - Apple: SF Mono / SFMono-Regular (`sf-mono`), Menlo (`menlo`), Monaco (`monaco`).
@@ -388,7 +578,7 @@ The content-width selector labels are Narrow reading width (`min`), App viewport
 
 ## Color and state model
 
-The complete theme values are normative in the YAML front matter. Every tone has a base, soft, border, fill, strong fill, and ink role. Use those roles consistently rather than calculating new colors.
+The complete theme values are normative in the YAML front matter. Compose each theme family using `themeFamilies.inheritance`; `ref:` values are live references to the named token, and `var(--color-border-strong)` in the Retro panel shadow references the active borderStrong color. Every family supports both modes. Families change surfaces, text, geometry, panel shadows, and code treatments while inheriting semantic and secondary accent tones from the mode. Every tone has a base, soft, border, fill, strong fill, and ink role. Use those roles consistently rather than calculating new colors.
 
 - **Start** is blue: primary action, hover energy, initial state, and active affordance.
 - **Mid** is green: informational, selected, checked, switched-on, and in-progress state.
@@ -400,7 +590,7 @@ Blue and green must remain visibly distinct. Green and amber must remain visibly
 
 ## Typography
 
-Everything is monospace: display type, headings, paragraphs, controls, options, labels, tables, badges, helper text, code, and form values. A root font change updates the entire page.
+The default is monospace. The font selector also offers sans-serif and serif stacks. Drive page-wide typography through `--font-ui`; retain `--font-mono` as the default monospace fallback. Display type, headings, paragraphs, controls, options, labels, tables, badges, helper text, code, and form values inherit the selected font. A root font change updates the entire page without changing the theme or mode. The Typography badge reports “Monospace,” “Sans serif,” or “Serif” to match the selection. Use installed fonts with the documented fallbacks; no external font service is required.
 
 The hero display is `clamp(2rem, 4vw, 3.5rem)`, bold, with `-0.04em` tracking. Section headings are approximately `1.5rem`; tone and combination card headings are `1.1rem`. Body and table copy use `1.6` line-height and muted text where secondary. Eyebrows, kickers, toolbar labels, and helper text use `0.75rem`, uppercase, and `0.12em` tracking. Badges use `0.68rem`, bold, uppercase, and `0.12em` tracking. Do not use negative tracking outside the hero display.
 
@@ -408,11 +598,11 @@ Links use start color, switch to `linkHover` on hover, and use the theme link sh
 
 ## Page shell and exact page anatomy
 
-The main shell is `min(100% - desktop gutter, selected content width)`, centered, with `3rem` vertical padding. It is a one-column grid with `1.5rem` between the hero and every following section. Full width removes both desktop and mobile gutters.
+The main shell is `min(100% - desktop gutter, selected content width)`, centered, with `3rem` vertical padding. It uses `minmax(0, 1fr)` for its single grid column, with zero minimum width on shell children, hero children, toolbar fields, and inspection surface children so wide table content scrolls within its own wrapper. It is a one-column grid with `1.5rem` between the hero and every following section. Full width removes both desktop and mobile gutters.
 
 Build the following content in this order:
 
-1. **Hero panel — “Light + Dark UI Baseline.”** Use eyebrow “Phox-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains a theme toggle, grouped font selector, content-width selector, root-scope helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
+1. **Hero panel — “Six Themes. Two Modes.”** Use eyebrow “D4rk-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains paired Theme and Mode dropdowns, a grouped sans-serif, serif, and monospace font selector, content-width selector, preference-persistence helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
 2. **Typography — “Text Samples.”** Use two cards: one demonstrates a heading and paragraph; one demonstrates start-tone inline text, a link, inline code, and Neutral, Start, Mid / Info, 75% / Warning, and End / Error badges.
 3. **Controls — “Form Elements.”** Show primary, secondary, ghost, and disabled buttons; text, email, password, search, textarea, and select fields; checked and unchecked checkboxes and radios; a live range/output pair initialized to 56; and a checked switch with live “enabled” text. Explain that actions are raised while labels are flat.
 4. **Variants — “Tone Control Sets.”** Use four tone cards for Start/Blue, Mid/Green, Warning/Amber, and Danger/Red. Every card includes its tone badge, button, input, range/output, checked checkbox, checked radio, and switch. Initial range values are 28, 54, 76, and 92. The danger switch starts unchecked; the other three start checked.
@@ -430,7 +620,7 @@ The hero is fixed at the top of the document order. Every one of the ten followi
 
 Panels use the active panel color, standard border, large radius, panel shadow, and `2rem` desktop padding. Hover changes only the border toward start and combines the panel and crisp hover shadows. Cards, choice groups, and tab panels use the elevated background, standard border, medium radius, and `1rem` padding. Avoid cards inside cards except where this reconstruction explicitly identifies a card as the container for controls; use spacing and border hierarchy instead of arbitrary nested decoration.
 
-Reusable auto-fit grids use these minimum column widths:
+Reusable auto-fit grids use `minmax(min(100%, minimum width), 1fr)` so they can shrink on narrow screens. Their minimum column widths are:
 
 - type, feedback, layout, state, and contrast grids: `16rem`
 - form grid: `15rem`
@@ -539,7 +729,7 @@ At `800px` and below:
 - Use the mobile gutter and `1.5rem` vertical shell padding.
 - Reduce panel padding to `1rem`.
 - Collapse the hero to one column and left-align hero actions.
-- Remove toolbar/theme-toggle minimum widths so they can shrink.
+- Remove toolbar minimum widths so selects can shrink; keep the Theme/Mode pair in two columns.
 - Stack section headings vertically and align them to the start.
 - Let the section-heading side span full width; keep section controls pushed to the trailing edge.
 - Make dropdown multi-select menus static with no minimum width and a `0.5rem` top margin.
@@ -558,7 +748,7 @@ JavaScript must tolerate a missing optional demo node by skipping only that beha
 ## Do and do not
 
 - Do implement this document as the sole reconstruction input.
-- Do keep theme, font, and content width on the root element.
+- Do keep theme family, mode, font, and content width on the root element.
 - Do use the complete token matrix instead of one-off values.
 - Do preserve all eleven page blocks, their order, their state examples, and all ten section control clusters.
 - Do preserve start, mid, warning, danger, neutral, alpha, beta, and gamma meanings across every surface.

@@ -1,9 +1,13 @@
 const root = document.documentElement;
-const themeToggle = document.querySelector("#theme-toggle");
-const themeToggleState = document.querySelector("#theme-toggle-state");
+const themeSelector = document.querySelector("#theme-selector");
+const modeSelector = document.querySelector("#mode-selector");
 const themeHelper = document.querySelector("#theme-helper");
 const fontSelector = document.querySelector("#font-selector");
+const fontHelper = document.querySelector("#font-helper");
 const contentWidthSelector = document.querySelector("#content-width-selector");
+const themeOptions = themeSelector
+  ? new Set(Array.from(themeSelector.options, (option) => option.value))
+  : new Set();
 const fontOptions = fontSelector
   ? new Set(Array.from(fontSelector.options, (option) => option.value))
   : new Set();
@@ -32,38 +36,51 @@ const inspectionModalValue = document.querySelector("#inspection-modal-value");
 const inspectionModalCopy = document.querySelector("#inspection-modal-copy");
 const inspectionModalStatus = document.querySelector("#inspection-modal-status");
 
-const syncThemeUi = (theme) => {
-  const nextTheme = theme === "light" ? "light" : "dark";
+const syncThemeUi = ({ palette, mode }) => {
+  const nextPalette = themeOptions.has(palette) ? palette : "d4rk";
+  const nextMode = mode === "light" ? "light" : "dark";
 
-  root.dataset.theme = nextTheme;
+  root.dataset.palette = nextPalette;
+  root.dataset.theme = nextMode;
 
-  if (themeToggle) {
-    themeToggle.setAttribute("aria-pressed", String(nextTheme === "light"));
+  if (themeSelector) {
+    themeSelector.value = nextPalette;
   }
 
-  if (themeToggleState) {
-    themeToggleState.textContent = nextTheme === "light" ? "Light" : "Dark";
+  if (modeSelector) {
+    modeSelector.value = nextMode;
   }
 
   if (themeHelper) {
-    themeHelper.textContent =
-      nextTheme === "light" ? "light theme active" : "dark theme active";
+    const themeLabel = themeSelector?.selectedOptions[0]?.textContent ?? nextPalette;
+    const modeLabel = modeSelector?.selectedOptions[0]?.textContent ?? nextMode;
+
+    themeHelper.textContent = `${themeLabel} / ${modeLabel}`;
   }
 };
 
-syncThemeUi(root.dataset.theme);
+syncThemeUi({ palette: root.dataset.palette, mode: root.dataset.theme });
 
-if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
-    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
+const saveThemePreferences = () => {
+  try {
+    localStorage.setItem("d4rk-styleguide-palette", root.dataset.palette);
+    localStorage.setItem("d4rk-styleguide-theme", root.dataset.theme);
+  } catch (error) {
+    console.warn("Theme preference unavailable.", error);
+  }
+};
 
-    syncThemeUi(nextTheme);
+if (themeSelector) {
+  themeSelector.addEventListener("change", () => {
+    syncThemeUi({ palette: themeSelector.value, mode: root.dataset.theme });
+    saveThemePreferences();
+  });
+}
 
-    try {
-      localStorage.setItem("phox-styleguide-theme", nextTheme);
-    } catch (error) {
-      console.warn("Theme preference unavailable.", error);
-    }
+if (modeSelector) {
+  modeSelector.addEventListener("change", () => {
+    syncThemeUi({ palette: root.dataset.palette, mode: modeSelector.value });
+    saveThemePreferences();
   });
 }
 
@@ -75,6 +92,10 @@ const syncFontUi = (fontKey) => {
   if (fontSelector) {
     fontSelector.value = nextFont;
   }
+
+  if (fontHelper) {
+    fontHelper.textContent = fontSelector?.selectedOptions[0]?.parentElement?.dataset.family ?? "Monospace";
+  }
 };
 
 syncFontUi(root.dataset.font);
@@ -84,7 +105,7 @@ if (fontSelector) {
     syncFontUi(fontSelector.value);
 
     try {
-      localStorage.setItem("phox-styleguide-font", fontSelector.value);
+      localStorage.setItem("d4rk-styleguide-font", fontSelector.value);
     } catch (error) {
       console.warn("Font preference unavailable.", error);
     }
@@ -110,7 +131,7 @@ if (contentWidthSelector) {
     syncContentWidthUi(contentWidthSelector.value);
 
     try {
-      localStorage.setItem("phox-styleguide-content-width", contentWidthSelector.value);
+      localStorage.setItem("d4rk-styleguide-content-width", contentWidthSelector.value);
     } catch (error) {
       console.warn("Content width preference unavailable.", error);
     }

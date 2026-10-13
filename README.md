@@ -1,11 +1,12 @@
-# Phox-Styleguide
+# D4rk-Styleguide
 
 ## What This Repo Contains
 
 - `index.html`: demo page with the controls and examples
 - `design.md`: Google DESIGN.md-style machine-readable tokens and design rationale for LLM consumers
-- `styles.css`: token-driven light and dark theme implementation
+- `styles.css`: six token-driven theme families, each with light and dark modes
 - `script.js`: theme, font, and demo interaction behavior
+- `en-US.json`: English copy catalog for the new appearance controls, mirrored in static HTML so opening the guide directly still works
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
 - `logging/logging.md`: portable logging and structured-error contract
 - `logging/rust/`: reusable Rust logger, JSON5 configuration/error-code tools, and Cargo helpers
@@ -36,8 +37,8 @@ If you are using this repository from another project:
 
 This style system is built around:
 
-- full-page monospace typography
-- root-driven `data-theme` switching
+- page-wide monospace, sans-serif, and serif font selection
+- root-driven `data-palette` theme families and `data-theme` light/dark switching
 - root-driven `data-font` switching
 - flat surfaces with no gradients
 - four semantic tones:
@@ -48,9 +49,10 @@ This style system is built around:
 
 The current demo supports:
 
-- dark mode
-- light mode
-- page-wide font selection
+- D4rk, Terminal, Bubbly, Paper, Ocean, and Retro themes
+- independent Theme and Mode dropdowns, with light and dark modes for every theme
+- saved theme, mode, font, and width preferences under D4rk keys
+- page-wide font selection with nine proportional choices alongside the original monospace stacks
 - page-wide content width selection
 - shared control styling for buttons, inputs, selects, textareas, sliders, toggles, tabs, alerts, badges, tables, cards, details/summary disclosures, dropdown multi-selects, removable badge actions, modal dialogs, and table-cell inspection buttons
 
@@ -61,7 +63,7 @@ Open `index.html` in a browser to inspect the demo.
 Carry the system into another project by preserving the root contract:
 
 ```html
-<html data-theme="dark" data-font="system-stack" data-content-width="standard">
+<html data-palette="d4rk" data-theme="dark" data-font="system-stack" data-content-width="standard">
 ```
 
 Then keep component styling token-driven and aligned with `style.md`.

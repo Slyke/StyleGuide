@@ -1,20 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-font="system-stack" data-content-width="standard">
+<html lang="en" data-palette="d4rk" data-theme="dark" data-font="system-stack" data-content-width="standard">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phox-Styleguide</title>
+    <title>D4rk-Styleguide</title>
     <script>
       try {
-        const savedTheme = localStorage.getItem("phox-styleguide-theme");
-        const savedFont = localStorage.getItem("phox-styleguide-font");
-        const savedContentWidth = localStorage.getItem("phox-styleguide-content-width");
+        const savedTheme = localStorage.getItem("d4rk-styleguide-theme");
+        const savedPalette = localStorage.getItem("d4rk-styleguide-palette");
+        const savedFont = localStorage.getItem("d4rk-styleguide-font");
+        const savedContentWidth = localStorage.getItem("d4rk-styleguide-content-width");
 
         if (savedTheme === "light" || savedTheme === "dark") {
           document.documentElement.dataset.theme = savedTheme;
         }
 
-        if (savedFont) {
+        if (["d4rk", "terminal", "bubbly", "paper", "ocean", "retro"].includes(savedPalette)) {
+          document.documentElement.dataset.palette = savedPalette;
+        }
+
+        if ([
+          "system-stack", "ui-mono", "generic-mono", "sf-mono", "menlo", "monaco",
+          "cascadia-mono", "consolas", "lucida-console", "courier-new", "roboto-mono",
+          "droid-sans-mono", "noto-sans-mono", "ubuntu-mono", "dejavu-sans-mono", "liberation-mono",
+          "system-sans", "segoe-ui", "arial", "verdana", "trebuchet-ms",
+          "system-serif", "georgia", "palatino", "times-new-roman"
+        ].includes(savedFont)) {
           document.documentElement.dataset.font = savedFont;
         }
 
@@ -32,33 +43,57 @@
     <main class="guide-shell">
       <header class="hero panel">
         <div class="hero-copy">
-          <p class="eyebrow">Phox-Styleguide / Theme Tokens</p>
-          <h1>Light + Dark UI Baseline</h1>
+          <p class="eyebrow">D4rk-Styleguide / Theme Tokens</p>
+          <h1>Six Themes. Two Modes.</h1>
           <p class="hero-text">
-            The same controls, states, and tone system rendered through shared
-            tokens for dark and light mode. The structure is still plain HTML
-            and CSS, but the token model is ready to be lifted into Svelte
-            components later.
+            From crisp terminals to soft, bubbly surfaces. Explore six distinct
+            themes, each with a light and dark mode, across the same controls,
+            states, and semantic tones.
           </p>
         </div>
 
         <div class="hero-side">
           <div class="hero-tools">
-            <button
-              type="button"
-              class="button theme-toggle"
-              id="theme-toggle"
-              aria-pressed="false"
-            >
-              <span class="theme-toggle-name">Theme</span>
-              <span class="theme-toggle-state" id="theme-toggle-state">Dark</span>
-            </button>
+            <div class="appearance-controls">
+              <label class="toolbar-field" for="theme-selector">
+                <span class="toolbar-label">Theme</span>
+                <select id="theme-selector" class="toolbar-select">
+                  <option value="d4rk">D4rk</option>
+                  <option value="terminal">Terminal</option>
+                  <option value="bubbly">Bubbly</option>
+                  <option value="paper">Paper</option>
+                  <option value="ocean">Ocean</option>
+                  <option value="retro">Retro</option>
+                </select>
+              </label>
+
+              <label class="toolbar-field" for="mode-selector">
+                <span class="toolbar-label">Mode</span>
+                <select id="mode-selector" class="toolbar-select">
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </label>
+            </div>
 
             <label class="toolbar-field" for="font-selector">
               <span class="toolbar-label">Font</span>
               <select id="font-selector" class="toolbar-select">
+                <optgroup label="Sans Serif" data-family="Sans serif">
+                  <option value="system-sans">System Sans</option>
+                  <option value="segoe-ui">Segoe UI</option>
+                  <option value="arial">Arial</option>
+                  <option value="verdana">Verdana</option>
+                  <option value="trebuchet-ms">Trebuchet MS</option>
+                </optgroup>
+                <optgroup label="Serif" data-family="Serif">
+                  <option value="system-serif">System Serif</option>
+                  <option value="georgia">Georgia</option>
+                  <option value="palatino">Palatino</option>
+                  <option value="times-new-roman">Times New Roman</option>
+                </optgroup>
                 <optgroup label="Browser / System">
-                  <option value="system-stack">System Mono Stack</option>
+                  <option value="system-stack" selected>System Mono Stack</option>
                   <option value="ui-mono">UI Monospace</option>
                   <option value="generic-mono">Generic Monospace</option>
                 </optgroup>
@@ -99,8 +134,8 @@
             </label>
 
             <span class="helper-text hero-note">
-              Font and content width apply at the root so the whole guide
-              can be checked under the same theme, type, and layout constraints.
+              Mix any theme with light or dark mode. Your theme, mode, font,
+              and content width are remembered for your next visit.
             </span>
           </div>
 
@@ -121,7 +156,7 @@
             <p class="eyebrow">Typography</p>
             <h2>Text Samples</h2>
           </div>
-          <span class="badge badge-start">monospace</span>
+          <span class="badge badge-start" id="font-helper">Monospace</span>
         </div>
 
         <div class="type-grid">
@@ -158,8 +193,8 @@
             <p class="eyebrow">Controls</p>
             <h2>Form Elements</h2>
           </div>
-          <span class="helper-text" id="theme-helper">
-            bordered action = pressable, flat pill = label
+          <span class="helper-text" id="theme-helper" role="status">
+            D4rk / Dark
           </span>
         </div>
 

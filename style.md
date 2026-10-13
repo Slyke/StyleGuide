@@ -10,9 +10,9 @@ If an agent or project references this repository:
 
 ## Purpose
 
-This system defines a monospace UI with:
+This system defines a UI with a default monospace stack and optional sans-serif and serif typography:
 
-- dark and light themes
+- six theme families, each with dark and light modes
 - root-driven theme switching
 - root-driven font switching
 - four semantic color tones
@@ -22,8 +22,8 @@ This system defines a monospace UI with:
 
 ## Required
 
-- Use a monospace font for the entire UI, not just code blocks.
-- Drive theme from a root `data-theme` attribute.
+- Use one selected font stack across the entire UI, including controls and code blocks; default to monospace.
+- Drive theme family from root `data-palette` and light/dark mode from root `data-theme`.
 - Drive font from a root `data-font` attribute.
 - Style controls from shared tokens and shared rules.
 - Preserve the semantic tones `start`, `mid`, `warning`, and `danger`.
@@ -43,10 +43,19 @@ This system defines a monospace UI with:
 Apply state at the root element, ideally `html`:
 
 ```html
-<html data-theme="dark" data-font="system-stack" data-content-width="standard">
+<html data-palette="d4rk" data-theme="dark" data-font="system-stack" data-content-width="standard">
 ```
 
-Supported `data-theme` values:
+Supported `data-palette` values:
+
+- `d4rk`: original neon technical baseline
+- `terminal`: phosphor greens, crisp edges, flat surfaces
+- `bubbly`: lilac and rose surfaces, generous rounded corners
+- `paper`: warm parchment, quiet ink, restrained corners
+- `ocean`: navy and sea-glass surfaces, gentle rounding
+- `retro`: warm arcade tones, square corners, crisp offset panel shadows
+
+Every family supports both `data-theme` mode values:
 
 - `dark`
 - `light`
@@ -61,6 +70,16 @@ Supported `data-content-width` values:
 - `full`: full browser width
 
 Supported `data-font` values:
+
+- `system-sans` (sans serif)
+- `segoe-ui` (sans serif)
+- `arial` (sans serif)
+- `verdana` (sans serif)
+- `trebuchet-ms` (sans serif)
+- `system-serif` (serif)
+- `georgia` (serif)
+- `palatino` (serif)
+- `times-new-roman` (serif)
 
 - `system-stack`
 - `ui-mono`
@@ -101,6 +120,10 @@ Use these tone meanings consistently across alerts, buttons, toggles, inputs, ta
 
 ## Theme Intent
 
+Use independent, labeled native Theme and Mode dropdowns. Selecting a family must preserve the selected mode, font, and content width. Persist the family in `d4rk-styleguide-palette` and mode in `d4rk-styleguide-theme`, restoring valid values before first paint. Default to D4rk / Dark. All preference keys use the `d4rk-styleguide-` prefix. A missing or invalid family falls back to D4rk, and storage failures must leave the controls usable. Announce the active family and mode through the Forms status helper.
+
+Families override shared surface, text, radius, panel-shadow, and code tokens as specified in `design.md`. Keep semantic colors and secondary accents consistent within each mode. All themes retain page-wide selected typography, flat fills, and the shared component interaction rules. Bubbly increases corner radii; Terminal and Paper remove panel shadows; Retro uses a crisp offset panel shadow. These are root token variations, not per-component theme rules.
+
 Dark theme:
 
 - near-black background
@@ -120,10 +143,10 @@ Light theme:
 Use a single page-wide variable for UI typography:
 
 ```css
---font-mono
+--font-ui
 ```
 
-Changing the selected font must change the entire page, including controls, labels, tables, badges, code blocks, and helper text.
+Changing the selected font must change the entire page, including controls, labels, tables, badges, code blocks, and helper text. Keep `--font-mono` as the default monospace fallback, with `--font-ui: var(--font-mono)` until a root font option overrides it. The native Font selector groups proportional fonts under Sans Serif and Serif, followed by the existing platform-based monospace groups. The Typography badge reports the selected family. Preserve the theme and mode when changing fonts. Use local font stacks and fallbacks without downloading web fonts.
 
 Recommended default stack:
 
@@ -173,6 +196,7 @@ Minimal example:
 
 ```js
 document.documentElement.dataset.theme = theme;
+document.documentElement.dataset.palette = palette;
 document.documentElement.dataset.font = font;
 ```
 
