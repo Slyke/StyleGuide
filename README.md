@@ -4,7 +4,7 @@
 
 - `index.html`: demo page with the controls and examples
 - `design.md`: Google DESIGN.md-style machine-readable tokens and design rationale for LLM consumers
-- `styles.css`: six token-driven theme families, each with light and dark modes
+- `styles.css`: seven token-driven theme families, each with light and dark modes
 - `script.js`: theme, font, and demo interaction behavior
 - `en-US.json`: English copy catalog for the new appearance controls, mirrored in static HTML so opening the guide directly still works
 - `interpolation.js`: self-testing string interpolation reference; copy only `interpolate` into consuming projects
@@ -49,7 +49,7 @@ This style system is built around:
 
 The current demo supports:
 
-- D4rk, Terminal, Bubbly, Paper, Ocean, and Retro themes
+- D4rk, Terminal, Bubbly, Paper, Ocean, Retro, and Professional themes
 - independent Theme and Mode dropdowns, with light and dark modes for every theme
 - saved theme, mode, font, and width preferences under D4rk keys
 - page-wide font selection with nine proportional choices alongside the original monospace stacks

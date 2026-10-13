@@ -1,6 +1,6 @@
 {
-  "styleguide-hero-title": "Six Themes. Two Modes.",
-  "styleguide-hero-description": "From crisp terminals to soft, bubbly surfaces. Explore six distinct themes, each with a light and dark mode, across the same controls, states, and semantic tones.",
+  "styleguide-hero-title": "Seven Themes. Two Modes.",
+  "styleguide-hero-description": "From crisp terminals to soft, bubbly surfaces. Explore seven distinct themes, each with a light and dark mode, across the same controls, states, and semantic tones.",
   "styleguide-theme-label": "Theme",
   "styleguide-theme-d4rk": "D4rk",
   "styleguide-theme-terminal": "Terminal",
@@ -8,6 +8,7 @@
   "styleguide-theme-paper": "Paper",
   "styleguide-theme-ocean": "Ocean",
   "styleguide-theme-retro": "Retro",
+  "styleguide-theme-professional": "Professional",
   "styleguide-mode-label": "Mode",
   "styleguide-mode-dark": "Dark",
   "styleguide-mode-light": "Light",

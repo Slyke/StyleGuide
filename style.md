@@ -12,7 +12,7 @@ If an agent or project references this repository:
 
 This system defines a UI with a default monospace stack and optional sans-serif and serif typography:
 
-- six theme families, each with dark and light modes
+- seven theme families, each with dark and light modes
 - root-driven theme switching
 - root-driven font switching
 - four semantic color tones
@@ -54,6 +54,7 @@ Supported `data-palette` values:
 - `paper`: warm parchment, quiet ink, restrained corners
 - `ocean`: navy and sea-glass surfaces, gentle rounding
 - `retro`: warm arcade tones, square corners, crisp offset panel shadows
+- `professional`: Windows-inspired neutral grays, compact corners, subtle elevation, and clear blue accents
 
 Every family supports both `data-theme` mode values:
 
@@ -122,7 +123,7 @@ Use these tone meanings consistently across alerts, buttons, toggles, inputs, ta
 
 Use independent, labeled native Theme and Mode dropdowns. Selecting a family must preserve the selected mode, font, and content width. Persist the family in `d4rk-styleguide-palette` and mode in `d4rk-styleguide-theme`, restoring valid values before first paint. Default to D4rk / Dark. All preference keys use the `d4rk-styleguide-` prefix. A missing or invalid family falls back to D4rk, and storage failures must leave the controls usable. Announce the active family and mode through the Forms status helper.
 
-Families override shared surface, text, radius, panel-shadow, and code tokens as specified in `design.md`. Keep semantic colors and secondary accents consistent within each mode. All themes retain page-wide selected typography, flat fills, and the shared component interaction rules. Bubbly increases corner radii; Terminal and Paper remove panel shadows; Retro uses a crisp offset panel shadow. These are root token variations, not per-component theme rules.
+Families override shared surface, text, radius, panel-shadow, and code tokens as specified in `design.md`. Keep semantic colors and secondary accents consistent within each mode. All themes retain page-wide selected typography, flat fills, and the shared component interaction rules. Bubbly increases corner radii; Terminal and Paper remove panel shadows; Retro uses a crisp offset panel shadow. Professional uses neutral gray surfaces, compact 0.3rem control corners, 0.5rem panel corners, subtle elevation, and a complete blue start-tone palette in each mode. Professional pairs with the existing Segoe UI font option while preserving the independently selected font. These are root token variations, not per-component theme rules.
 
 Dark theme:
 

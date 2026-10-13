@@ -366,6 +366,56 @@ themeFamilies:
           text: "#422f1c"
           textMuted: "#715333"
           textFaint: "#80623e"
+  professional:
+    label: Professional
+    description: "Windows-inspired neutral surfaces, compact corners, subtle elevation, and clear blue accents."
+    shape:
+      radiusSm: "0.2rem"
+      radiusMd: "0.3rem"
+      radiusLg: "0.5rem"
+    shadows:
+      panel: "0 2px 8px rgba(0, 0, 0, 0.12)"
+      hover: "0 0 0 1px var(--color-start-soft)"
+      linkHover: "none"
+    colors:
+      linkHover: "ref:startInk"
+      inlineCodeBg: "ref:startFill"
+      inlineCodeText: "ref:startInk"
+    modes:
+      dark:
+        colors:
+          bg: "#202020"
+          bgElevated: "#323232"
+          panel: "#282828"
+          panelStrong: "#383838"
+          border: "#454545"
+          borderStrong: "#666666"
+          text: "#f5f5f5"
+          textMuted: "#d1d1d1"
+          textFaint: "#aaaaaa"
+          start: "#60cdff"
+          startSoft: "rgba(96, 205, 255, 0.16)"
+          startBorder: "rgba(96, 205, 255, 0.55)"
+          startFill: "rgba(96, 205, 255, 0.12)"
+          startFillStrong: "rgba(96, 205, 255, 0.2)"
+          startInk: "#c4edff"
+      light:
+        colors:
+          bg: "#f3f3f3"
+          bgElevated: "#ffffff"
+          panel: "#fafafa"
+          panelStrong: "#eeeeee"
+          border: "#d6d6d6"
+          borderStrong: "#a6a6a6"
+          text: "#1b1b1b"
+          textMuted: "#525252"
+          textFaint: "#707070"
+          start: "#0f6cbd"
+          startSoft: "rgba(15, 108, 189, 0.1)"
+          startBorder: "rgba(15, 108, 189, 0.4)"
+          startFill: "rgba(15, 108, 189, 0.08)"
+          startFillStrong: "rgba(15, 108, 189, 0.14)"
+          startInk: "#0f548c"
 typography:
   defaultStack: "ui-monospace, SF Mono, SFMono-Regular, Menlo, Monaco, Cascadia Mono, Cascadia Code, Consolas, Lucida Console, Roboto Mono, Droid Sans Mono, Noto Sans Mono, Ubuntu Mono, DejaVu Sans Mono, Liberation Mono, Courier New, monospace"
   fontOptions:
@@ -553,7 +603,7 @@ The result is a compact technical style-guide UI, not a marketing page. It uses 
 
 Use an HTML document titled **D4rk-Styleguide**, with language set to English, UTF-8 encoding, and the standard responsive viewport declaration. The root element starts with `data-palette="d4rk"`, `data-theme="dark"`, `data-font="system-stack"`, and `data-content-width="standard"`. `data-palette` identifies the theme family; `data-theme` retains the existing light/dark mode contract. Set `color-scheme` from the active mode.
 
-Before the first paint, read the four persistence keys in the YAML front matter. Apply a saved mode only when it is `light` or `dark`, and a saved palette only when it is `d4rk`, `terminal`, `bubbly`, `paper`, `ocean`, or `retro`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Use the D4rk persistence keys for all preferences. Storage failures must not break the page.
+Before the first paint, read the four persistence keys in the YAML front matter. Apply a saved mode only when it is `light` or `dark`, and a saved palette only when it is `d4rk`, `terminal`, `bubbly`, `paper`, `ocean`, `retro`, or `professional`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Use the D4rk persistence keys for all preferences. Storage failures must not break the page.
 
 Apply `box-sizing: border-box` to every element and pseudo-element. The document and body use the active background, active text, and selected page-wide font stack. The body has zero margin and a minimum height of `100vh`. Buttons, inputs, selects, textareas, progress, meter, and dialogs inherit the page font. Text selection uses the active start color as its background and the page background as its text color.
 
@@ -561,7 +611,7 @@ All panels, cards, choice groups, table wrappers, alerts, swatches, tabs, button
 
 ## Toolbar state and option contract
 
-The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), and Retro (`retro`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
+The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), Retro (`retro`), and Professional (`professional`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
 
 Toolbar fields are one-column grids with `0.5rem` gaps. Desktop toolbar selects span the available width and have an `18rem` minimum width. The font selector groups options exactly as follows:
 
@@ -578,7 +628,7 @@ The content-width selector labels are Narrow reading width (`min`), App viewport
 
 ## Color and state model
 
-The complete theme values are normative in the YAML front matter. Compose each theme family using `themeFamilies.inheritance`; `ref:` values are live references to the named token, and `var(--color-border-strong)` in the Retro panel shadow references the active borderStrong color. Every family supports both modes. Families change surfaces, text, geometry, panel shadows, and code treatments while inheriting semantic and secondary accent tones from the mode. Every tone has a base, soft, border, fill, strong fill, and ink role. Use those roles consistently rather than calculating new colors.
+The complete theme values are normative in the YAML front matter. Compose each theme family using `themeFamilies.inheritance`; `ref:` values are live references to the named token, and `var(--color-border-strong)` in the Retro panel shadow references the active borderStrong color. Every family supports both modes. Families change surfaces, text, geometry, panel shadows, and code treatments while inheriting semantic and secondary accent tones from the mode. Professional overrides the complete start-tone blue family and its linked hover/code tokens in both modes; all semantic meanings remain unchanged. Every tone has a base, soft, border, fill, strong fill, and ink role. Use those roles consistently rather than calculating new colors.
 
 - **Start** is blue: primary action, hover energy, initial state, and active affordance.
 - **Mid** is green: informational, selected, checked, switched-on, and in-progress state.
@@ -602,7 +652,7 @@ The main shell is `min(100% - desktop gutter, selected content width)`, centered
 
 Build the following content in this order:
 
-1. **Hero panel — “Six Themes. Two Modes.”** Use eyebrow “D4rk-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains paired Theme and Mode dropdowns, a grouped sans-serif, serif, and monospace font selector, content-width selector, preference-persistence helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
+1. **Hero panel — “Seven Themes. Two Modes.”** Use eyebrow “D4rk-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains paired Theme and Mode dropdowns, a grouped sans-serif, serif, and monospace font selector, content-width selector, preference-persistence helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
 2. **Typography — “Text Samples.”** Use two cards: one demonstrates a heading and paragraph; one demonstrates start-tone inline text, a link, inline code, and Neutral, Start, Mid / Info, 75% / Warning, and End / Error badges.
 3. **Controls — “Form Elements.”** Show primary, secondary, ghost, and disabled buttons; text, email, password, search, textarea, and select fields; checked and unchecked checkboxes and radios; a live range/output pair initialized to 56; and a checked switch with live “enabled” text. Explain that actions are raised while labels are flat.
 4. **Variants — “Tone Control Sets.”** Use four tone cards for Start/Blue, Mid/Green, Warning/Amber, and Danger/Red. Every card includes its tone badge, button, input, range/output, checked checkbox, checked radio, and switch. Initial range values are 28, 54, 76, and 92. The danger switch starts unchecked; the other three start checked.

@@ -189,7 +189,7 @@ html[data-theme="light"] {
 }
 
 /* Theme families layer over the existing light/dark semantic tones. */
-html:is([data-palette="terminal"], [data-palette="bubbly"], [data-palette="paper"], [data-palette="ocean"], [data-palette="retro"]) {
+html:is([data-palette="terminal"], [data-palette="bubbly"], [data-palette="paper"], [data-palette="ocean"], [data-palette="retro"], [data-palette="professional"]) {
   --color-control-bg: var(--color-bg-elevated);
   --color-control-strong: var(--color-panel-strong);
   --color-pre-bg: var(--color-bg);
@@ -357,6 +357,55 @@ html[data-palette="retro"][data-theme="light"] {
   --color-text: #422f1c;
   --color-text-muted: #715333;
   --color-text-faint: #80623e;
+}
+
+/* Professional: Windows-inspired neutral surfaces, compact corners, subtle elevation, and clear blue accents. */
+html[data-palette="professional"] {
+  --radius-sm: 0.2rem;
+  --radius-md: 0.3rem;
+  --radius-lg: 0.5rem;
+  --color-link-hover: var(--color-start-ink);
+  --color-inline-code-bg: var(--color-start-fill);
+  --color-inline-code-text: var(--color-start-ink);
+  --shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 0 0 1px var(--color-start-soft);
+  --shadow-link-hover: none;
+}
+
+html[data-palette="professional"][data-theme="dark"] {
+  --color-bg: #202020;
+  --color-bg-elevated: #323232;
+  --color-panel: #282828;
+  --color-panel-strong: #383838;
+  --color-border: #454545;
+  --color-border-strong: #666666;
+  --color-text: #f5f5f5;
+  --color-text-muted: #d1d1d1;
+  --color-text-faint: #aaaaaa;
+  --color-start: #60cdff;
+  --color-start-soft: rgba(96, 205, 255, 0.16);
+  --color-start-border: rgba(96, 205, 255, 0.55);
+  --color-start-fill: rgba(96, 205, 255, 0.12);
+  --color-start-fill-strong: rgba(96, 205, 255, 0.2);
+  --color-start-ink: #c4edff;
+}
+
+html[data-palette="professional"][data-theme="light"] {
+  --color-bg: #f3f3f3;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #fafafa;
+  --color-panel-strong: #eeeeee;
+  --color-border: #d6d6d6;
+  --color-border-strong: #a6a6a6;
+  --color-text: #1b1b1b;
+  --color-text-muted: #525252;
+  --color-text-faint: #707070;
+  --color-start: #0f6cbd;
+  --color-start-soft: rgba(15, 108, 189, 0.1);
+  --color-start-border: rgba(15, 108, 189, 0.4);
+  --color-start-fill: rgba(15, 108, 189, 0.08);
+  --color-start-fill-strong: rgba(15, 108, 189, 0.14);
+  --color-start-ink: #0f548c;
 }
 
 html[data-font="system-stack"] {
