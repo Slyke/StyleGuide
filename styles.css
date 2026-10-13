@@ -189,7 +189,7 @@ html[data-theme="light"] {
 }
 
 /* Theme families layer over the existing light/dark semantic tones. */
-html:is([data-palette="terminal"], [data-palette="bubbly"], [data-palette="paper"], [data-palette="ocean"], [data-palette="retro"], [data-palette="professional"]) {
+html:is([data-palette="terminal"], [data-palette="bubbly"], [data-palette="paper"], [data-palette="ocean"], [data-palette="retro"], [data-palette="professional"], [data-palette="reference"], [data-palette="contrast"], [data-palette="tron"]) {
   --color-control-bg: var(--color-bg-elevated);
   --color-control-strong: var(--color-panel-strong);
   --color-pre-bg: var(--color-bg);
@@ -406,6 +406,209 @@ html[data-palette="professional"][data-theme="light"] {
   --color-start-fill: rgba(15, 108, 189, 0.08);
   --color-start-fill-strong: rgba(15, 108, 189, 0.14);
   --color-start-ink: #0f548c;
+}
+
+/* Imported kiosk palettes retain the guide's semantic roles and interactions. */
+html:is([data-palette="reference"], [data-palette="contrast"], [data-palette="tron"]) {
+  --color-link-hover: var(--color-start-ink);
+  --color-inline-code-bg: var(--color-start-fill);
+  --color-inline-code-text: var(--color-start-ink);
+  --color-danger-glow: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  --shadow-panel: none;
+  --shadow-hover: 0 0 0 1px var(--color-start-soft);
+  --shadow-focus: 0 0 0 3px var(--color-warning-soft);
+  --shadow-link-hover: none;
+}
+
+html:is([data-palette="reference"], [data-palette="contrast"], [data-palette="tron"])[data-theme="dark"] {
+  --color-start-soft: color-mix(in srgb, var(--color-start) 18%, transparent);
+  --color-start-border: color-mix(in srgb, var(--color-start) 62%, transparent);
+  --color-start-fill: color-mix(in srgb, var(--color-start) 16%, transparent);
+  --color-start-fill-strong: color-mix(in srgb, var(--color-start) 24%, transparent);
+  --color-mid-soft: color-mix(in srgb, var(--color-mid) 18%, transparent);
+  --color-mid-border: color-mix(in srgb, var(--color-mid) 62%, transparent);
+  --color-mid-fill: color-mix(in srgb, var(--color-mid) 16%, transparent);
+  --color-mid-fill-strong: color-mix(in srgb, var(--color-mid) 24%, transparent);
+  --color-warning-soft: color-mix(in srgb, var(--color-warning) 18%, transparent);
+  --color-warning-border: color-mix(in srgb, var(--color-warning) 62%, transparent);
+  --color-warning-fill: color-mix(in srgb, var(--color-warning) 16%, transparent);
+  --color-warning-fill-strong: color-mix(in srgb, var(--color-warning) 24%, transparent);
+  --color-danger-soft: color-mix(in srgb, var(--color-danger) 18%, transparent);
+  --color-danger-border: color-mix(in srgb, var(--color-danger) 62%, transparent);
+  --color-danger-fill: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  --color-danger-fill-strong: color-mix(in srgb, var(--color-danger) 24%, transparent);
+}
+
+html:is([data-palette="reference"], [data-palette="contrast"], [data-palette="tron"])[data-theme="light"] {
+  --color-start-soft: color-mix(in srgb, var(--color-start) 10%, transparent);
+  --color-start-border: color-mix(in srgb, var(--color-start) 40%, transparent);
+  --color-start-fill: color-mix(in srgb, var(--color-start) 8%, transparent);
+  --color-start-fill-strong: color-mix(in srgb, var(--color-start) 14%, transparent);
+  --color-mid-soft: color-mix(in srgb, var(--color-mid) 10%, transparent);
+  --color-mid-border: color-mix(in srgb, var(--color-mid) 40%, transparent);
+  --color-mid-fill: color-mix(in srgb, var(--color-mid) 8%, transparent);
+  --color-mid-fill-strong: color-mix(in srgb, var(--color-mid) 14%, transparent);
+  --color-warning-soft: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  --color-warning-border: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  --color-warning-fill: color-mix(in srgb, var(--color-warning) 8%, transparent);
+  --color-warning-fill-strong: color-mix(in srgb, var(--color-warning) 14%, transparent);
+  --color-danger-soft: color-mix(in srgb, var(--color-danger) 10%, transparent);
+  --color-danger-border: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  --color-danger-fill: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  --color-danger-fill-strong: color-mix(in srgb, var(--color-danger) 14%, transparent);
+}
+
+/* Reference: The kiosk's slate surfaces and bright blue, green, orange, and red status palette. */
+html[data-palette="reference"] {
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+}
+
+html[data-palette="reference"][data-theme="dark"] {
+  --color-bg: #0b1216;
+  --color-bg-elevated: #19242b;
+  --color-panel: #121e24;
+  --color-panel-strong: #19262d;
+  --color-border: #334750;
+  --color-border-strong: #536d7a;
+  --color-text: #edf5f8;
+  --color-text-muted: #a3bac6;
+  --color-text-faint: #91a9b5;
+  --color-pre-bg: #081018;
+  --color-backdrop: #04090dc4;
+  --color-start: #50c7ff;
+  --color-mid: #39ff79;
+  --color-warning: #ff9a3d;
+  --color-danger: #ff6262;
+  --color-start-ink: #65c5ff;
+  --color-mid-ink: #65ff91;
+  --color-warning-ink: #ffac5c;
+  --color-danger-ink: #ff7777;
+}
+
+html[data-palette="reference"][data-theme="light"] {
+  --color-bg: #e8eff2;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #f5f9fb;
+  --color-panel-strong: #dce7ed;
+  --color-border: #b4c7d1;
+  --color-border-strong: #698593;
+  --color-text: #132b38;
+  --color-text-muted: #405b6b;
+  --color-text-faint: #506d7d;
+  --color-pre-bg: #e1edf3;
+  --color-backdrop: #132b3870;
+  --color-start: #006eaa;
+  --color-mid: #087a32;
+  --color-warning: #a34a00;
+  --color-danger: #b51e2b;
+  --color-start-ink: #004f7d;
+  --color-mid-ink: #075e28;
+  --color-warning-ink: #743400;
+  --color-danger-ink: #891622;
+}
+
+/* High contrast: The kiosk's near-black surfaces, white borders, and vivid status colors, with a crisp white light counterpart. */
+html[data-palette="contrast"] {
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+}
+
+html[data-palette="contrast"][data-theme="dark"] {
+  --color-bg: #000000;
+  --color-bg-elevated: #000000;
+  --color-panel: #090909;
+  --color-panel-strong: #181818;
+  --color-border: #888888;
+  --color-border-strong: #ffffff;
+  --color-text: #ffffff;
+  --color-text-muted: #dedede;
+  --color-text-faint: #dedede;
+  --color-pre-bg: #000000;
+  --color-backdrop: #000000d9;
+  --color-start: #75d7ff;
+  --color-mid: #3dff77;
+  --color-warning: #ff982f;
+  --color-danger: #ff7575;
+  --color-start-ink: #78cfff;
+  --color-mid-ink: #51ff88;
+  --color-warning-ink: #ff982f;
+  --color-danger-ink: #ff8585;
+}
+
+html[data-palette="contrast"][data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-strong: #eeeeee;
+  --color-border: #595959;
+  --color-border-strong: #000000;
+  --color-text: #000000;
+  --color-text-muted: #222222;
+  --color-text-faint: #333333;
+  --color-pre-bg: #f2f2f2;
+  --color-backdrop: #00000099;
+  --color-start: #004b76;
+  --color-mid: #005c1b;
+  --color-warning: #813500;
+  --color-danger: #950c19;
+  --color-start-ink: #003957;
+  --color-mid-ink: #004015;
+  --color-warning-ink: #642900;
+  --color-danger-ink: #730914;
+}
+
+/* Tron: The kiosk's midnight panels, cyan borders, bright status colors, and sharp two-pixel corners. */
+html[data-palette="tron"] {
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+html[data-palette="tron"][data-theme="dark"] {
+  --color-bg: #020b12;
+  --color-bg-elevated: #04111b;
+  --color-panel: #071923;
+  --color-panel-strong: #0b2634;
+  --color-border: #125269;
+  --color-border-strong: #22c9ed;
+  --color-text: #e5fbff;
+  --color-text-muted: #a3c6d2;
+  --color-text-faint: #85b3c3;
+  --color-pre-bg: #020b12;
+  --color-backdrop: #020b12cc;
+  --color-start: #00dcff;
+  --color-mid: #00ff66;
+  --color-warning: #ff9933;
+  --color-danger: #ff5555;
+  --color-start-ink: #50bdff;
+  --color-mid-ink: #00ff66;
+  --color-warning-ink: #ff9933;
+  --color-danger-ink: #ff7171;
+}
+
+html[data-palette="tron"][data-theme="light"] {
+  --color-bg: #e9faff;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #f5fdff;
+  --color-panel-strong: #d7f2fa;
+  --color-border: #70a8ba;
+  --color-border-strong: #007b98;
+  --color-text: #082b3a;
+  --color-text-muted: #355e70;
+  --color-text-faint: #476f80;
+  --color-pre-bg: #dff4fc;
+  --color-backdrop: #082b3870;
+  --color-start: #006f88;
+  --color-mid: #007c38;
+  --color-warning: #a64a00;
+  --color-danger: #bc2626;
+  --color-start-ink: #00556b;
+  --color-mid-ink: #005e2a;
+  --color-warning-ink: #7a3600;
+  --color-danger-ink: #921b1b;
 }
 
 html[data-font="system-stack"] {

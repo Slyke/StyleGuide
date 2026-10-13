@@ -1,6 +1,6 @@
 {
-  "styleguide-hero-title": "Seven Themes. Two Modes.",
-  "styleguide-hero-description": "From crisp terminals to soft, bubbly surfaces. Explore seven distinct themes, each with a light and dark mode, across the same controls, states, and semantic tones.",
+  "styleguide-hero-title": "Ten Themes. Two Modes.",
+  "styleguide-hero-description": "From crisp terminals to soft, bubbly surfaces. Explore ten distinct themes, each with a light and dark mode, across the same controls, states, and semantic tones.",
   "styleguide-theme-label": "Theme",
   "styleguide-theme-d4rk": "D4rk",
   "styleguide-theme-terminal": "Terminal",
@@ -25,5 +25,8 @@
   "styleguide-font-sans-label": "Sans Serif",
   "styleguide-font-serif-label": "Serif",
   "styleguide-font-monospace-label": "Monospace",
-  "styleguide-font-sans-family": "Sans serif"
+  "styleguide-font-sans-family": "Sans serif",
+  "styleguide-theme-reference": "Reference",
+  "styleguide-theme-contrast": "High contrast",
+  "styleguide-theme-tron": "Tron"
 }

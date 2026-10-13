@@ -193,7 +193,7 @@ themes:
       linkHover: none
 themeFamilies:
   default: d4rk
-  inheritance: "Start with themes[mode], apply sharedOverrides for non-D4rk families, then apply family shape, shadows, colors, and modes[mode].colors."
+  inheritance: "Start with themes[mode], apply sharedOverrides for non-D4rk families, apply kioskThemeOverrides for its listed families, then apply family shape, shadows, colors, and modes[mode].colors."
   sharedOverrides:
     controlBg: "ref:bgElevated"
     controlStrong: "ref:panelStrong"
@@ -416,6 +416,181 @@ themeFamilies:
           startFill: "rgba(15, 108, 189, 0.08)"
           startFillStrong: "rgba(15, 108, 189, 0.14)"
           startInk: "#0f548c"
+  reference:
+    label: "Reference"
+    description: "The kiosk's slate surfaces and bright blue, green, orange, and red status palette."
+    shape:
+      radiusSm: "6px"
+      radiusMd: "6px"
+      radiusLg: "6px"
+    modes:
+      dark:
+        colors:
+          bg: "#0b1216"
+          bgElevated: "#19242b"
+          panel: "#121e24"
+          panelStrong: "#19262d"
+          border: "#334750"
+          borderStrong: "#536d7a"
+          text: "#edf5f8"
+          textMuted: "#a3bac6"
+          textFaint: "#91a9b5"
+          preBg: "#081018"
+          backdrop: "#04090dc4"
+          start: "#50c7ff"
+          mid: "#39ff79"
+          warning: "#ff9a3d"
+          danger: "#ff6262"
+          startInk: "#65c5ff"
+          midInk: "#65ff91"
+          warningInk: "#ffac5c"
+          dangerInk: "#ff7777"
+      light:
+        colors:
+          bg: "#e8eff2"
+          bgElevated: "#ffffff"
+          panel: "#f5f9fb"
+          panelStrong: "#dce7ed"
+          border: "#b4c7d1"
+          borderStrong: "#698593"
+          text: "#132b38"
+          textMuted: "#405b6b"
+          textFaint: "#506d7d"
+          preBg: "#e1edf3"
+          backdrop: "#132b3870"
+          start: "#006eaa"
+          mid: "#087a32"
+          warning: "#a34a00"
+          danger: "#b51e2b"
+          startInk: "#004f7d"
+          midInk: "#075e28"
+          warningInk: "#743400"
+          dangerInk: "#891622"
+  contrast:
+    label: "High contrast"
+    description: "The kiosk's near-black surfaces, white borders, and vivid status colors, with a crisp white light counterpart."
+    shape:
+      radiusSm: "6px"
+      radiusMd: "6px"
+      radiusLg: "6px"
+    modes:
+      dark:
+        colors:
+          bg: "#000000"
+          bgElevated: "#000000"
+          panel: "#090909"
+          panelStrong: "#181818"
+          border: "#888888"
+          borderStrong: "#ffffff"
+          text: "#ffffff"
+          textMuted: "#dedede"
+          textFaint: "#dedede"
+          preBg: "#000000"
+          backdrop: "#000000d9"
+          start: "#75d7ff"
+          mid: "#3dff77"
+          warning: "#ff982f"
+          danger: "#ff7575"
+          startInk: "#78cfff"
+          midInk: "#51ff88"
+          warningInk: "#ff982f"
+          dangerInk: "#ff8585"
+      light:
+        colors:
+          bg: "#ffffff"
+          bgElevated: "#ffffff"
+          panel: "#ffffff"
+          panelStrong: "#eeeeee"
+          border: "#595959"
+          borderStrong: "#000000"
+          text: "#000000"
+          textMuted: "#222222"
+          textFaint: "#333333"
+          preBg: "#f2f2f2"
+          backdrop: "#00000099"
+          start: "#004b76"
+          mid: "#005c1b"
+          warning: "#813500"
+          danger: "#950c19"
+          startInk: "#003957"
+          midInk: "#004015"
+          warningInk: "#642900"
+          dangerInk: "#730914"
+  tron:
+    label: "Tron"
+    description: "The kiosk's midnight panels, cyan borders, bright status colors, and sharp two-pixel corners."
+    shape:
+      radiusSm: "2px"
+      radiusMd: "2px"
+      radiusLg: "2px"
+    modes:
+      dark:
+        colors:
+          bg: "#020b12"
+          bgElevated: "#04111b"
+          panel: "#071923"
+          panelStrong: "#0b2634"
+          border: "#125269"
+          borderStrong: "#22c9ed"
+          text: "#e5fbff"
+          textMuted: "#a3c6d2"
+          textFaint: "#85b3c3"
+          preBg: "#020b12"
+          backdrop: "#020b12cc"
+          start: "#00dcff"
+          mid: "#00ff66"
+          warning: "#ff9933"
+          danger: "#ff5555"
+          startInk: "#50bdff"
+          midInk: "#00ff66"
+          warningInk: "#ff9933"
+          dangerInk: "#ff7171"
+      light:
+        colors:
+          bg: "#e9faff"
+          bgElevated: "#ffffff"
+          panel: "#f5fdff"
+          panelStrong: "#d7f2fa"
+          border: "#70a8ba"
+          borderStrong: "#007b98"
+          text: "#082b3a"
+          textMuted: "#355e70"
+          textFaint: "#476f80"
+          preBg: "#dff4fc"
+          backdrop: "#082b3870"
+          start: "#006f88"
+          mid: "#007c38"
+          warning: "#a64a00"
+          danger: "#bc2626"
+          startInk: "#00556b"
+          midInk: "#005e2a"
+          warningInk: "#7a3600"
+          dangerInk: "#921b1b"
+kioskThemeOverrides:
+  families: [reference, contrast, tron]
+  colors:
+    linkHover: "ref:startInk"
+    inlineCodeBg: "ref:startFill"
+    inlineCodeText: "ref:startInk"
+    dangerGlow: "color-mix(in srgb, var(--color-danger) 8%, transparent)"
+  shadows:
+    panel: none
+    hover: "0 0 0 1px var(--color-start-soft)"
+    focus: "0 0 0 3px var(--color-warning-soft)"
+    linkHover: none
+  toneMix:
+    tones: [start, mid, warning, danger]
+    formula: "color-mix(in srgb, var(--color-TONE) PERCENT%, transparent)"
+    dark:
+      soft: 18
+      border: 62
+      fill: 16
+      fillStrong: 24
+    light:
+      soft: 10
+      border: 40
+      fill: 8
+      fillStrong: 14
 typography:
   defaultStack: "ui-monospace, SF Mono, SFMono-Regular, Menlo, Monaco, Cascadia Mono, Cascadia Code, Consolas, Lucida Console, Roboto Mono, Droid Sans Mono, Noto Sans Mono, Ubuntu Mono, DejaVu Sans Mono, Liberation Mono, Courier New, monospace"
   fontOptions:
@@ -603,7 +778,7 @@ The result is a compact technical style-guide UI, not a marketing page. It uses 
 
 Use an HTML document titled **D4rk-Styleguide**, with language set to English, UTF-8 encoding, and the standard responsive viewport declaration. The root element starts with `data-palette="d4rk"`, `data-theme="dark"`, `data-font="system-stack"`, and `data-content-width="standard"`. `data-palette` identifies the theme family; `data-theme` retains the existing light/dark mode contract. Set `color-scheme` from the active mode.
 
-Before the first paint, read the four persistence keys in the YAML front matter. Apply a saved mode only when it is `light` or `dark`, and a saved palette only when it is `d4rk`, `terminal`, `bubbly`, `paper`, `ocean`, `retro`, or `professional`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Use the D4rk persistence keys for all preferences. Storage failures must not break the page.
+Before the first paint, read the four persistence keys in the YAML front matter. Apply a saved mode only when it is `light` or `dark`, and a saved palette only when it is `d4rk`, `terminal`, `bubbly`, `paper`, `ocean`, `retro`, `professional`, `reference`, `contrast`, or `tron`; apply a saved font only when it is one of the listed font options; apply a saved width only when it is one of the six supported values. Invalid or unavailable saved state falls back to the defaults. Use the D4rk persistence keys for all preferences. Storage failures must not break the page.
 
 Apply `box-sizing: border-box` to every element and pseudo-element. The document and body use the active background, active text, and selected page-wide font stack. The body has zero margin and a minimum height of `100vh`. Buttons, inputs, selects, textareas, progress, meter, and dialogs inherit the page font. Text selection uses the active start color as its background and the page background as its text color.
 
@@ -613,7 +788,7 @@ Native selects are the exception: transition only border color and box shadow. D
 
 ## Toolbar state and option contract
 
-The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), Retro (`retro`), and Professional (`professional`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
+The appearance controls are two labeled native dropdowns in a grid with `minmax(0, 1.5fr) minmax(0, 1fr)` columns and a `0.75rem` gap. The **Theme** dropdown (`theme-selector`) contains D4rk (`d4rk`), Terminal (`terminal`), Bubbly (`bubbly`), Paper (`paper`), Ocean (`ocean`), Retro (`retro`), Professional (`professional`), Reference (`reference`), High contrast (`contrast`), and Tron (`tron`) in that order. The **Mode** dropdown (`mode-selector`) contains Dark (`dark`) and Light (`light`). Both selects have zero minimum width so the pair can shrink on narrow screens. Changing either updates only its own root state, synchronizes both selectors, and saves both preferences. It must preserve font and content width. The Forms helper is a polite status region displaying the selected labels, such as “Terminal / Light.” Native select semantics provide keyboard and screen-reader support. Unknown runtime values fall back to D4rk or Dark.
 
 Toolbar fields are one-column grids with `0.5rem` gaps. Desktop toolbar selects span the available width and have an `18rem` minimum width. The font selector groups options exactly as follows:
 
@@ -640,6 +815,12 @@ The complete theme values are normative in the YAML front matter. Compose each t
 
 Blue and green must remain visibly distinct. Green and amber must remain visibly distinct for users with green-yellow confusion. Danger must read as red rather than pink. Gamma stays earthier and browner than warning. No component may create its own theme switch or tone meaning.
 
+### Imported kiosk palettes
+
+Reference (`reference`), High contrast (`contrast`), and Tron (`tron`) are adapted from `../service-watcher-kiosk/src/web/styles.css`; the complete reconstruction values are included above. The kiosk's Dark and Light entries share the existing D4rk baseline and are not added as duplicate families. The three imported dark palettes retain their source background, panel, strong-panel, control-background, border, text, muted-text, status base colors, and status inks. `bgElevated` maps to the source control background. Each family adds a light counterpart; faint text, missing surface roles, and light-mode colors are guide adaptations.
+
+Apply `kioskThemeOverrides` after the shared family overrides and before the individual family values. For each listed tone, derive soft, border, fill, and strong-fill tokens with the exact color-mix formula and mode percentages in the YAML; base and ink values come from the family. This maps the kiosk colors onto the guide's existing semantic roles without importing kiosk-only status-card layout or saturated tile backgrounds. Secondary accents inherit the mode baseline. Reference and High contrast keep the source six-pixel radius on shared corners; Tron keeps its two-pixel radius. All imported families retain the independent font selector, 60ms transitions, and active-only native-select feedback.
+
 ## Typography
 
 The default is monospace. The font selector also offers sans-serif and serif stacks. Drive page-wide typography through `--font-ui`; retain `--font-mono` as the default monospace fallback. Display type, headings, paragraphs, controls, options, labels, tables, badges, helper text, code, and form values inherit the selected font. A root font change updates the entire page without changing the theme or mode. The Typography badge reports “Monospace,” “Sans serif,” or “Serif” to match the selection. Use installed fonts with the documented fallbacks; no external font service is required.
@@ -654,7 +835,7 @@ The main shell is `min(100% - desktop gutter, selected content width)`, centered
 
 Build the following content in this order:
 
-1. **Hero panel — “Seven Themes. Two Modes.”** Use eyebrow “D4rk-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains paired Theme and Mode dropdowns, a grouped sans-serif, serif, and monospace font selector, content-width selector, preference-persistence helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
+1. **Hero panel — “Ten Themes. Two Modes.”** Use eyebrow “D4rk-Styleguide / Theme Tokens,” explanatory copy, and a two-column desktop layout (`minmax(0, 1.8fr)` and `minmax(16rem, 1fr)`). The right side contains paired Theme and Mode dropdowns, a grouped sans-serif, serif, and monospace font selector, content-width selector, preference-persistence helper text, and Start, Mid / Info, Ghost, and Disabled action examples.
 2. **Typography — “Text Samples.”** Use two cards: one demonstrates a heading and paragraph; one demonstrates start-tone inline text, a link, inline code, and Neutral, Start, Mid / Info, 75% / Warning, and End / Error badges.
 3. **Controls — “Form Elements.”** Show primary, secondary, ghost, and disabled buttons; text, email, password, search, textarea, and select fields; checked and unchecked checkboxes and radios; a live range/output pair initialized to 56; and a checked switch with live “enabled” text. Explain that actions are raised while labels are flat.
 4. **Variants — “Tone Control Sets.”** Use four tone cards for Start/Blue, Mid/Green, Warning/Amber, and Danger/Red. Every card includes its tone badge, button, input, range/output, checked checkbox, checked radio, and switch. Initial range values are 28, 54, 76, and 92. The danger switch starts unchecked; the other three start checked.
