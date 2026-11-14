@@ -89,3 +89,4 @@ This repository is intentionally documented for LLM-first consumption.
 - Font switching should change the whole page, not isolated elements.
 - Blue, green, warning, and danger tones should remain semantically stable.
 - If reusable design tokens or component rules change, update `design.md` and `style.md` so downstream projects stay aligned.
+- Create a `local-only` folder and ensure it's added to `.gitignore`. Use this to store sensitive information. The rest of the project should be generic and not contain IPs, Usernames etc.
