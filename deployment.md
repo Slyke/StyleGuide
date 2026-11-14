@@ -17,6 +17,7 @@ Use this guide for services that need repeatable image publishing, traceable run
 - Include Kubernetes logging metadata environment variables in startup diagnostics when they are available and the logger does not already attach them.
 - Configure logging sinks and gates so the startup diagnostics event is actually emitted to the intended outputs.
 - Docker Compose application services should load a repository-root `.env` when it exists and should still start when it does not.
+- Follow the [network transport contract](./configuration.md#network-transport) for configurable MQTT TLS, broker trust anchors, and HTTPS certificate provisioning.
 - Keep `.env` out of Git and the Docker build context; never copy it in a Dockerfile.
 - Keep secrets out of startup diagnostics and health responses. Log only booleans such as `apiTokenConfigured`, not secret values.
 - Tag pushed images with `latest`, the release version, and the release version plus Git hash.

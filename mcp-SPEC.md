@@ -17,7 +17,7 @@ This specification describes a reusable production pattern for an MCP server tha
 - Probe endpoints SHOULD be available at `/livez` and `/readyz`; a redundant `/healthz` alias SHOULD NOT be added unless required by the deployment platform.
 - `/livez` SHOULD be dependency-free process/listener status. `/readyz` SHOULD check the upstream API and every other dependency required to serve MCP requests.
 - Probe responses SHOULD include service identity, `ok`, `version`, `buildHash`, and correlation metadata when available, without exposing internal counts, revisions, keys, tenants, or topology.
-- HTTP SHOULD be enabled for trusted LAN or sidecar deployments; HTTPS SHOULD be supported for direct remote access.
+- The server MUST support configurable HTTPS. HTTP SHOULD be available for trusted LAN or sidecar deployments.
 - The server SHOULD support graceful shutdown on `SIGINT` and `SIGTERM`.
 - Each MCP request SHOULD create a fresh transport/session object unless the project has a clear session-state requirement.
 
@@ -32,7 +32,7 @@ When an MCP server is bundled with an application whose API owns the domain logi
 - Client-to-MCP and MCP-to-API authentication MUST use separate credentials. MCP clients use named, scoped Bearer tokens; the sidecar uses a dedicated upstream API key or service credential that is never returned to clients.
 - A client-facing token MUST NOT be reused as the upstream API credential. Configuration validation SHOULD reject credential reuse.
 - The upstream API credential MUST have only the permissions required by the registered tools. Upstream systems with higher-impact capabilities SHOULD provide a dedicated service identity or key scope.
-- The API and MCP containers MAY share a mounted certificate volume. Certificate generation SHOULD be handled by an idempotent init container or one-shot Compose service before either listener starts.
+- The API and MCP containers MAY share a mounted certificate volume. Deployments MAY populate that volume with an idempotent init container or one-shot Compose service before either listener starts.
 - When the sidecar calls an HTTPS upstream using a private or self-signed certificate, TLS verification MUST remain enabled by default and the shared certificate or private CA SHOULD be mounted as an explicit trust anchor.
 - Generated certificates MUST contain subject alternative names for every configured container/service DNS name used by verified upstream connections.
 - Compose and Kubernetes examples SHOULD model the API, MCP sidecar, certificate initialization, shared certificate mount, separate secret inputs, health checks, and dependency/readiness ordering.
@@ -151,7 +151,7 @@ When an MCP server is bundled with an application whose API owns the domain logi
 - Provide Kubernetes deployment examples when the project is expected to run in clusters.
 - Bundled application MCP servers SHOULD ship as a dedicated sidecar image/service rather than adding MCP dependencies to the application API image.
 - Health and readiness probes SHOULD be documented.
-- If HTTPS is enabled, support mounted certificates and safe local development certificate generation.
+- Follow the [HTTPS configuration contract](./configuration.md#http-and-https). When HTTPS is enabled and neither a certificate nor a private key is configured, the application MUST generate a self-signed pair before opening the listener.
 - The default container should run as a non-root user when practical.
 - Runtime data such as history files, generated certs, and logs SHOULD be stored in configurable paths.
 
