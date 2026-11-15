@@ -343,7 +343,7 @@ BUILDER_BIN=podman # or docker
 # PUSH_TAGS="beta preview"
 ```
 
-Set `MIRROR_DOMAIN` to push the same tags to a mirror after Docker Hub. The optional second argument overrides it for one run. The script keeps the hostname in the publishing shell and uses it for temporary registry tags.
+Set `MIRROR_DOMAIN` to push the same tags to a mirror after Docker Hub. A failure stops the remaining tags for that destination. The script tries any remaining destination and exits nonzero if any attempt failed. The optional second argument overrides `MIRROR_DOMAIN` for one run. The script keeps the hostname in the publishing shell and uses it for temporary registry tags.
 
 Set `BUILD_VERSION` in `.build.env` to the release version, such as `v0.4.2`. The guard rejects the literal value `latest` so moving `:latest` always requires an explicit `PUSH_TAGS=latest`. Use `PUSH_TAGS` for space-separated aliases in addition to the version and commit tags. Request `latest` after verifying a stable `MAJOR.MINOR.PATCH` release, with an optional leading `v`. Keep the comment above the guard in Bash scripts adapted from this example.
 
@@ -435,20 +435,27 @@ if [[ -n $mirror_domain && $mirror_domain != docker.io ]]; then
   destinations+=("$mirror_domain/$BUILD_USERNAME/$BUILD_APP_NAME")
 fi
 
+publish_status=0
 for destination in "${destinations[@]}"; do
   for tag in "${tags[@]}"; do
     ref="$destination:$tag"
-    "$BUILDER_BIN" tag "$image" "$ref"
-    push_status=0
-    "$BUILDER_BIN" push "$ref" || push_status=$?
-    if [[ $destination != "$primary" ]]; then
-      "$BUILDER_BIN" image rm "$ref" >/dev/null
+    ref_status=0
+    if "$BUILDER_BIN" tag "$image" "$ref"; then
+      "$BUILDER_BIN" push "$ref" || ref_status=$?
+      if [[ $destination != "$primary" ]]; then
+        "$BUILDER_BIN" image rm "$ref" >/dev/null || ref_status=$?
+      fi
+    else
+      ref_status=$?
     fi
-    if (( push_status != 0 )); then
-      exit "$push_status"
+    if (( ref_status != 0 )); then
+      printf 'Publishing failed for %s (exit %d)\n' "$ref" "$ref_status" >&2
+      publish_status=$ref_status
+      break
     fi
   done
 done
+exit "$publish_status"
 ```
 
 The script removes each temporary local mirror tag after its push attempt. A host that pulls directly from the mirror can show that registry address in its local image references. Inspect the image config, history, and layers to check the published content. [Docker image inspection fields](https://github.com/moby/moby/blob/master/api/types/image/image_inspect.go)
@@ -485,4 +492,5 @@ Before considering a deployment complete:
 - Confirm `/readyz` checks every required dependency, returns HTTP 500 for a failed required check, and does not expose sensitive runtime details.
 - Confirm liveness remains HTTP 200 during a simulated external dependency outage while readiness becomes HTTP 500.
 - Confirm the publish script stops on a version mismatch. Check that Docker Hub and any configured mirror receive the version and commit tags plus the aliases in `PUSH_TAGS`. Verify that `latest` moves only when requested for a stable release.
+- Simulate a Docker Hub rejection and verify that the configured mirror receives its tags and the script exits nonzero.
 - Check that the mirror hostname stays out of the running container's environment and the image config, history, and layers. Verify that the publishing host has removed its temporary mirror tags.
