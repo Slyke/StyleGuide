@@ -325,6 +325,8 @@ Use the same build-info loader as startup diagnostics. Each call gets one correl
 
 When writing a publish script, inspect the project's build files and identify the components versioned together for the requested release. Fill in `check_release_versions` with those paths and adapt the build and publish steps to the artifact.
 
+Start the resulting Bash script with a brief troubleshooting comment right after the shebang. Name the project's actual manifest paths, configuration, or commands someone needs to fix common version, build, and publish failures.
+
 - For Svelte and Node.js, read `version` from the `package.json` files that own the release. Include workspace packages that ship together under that version.
 - For Rust, use [`cargo metadata --no-deps --format-version 1`](https://doc.rust-lang.org/cargo/commands/cargo-metadata.html) and select the package being released. This resolves Cargo workspace inheritance.
 - For mixed projects, check both stacks when they share a release version. For Tauri, resolve the [effective app version](https://v2.tauri.app/reference/config/#version) and use the project's bundling and publishing commands for desktop artifacts.
@@ -343,12 +345,15 @@ BUILDER_BIN=podman # or docker
 
 Set `MIRROR_DOMAIN` to push the same tags to a mirror after Docker Hub. The optional second argument overrides it for one run. The script keeps the hostname in the publishing shell and uses it for temporary registry tags.
 
-Use `PUSH_TAGS` for space-separated aliases in addition to the version and commit tags. After verifying a stable release, use `PUSH_TAGS=latest` to move the `latest` tag. The script accepts `latest` only for versions in `MAJOR.MINOR.PATCH` format with an optional leading `v`.
+Set `BUILD_VERSION` in `.build.env` to the release version, such as `v0.4.2`. The guard rejects the literal value `latest` so moving `:latest` always requires an explicit `PUSH_TAGS=latest`. Use `PUSH_TAGS` for space-separated aliases in addition to the version and commit tags. Request `latest` after verifying a stable `MAJOR.MINOR.PATCH` release, with an optional leading `v`. Keep the comment above the guard in Bash scripts adapted from this example.
 
 Run all version checks before tagging, building, or publishing. Fail on a missing manifest, parse error, missing version, or mismatch. The skeleton ignores an optional leading `v` during comparison and uses `BUILD_VERSION` in image tags. If the release version contains characters such as `+`, adapt the tag to the project's registry convention.
 
 ```bash
 #!/usr/bin/env bash
+# Adapt these recovery steps to the project's files and commands.
+# For a version mismatch, align BUILD_VERSION in .build.env with the selected manifests.
+# For build or push failures, check the project's Dockerfile or sign in to the destination registry.
 set -euo pipefail
 
 fail() {
@@ -395,6 +400,7 @@ fi
 # Adapt the Dockerfile, build context, and targets to the project.
 commit_tag="$BUILD_VERSION-$BUILD_HASH"
 tag_pattern='^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$'
+# Reject the literal value latest so :latest requires an explicit PUSH_TAGS=latest on a stable release.
 [[ $BUILD_VERSION != latest ]] || fail 'Use a release version for BUILD_VERSION'
 [[ $commit_tag =~ $tag_pattern ]] || fail "Invalid commit tag: $commit_tag"
 read -r -a custom_tags <<< "${PUSH_TAGS:-}"
