@@ -20,7 +20,7 @@ Use this guide for services that need repeatable image publishing, traceable run
 - Follow the [network transport contract](./configuration.md#network-transport) for configurable MQTT TLS, broker trust anchors, and HTTPS certificate provisioning.
 - Keep `.env` out of Git and the Docker build context; never copy it in a Dockerfile.
 - Keep secrets out of startup diagnostics and health responses. Log only booleans such as `apiTokenConfigured`, not secret values.
-- Tag pushed images with `latest`, the release version, and the release version plus Git hash.
+- Tag pushed images with the release version and the release version plus Git hash. Promote a verified stable release to `latest` explicitly.
 
 ## Versioning
 
@@ -330,14 +330,19 @@ When writing a publish script, inspect the project's build files and identify th
 - For mixed projects, check both stacks when they share a release version. For Tauri, resolve the [effective app version](https://v2.tauri.app/reference/config/#version) and use the project's bundling and publishing commands for desktop artifacts.
 - For example, an `mqttctl` web image release can check the workspace, Svelte frontend, and Node API manifests. Include the Rust broker agent and MCP server when releasing their images under the same version.
 
-Use a trusted build env file with shell assignments and exclude it from Git and the Docker build context. Run from the repository root and pass the file path as the first argument, or use `./.build.env`.
+Use a trusted build env file with shell assignments. Run from the repository root and pass the file path as the first argument, or use `./.build.env`. Keep the file out of Git and the build context. If it sits inside the context, exclude it in the active ignore file, including a Dockerfile-specific `.dockerignore` or Podman's `.containerignore` where applicable. [Docker build context](https://docs.docker.com/build/concepts/context/#dockerignore-files) · [Podman build context](https://docs.podman.io/en/latest/markdown/podman-build.1.html#files)
 
 ```env
 BUILD_USERNAME=your-team
 BUILD_APP_NAME=your-service
 BUILD_VERSION=v0.4.2
-BUILD_BUILDER=podman
+BUILDER_BIN=podman # or docker
+# PUSH_TAGS="beta preview"
 ```
+
+Pass a mirror registry hostname as the optional second argument, for example `./publish-image.sh ./.build.env registry.example.com`. The script reads the hostname after building and pushes the same tags there after Docker Hub.
+
+Use `PUSH_TAGS` for space-separated aliases in addition to the version and commit tags. After verifying a stable release, use `PUSH_TAGS=latest` to move the `latest` tag. The script accepts `latest` only for versions in `MAJOR.MINOR.PATCH` format with an optional leading `v`.
 
 Run all version checks before tagging, building, or publishing. Fail on a missing manifest, parse error, missing version, or mismatch. The skeleton ignores an optional leading `v` during comparison and uses `BUILD_VERSION` in image tags. If the release version contains characters such as `+`, adapt the tag to the project's registry convention.
 
@@ -370,7 +375,7 @@ source "$build_env"
 : "${BUILD_USERNAME:?Set BUILD_USERNAME in the build env file}"
 : "${BUILD_APP_NAME:?Set BUILD_APP_NAME in the build env file}"
 : "${BUILD_VERSION:?Set BUILD_VERSION in the build env file}"
-builder=${BUILD_BUILDER:-podman}
+BUILDER_BIN=${BUILDER_BIN:-podman}
 check_release_versions
 
 GIT_SHA=$(git rev-parse --verify HEAD)
@@ -384,12 +389,22 @@ if [[ -n $status ]]; then
   GIT_DIRTY=true
 fi
 
-# Adapt the Dockerfile, context, targets, and destinations to the project.
+# Adapt the Dockerfile, build context, and targets to the project.
 commit_tag="$BUILD_VERSION-$BUILD_HASH"
-[[ $commit_tag =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$ ]] || fail 'Invalid image tag'
+tag_pattern='^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$'
+[[ $BUILD_VERSION != latest ]] || fail 'Use a release version for BUILD_VERSION'
+[[ $commit_tag =~ $tag_pattern ]] || fail "Invalid commit tag: $commit_tag"
+read -r -a custom_tags <<< "${PUSH_TAGS:-}"
+for tag in "${custom_tags[@]}"; do
+  [[ $tag =~ $tag_pattern ]] || fail "Invalid push tag: $tag"
+  if [[ $tag == latest && ! $BUILD_VERSION =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    fail 'Publishing latest requires a stable release version'
+  fi
+done
+tags=("$commit_tag" "$BUILD_VERSION" "${custom_tags[@]}")
+
 image="$BUILD_APP_NAME:$commit_tag"
-destination="docker.io/$BUILD_USERNAME/$BUILD_APP_NAME"
-"$builder" build \
+"$BUILDER_BIN" build \
     --build-arg BUILD_HASH="$BUILD_HASH" \
     --build-arg BUILD_VERSION="$BUILD_VERSION" \
     --build-arg BUILD_DATE="$BUILD_DATE" \
@@ -404,13 +419,19 @@ destination="docker.io/$BUILD_USERNAME/$BUILD_APP_NAME"
     --label "build.ci.run-id=$CI_RUN_ID" \
     -t "$image" -f ./Dockerfile .
 
-for tag in "$commit_tag" "$BUILD_VERSION" latest; do
-  "$builder" tag "$image" "$destination:$tag"
-  "$builder" push "$destination:$tag"
+destinations=("docker.io/$BUILD_USERNAME/$BUILD_APP_NAME")
+mirror_domain=${2:-}
+if [[ -n $mirror_domain ]]; then
+  destinations+=("$mirror_domain/$BUILD_USERNAME/$BUILD_APP_NAME")
+fi
+
+for destination in "${destinations[@]}"; do
+  for tag in "${tags[@]}"; do
+    "$BUILDER_BIN" tag "$image" "$destination:$tag"
+    "$BUILDER_BIN" push "$destination:$tag"
+  done
 done
 ```
-
-For a mirror push, copy the published tags to the mirror repository, such as `registry.example.com/your-team/your-service`. Configure the mirror hostname in that step.
 
 If the release uses a Git tag, verify that any existing tag points to `GIT_SHA` before building. Create and push a missing tag for that commit at the step owned by the project's release workflow. Use a new version for a build that replaces one already deployed.
 
@@ -443,4 +464,5 @@ Before considering a deployment complete:
 - Confirm `/livez` succeeds without making dependency calls and includes service identity, `ok`, `version`, `buildHash`, and correlation metadata.
 - Confirm `/readyz` checks every required dependency, returns HTTP 500 for a failed required check, and does not expose sensitive runtime details.
 - Confirm liveness remains HTTP 200 during a simulated external dependency outage while readiness becomes HTTP 500.
-- Confirm the publish script stops on a version mismatch and the registry receives `latest`, `$BUILD_VERSION`, and `$BUILD_VERSION-$BUILD_HASH` for a valid release.
+- Confirm the publish script stops on a version mismatch. Check that Docker Hub and any configured mirror receive the version and commit tags plus the aliases in `PUSH_TAGS`. Verify that `latest` moves only when requested for a stable release.
+- Inspect the image config, history, and layers to verify that the mirror hostname stays in the publishing step.
