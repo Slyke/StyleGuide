@@ -210,8 +210,8 @@ const formatTextLog = ({ template, entry }) => {
     rendered += ` error=${safeStringify({ value: entry.error })}`;
   }
 
-  if (entry.kubernetes !== undefined) {
-    rendered += ` kubernetes=${safeStringify({ value: entry.kubernetes })}`;
+  if (entry.runtime !== undefined) {
+    rendered += ` runtime=${safeStringify({ value: entry.runtime })}`;
   }
 
   return rendered.trim();
@@ -468,25 +468,29 @@ const sendSyslogLog = ({ sink, message }) => {
   sendSyslogStreamLog({ sink, message });
 };
 
-const resolveKubernetesMetadata = ({ kubernetes }) => {
-  if (!kubernetes.enabled) {
-    return undefined;
-  }
+const resolveRuntimeMetadata = ({ logging, env = process.env } = {}) => {
+  const runtime = logging?.runtime ?? {};
+  const legacy = logging?.kubernetes ?? {};
+  const configuredEnabled = [runtime.enabled, legacy.enabled, env.LOG_RUNTIME_ENABLED, env.LOG_K8S_METADATA_ENABLED]
+    .find((value) => value !== undefined);
 
-  const metadata = {
-    podName: kubernetes.podName,
-    deployment: kubernetes.deployment,
-    namespace: kubernetes.namespace,
-    podIp: kubernetes.podIp,
-    podIps: kubernetes.podIps,
-    nodeName: kubernetes.nodeName
+  const fields = [
+    ['name', runtime.name, legacy.podName, env.RUNTIME_NAME, env.K8S_POD_NAME],
+    ['deployment', runtime.deployment, legacy.deployment, env.RUNTIME_DEPLOYMENT, env.K8S_DEPLOYMENT],
+    ['namespace', runtime.namespace, legacy.namespace, env.RUNTIME_NAMESPACE, env.K8S_NAMESPACE],
+    ['ip', runtime.ip, legacy.podIp, env.RUNTIME_IP, env.K8S_POD_IP],
+    ['ips', runtime.ips, legacy.podIps, env.RUNTIME_IPS, env.K8S_POD_IPS],
+    ['node', runtime.node, legacy.nodeName, env.RUNTIME_NODE, env.K8S_NODE_NAME]
+  ];
+
+  const metadata = fields
+    .map(([field, ...values]) => [field, values.find((value) => value !== undefined)])
+    .filter(([, value]) => value !== undefined && value !== null && value !== '');
+
+  return {
+    enabled: asBoolean({ value: configuredEnabled }),
+    metadata: metadata.length > 0 ? Object.fromEntries(metadata) : undefined
   };
-
-  const filtered = Object.fromEntries(
-    Object.entries(metadata).filter(([, value]) => value !== undefined && value !== '')
-  );
-
-  return Object.keys(filtered).length > 0 ? filtered : undefined;
 };
 
 const resolveLoggingConfig = ({ settings = {} }) => {
@@ -526,18 +530,9 @@ const resolveLoggingConfig = ({ settings = {} }) => {
     socketType: process.env.LOG_SYSLOG_SOCKET_TYPE,
     servername: process.env.LOG_SYSLOG_SERVERNAME
   };
-  const envKubernetes = {
-    enabled: asBoolean({ value: process.env.LOG_K8S_METADATA_ENABLED, fallback: false }),
-    podName: process.env.K8S_POD_NAME,
-    deployment: process.env.K8S_DEPLOYMENT,
-    namespace: process.env.K8S_NAMESPACE,
-    podIp: process.env.K8S_POD_IP,
-    podIps: process.env.K8S_POD_IPS,
-    nodeName: process.env.K8S_NODE_NAME
-  };
-
   const logging = settings.logging || {};
   const sinks = logging.sinks || {};
+  const runtime = resolveRuntimeMetadata({ logging });
   const mergedSyslogSink = mergeDefined({
     base: mergeDefined({
       base: {
@@ -651,10 +646,7 @@ const resolveLoggingConfig = ({ settings = {} }) => {
       }
     },
     gates: logging.gates || {},
-    kubernetes: mergeDefined({
-      base: envKubernetes,
-      override: logging.kubernetes || {}
-    })
+    runtime: runtime.enabled ? runtime.metadata : undefined
   };
 };
 
@@ -721,7 +713,6 @@ const emitLog = ({ entry, config }) => {
 
 const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
   const config = resolveLoggingConfig({ settings });
-  const kubernetes = resolveKubernetesMetadata({ kubernetes: config.kubernetes });
 
   const resolveGate = ({ gate, loggerKey, errorKey }) => {
     const gateKey = gate || loggerKey || errorKey;
@@ -791,8 +782,8 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
       }
     }
 
-    if (kubernetes !== undefined) {
-      entry.kubernetes = kubernetes;
+    if (config.runtime !== undefined) {
+      entry.runtime = config.runtime;
     }
 
     emitLog({ entry, config });
@@ -893,5 +884,6 @@ const debugAndErrors = ({ settings = {}, errorCodeMap = {} } = {}) => {
 };
 
 module.exports = {
-  debugAndErrors
+  debugAndErrors,
+  resolveRuntimeMetadata
 };

@@ -1,7 +1,7 @@
 //! JSON5 loading, whole-value environment references, and logger configuration.
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use std::{collections::BTreeMap, fmt, path::Path};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -302,14 +302,18 @@ impl Gate {
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
-pub struct KubernetesConfig {
+pub struct RuntimeConfig {
     pub enabled: bool,
-    pub pod_name: Option<String>,
+    #[serde(alias = "podName")]
+    pub name: Option<String>,
     pub deployment: Option<String>,
     pub namespace: Option<String>,
-    pub pod_ip: Option<String>,
-    pub pod_ips: Option<Value>,
-    pub node_name: Option<String>,
+    #[serde(alias = "podIp")]
+    pub ip: Option<String>,
+    #[serde(alias = "podIps")]
+    pub ips: Option<Value>,
+    #[serde(alias = "nodeName")]
+    pub node: Option<String>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -319,7 +323,8 @@ pub struct LoggingConfig {
     pub error_file: Option<String>,
     pub sinks: SinksConfig,
     pub gates: BTreeMap<String, Gate>,
-    pub kubernetes: KubernetesConfig,
+    #[serde(alias = "kubernetes")]
+    pub runtime: RuntimeConfig,
 }
 
 impl Default for LoggingConfig {
@@ -329,7 +334,7 @@ impl Default for LoggingConfig {
             error_file: None,
             sinks: SinksConfig::default(),
             gates: BTreeMap::new(),
-            kubernetes: KubernetesConfig::default(),
+            runtime: RuntimeConfig::default(),
         }
     }
 }
@@ -346,7 +351,7 @@ impl LoggingConfig {
     }
 
     /// Accepts either `{ logging: { ... } }` or a logging object directly.
-    /// Precedence: defaults < legacy LOG_* environment variables < JSON5 settings.
+    /// Precedence: defaults < direct environment variables < JSON5 settings.
     pub fn from_json5_with_environment(
         text: &str,
         environment: &impl Fn(&str) -> Option<String>,
@@ -354,11 +359,13 @@ impl LoggingConfig {
         let mut settings: Value =
             json5::from_str(text).map_err(|_| invalid("Invalid logging JSON5 syntax"))?;
         resolve_environment_references(&mut settings, environment);
-        let settings = settings.get("logging").cloned().unwrap_or(settings);
-        if !settings.is_object() {
-            return Err(invalid("Logging settings must be an object"));
-        }
-        let mut base = legacy_environment(environment)?;
+        let mut settings = settings.get("logging").cloned().unwrap_or(settings);
+        normalize_runtime_settings(
+            settings
+                .as_object_mut()
+                .ok_or_else(|| invalid("Logging settings must be an object"))?,
+        )?;
+        let mut base = direct_environment(environment)?;
         merge(&mut base, settings);
         normalize_headers(&mut base)?;
         let mut config: Self = serde_json::from_value(base).map_err(|_| {
@@ -441,6 +448,32 @@ fn merge(base: &mut Value, settings: Value) {
     }
 }
 
+fn normalize_runtime_settings(settings: &mut Map<String, Value>) -> Result<(), ConfigError> {
+    let legacy = settings.remove("kubernetes");
+    let runtime = settings.remove("runtime");
+    let mut normalized = Map::new();
+    for metadata in legacy.into_iter().chain(runtime) {
+        let Value::Object(mut fields) = metadata else {
+            return Err(invalid("Runtime metadata settings must be an object"));
+        };
+        for (alias, field) in [
+            ("podName", "name"),
+            ("podIp", "ip"),
+            ("podIps", "ips"),
+            ("nodeName", "node"),
+        ] {
+            if let Some(value) = fields.remove(alias) {
+                fields.entry(field).or_insert(value);
+            }
+        }
+        normalized.extend(fields);
+    }
+    if !normalized.is_empty() {
+        settings.insert("runtime".into(), Value::Object(normalized));
+    }
+    Ok(())
+}
+
 fn normalize_headers(value: &mut Value) -> Result<(), ConfigError> {
     for field in ["headers", "optionalHeaders"] {
         if let Some(headers) = value.pointer_mut(&format!("/sinks/http/{field}")) {
@@ -464,8 +497,8 @@ fn normalize_headers(value: &mut Value) -> Result<(), ConfigError> {
     Ok(())
 }
 
-fn legacy_environment(environment: &impl Fn(&str) -> Option<String>) -> Result<Value, ConfigError> {
-    let mut value = json!({"sinks": {}, "kubernetes": {}});
+fn direct_environment(environment: &impl Fn(&str) -> Option<String>) -> Result<Value, ConfigError> {
+    let mut value = json!({"sinks": {}, "runtime": {}});
     for (variable, field) in [
         ("LOG_TEXT_FORMAT", "logTextFormat"),
         ("ERROR_FILE_PATH", "errorFile"),
@@ -528,22 +561,25 @@ fn legacy_environment(environment: &impl Fn(&str) -> Option<String>) -> Result<V
         }
         value["sinks"][sink] = settings;
     }
-    if let Some(text) = environment("LOG_K8S_METADATA_ENABLED") {
-        value["kubernetes"]["enabled"] = json!(text
+    if let Some((variable, text)) = ["LOG_RUNTIME_ENABLED", "LOG_K8S_METADATA_ENABLED"]
+        .into_iter()
+        .find_map(|variable| environment(variable).map(|text| (variable, text)))
+    {
+        value["runtime"]["enabled"] = json!(text
             .to_lowercase()
             .parse::<bool>()
-            .map_err(|_| invalid("Invalid LOG_K8S_METADATA_ENABLED"))?);
+            .map_err(|_| ConfigError(format!("Invalid {variable}")))?);
     }
-    for (variable, field) in [
-        ("K8S_POD_NAME", "podName"),
-        ("K8S_DEPLOYMENT", "deployment"),
-        ("K8S_NAMESPACE", "namespace"),
-        ("K8S_POD_IP", "podIp"),
-        ("K8S_POD_IPS", "podIps"),
-        ("K8S_NODE_NAME", "nodeName"),
+    for (field, variable, alias) in [
+        ("name", "RUNTIME_NAME", "K8S_POD_NAME"),
+        ("deployment", "RUNTIME_DEPLOYMENT", "K8S_DEPLOYMENT"),
+        ("namespace", "RUNTIME_NAMESPACE", "K8S_NAMESPACE"),
+        ("ip", "RUNTIME_IP", "K8S_POD_IP"),
+        ("ips", "RUNTIME_IPS", "K8S_POD_IPS"),
+        ("node", "RUNTIME_NODE", "K8S_NODE_NAME"),
     ] {
-        if let Some(text) = environment(variable) {
-            value["kubernetes"][field] = json!(text);
+        if let Some(text) = environment(variable).or_else(|| environment(alias)) {
+            value["runtime"][field] = json!(text);
         }
     }
     Ok(value)

@@ -5,7 +5,7 @@ Use this guide for services that need repeatable image publishing, traceable run
 ## Deployment Contract
 
 - Keep the application version in project metadata, such as `package.json` `version`, a language manifest, or an explicit release file.
-- Generate build metadata during the image build, not at runtime.
+- Capture build metadata when building the image and make it available to the application at startup.
 - Include at least:
   - `version`: the release or package version.
   - `buildHash`: the Git commit hash for the built source.
@@ -14,7 +14,7 @@ Use this guide for services that need repeatable image publishing, traceable run
 - Expose `/livez` for process liveness and `/readyz` for traffic readiness. Do not add a redundant `/healthz` alias unless a platform integration explicitly requires it.
 - `/livez` must be cheap and dependency-free. `/readyz` owns database, cache, upstream, and other required dependency checks.
 - Both probes should return `ok`, service identity, `version`, `buildHash` or equivalent commit hash metadata, and the call's correlation ID.
-- Include Kubernetes logging metadata environment variables in startup diagnostics when they are available and the logger does not already attach them.
+- Include available runtime metadata once in startup diagnostics.
 - Configure logging sinks and gates so the startup diagnostics event is actually emitted to the intended outputs.
 - Docker Compose application services should load a repository-root `.env` when it exists and should still start when it does not.
 - Follow the [network transport contract](./configuration.md#network-transport) for configurable MQTT TLS, broker trust anchors, and HTTPS certificate provisioning.
@@ -33,19 +33,11 @@ Use one canonical application version and keep it aligned across the package met
 - Use a short Git hash length that is long enough to be useful in registries. Twelve characters is a practical default: `git rev-parse --short=12 HEAD`.
 - Do not force-move a version tag after it has been deployed. Create a new version instead.
 
-A normal release flow is:
-
-```bash
-VERSION=v0.4.2
-git status --short
-git tag -a "$VERSION" -m "$VERSION"
-git push origin "$VERSION"
-SHA=$(git rev-parse --short=12 HEAD)
-```
+Use the [image publishing skeleton](#image-publishing) to check the release version and Git commit before building or publishing.
 
 ## Build Metadata
 
-Generate a small build-info file as part of the container build. The final runtime image should receive that generated artifact and should not need the `.git` directory or the `git` binary.
+Pass the validated release version and Git hash as build arguments. The Dockerfile patterns expose them as `APP_VERSION` and `APP_BUILD_HASH` in the final image. Projects that use a build-info file can generate it from the same inputs. The final image needs only the metadata values.
 
 Recommended JSON shape:
 
@@ -58,12 +50,13 @@ Recommended JSON shape:
 
 A robust build-info generator should:
 
-- Read `version` from the project metadata.
+- Use the validated `BUILD_VERSION` and `BUILD_HASH` when supplied.
+- Read `version` from the project metadata for local builds without `BUILD_VERSION`.
 - Resolve the Git directory even when `.git` is a file that points at a worktree gitdir.
 - Handle detached HEAD by reading the commit directly from `.git/HEAD`.
 - Handle normal branches by following the ref named in `.git/HEAD`.
 - Handle packed refs when the branch ref is stored in `packed-refs`.
-- Fall back to `BUILD_HASH` or `unknown` only for local development and non-release builds.
+- Use `unknown` for a local build when source revision information is unavailable.
 - Write deterministic JSON with a trailing newline.
 
 For Node projects, the final write should be equivalent to:
@@ -81,33 +74,74 @@ Use the same field names everywhere: startup logs, health endpoints, deployment 
 
 ## Dockerfile Pattern
 
-Use a small build-info stage before the runtime stage:
+Use the example that fits the deployable artifact. Adjust dependency installation, build stages, and entry points for the project's layout. The [publishing script](#image-publishing) supplies the six build arguments. Declare them in the final stage so the application can read the corresponding `APP_*` values at runtime. Redeclare any arguments a separate build stage also needs.
+
+### Node.js
+
+Use the [Node.js 26.13.1 LTS image](https://hub.docker.com/_/node/tags?name=26.13.1-bookworm-slim). For SvelteKit or npm workspaces, adapt the dependency and build steps to the files and output the service needs.
 
 ```Dockerfile
-FROM node:22.12.0-bookworm-slim AS build-info
-
-WORKDIR /workspace
-
-COPY package.json ./
-COPY scripts/write-build-info.mjs ./scripts/write-build-info.mjs
-COPY .git ./.git
-
-RUN node scripts/write-build-info.mjs --output /build-info.json
-
-FROM node:22.12.0-bookworm-slim
+FROM node:26.13.1-bookworm-slim
 
 WORKDIR /app
-
 ENV NODE_ENV=production
 
-COPY --from=build-info /build-info.json ./build-info.json
-COPY package.json ./
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 COPY src ./src
+
+ARG BUILD_HASH=unknown
+ARG BUILD_VERSION=dev
+ARG BUILD_DATE=unknown
+ARG GIT_SHA=unknown
+ARG GIT_DIRTY=false
+ARG CI_RUN_ID=local
+
+ENV APP_BUILD_HASH="${BUILD_HASH}" \
+    APP_VERSION="${BUILD_VERSION}" \
+    APP_BUILD_DATE="${BUILD_DATE}" \
+    APP_GIT_SHA="${GIT_SHA}" \
+    APP_GIT_DIRTY="${GIT_DIRTY}" \
+    APP_CI_RUN_ID="${CI_RUN_ID}"
 
 CMD ["node", "src/index.js"]
 ```
 
-The final image should load `./build-info.json` at runtime. If the file is missing in local development, fall back to the package version and `BUILD_HASH` or `unknown`.
+### Rust
+
+Build the selected binary with the [Rust 1.100.0 image](https://hub.docker.com/_/rust/tags?name=1.100.0-bookworm). Keep the build and runtime stages on compatible Linux bases and install any runtime libraries the binary needs.
+
+```Dockerfile
+FROM rust:1.100.0-bookworm AS build
+
+WORKDIR /workspace
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
+RUN cargo build --locked --release --bin your-service
+
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /workspace/target/release/your-service /usr/local/bin/your-service
+
+ARG BUILD_HASH=unknown
+ARG BUILD_VERSION=dev
+ARG BUILD_DATE=unknown
+ARG GIT_SHA=unknown
+ARG GIT_DIRTY=false
+ARG CI_RUN_ID=local
+
+ENV APP_BUILD_HASH="${BUILD_HASH}" \
+    APP_VERSION="${BUILD_VERSION}" \
+    APP_BUILD_DATE="${BUILD_DATE}" \
+    APP_GIT_SHA="${GIT_SHA}" \
+    APP_GIT_DIRTY="${GIT_DIRTY}" \
+    APP_CI_RUN_ID="${CI_RUN_ID}"
+
+CMD ["your-service"]
+```
 
 ## Docker Compose Environment Files
 
@@ -115,7 +149,7 @@ Follow the optional Compose `.env` pattern in [`configuration.md`](./configurati
 
 ## Runtime Build Info Loader
 
-Load build metadata once and reuse the result for startup logs, health endpoints, and any diagnostics page. Do not shell out to `git` at runtime.
+Load build metadata once and reuse it for startup logs, health endpoints, and diagnostics. For Node, the example supports an optional build-info file, then falls back to the image environment and local defaults.
 
 ```js
 const fs = require('fs');
@@ -153,36 +187,23 @@ const getBuildInfo = () => {
   }
 
   cachedBuildInfo = {
-    version: packageVersion,
-    buildHash: process.env.BUILD_HASH || 'unknown'
+    version: process.env.APP_VERSION?.trim() || packageVersion,
+    buildHash: process.env.APP_BUILD_HASH?.trim() || process.env.BUILD_HASH || 'unknown'
   };
   return cachedBuildInfo;
 };
 ```
 
+In Rust, read `APP_VERSION` and `APP_BUILD_HASH` with `std::env::var`. Use `env!("CARGO_PKG_VERSION")` and `unknown` as local fallbacks when the variables are absent.
+
 ## Startup Logging
 
 Every deployable service should log the loaded build metadata during startup. Put this log before the service reports readiness or begins normal processing.
 
-If the shared `generateLog` implementation already attaches Kubernetes metadata, such as when `LOG_K8S_METADATA_ENABLED=true` is configured, do not duplicate that metadata in `context`. If `generateLog` does not attach Kubernetes metadata, add the available Kubernetes logging env vars yourself.
+Set `LOG_RUNTIME_ENABLED=true` or set `logging.runtime.enabled` to `true` to attach `runtime` metadata to every entry from the shared logger. Pass the same logging settings used to initialize the logger to this startup helper. When enrichment is disabled, the helper includes the available [runtime fields](./logging/logging.md#runtime-metadata) in `context.runtime` for the startup event.
 
 ```js
-const KUBERNETES_LOGGING_ENV_KEYS = [
-  "K8S_POD_NAME",
-  "K8S_DEPLOYMENT",
-  "K8S_NAMESPACE",
-  "K8S_POD_IP",
-  "K8S_POD_IPS",
-  "K8S_NODE_NAME"
-];
-
-const collectAvailableEnv = ({ keys, env = process.env }) => {
-  return Object.fromEntries(
-    keys
-      .filter((key) => env[key] !== undefined && env[key] !== "")
-      .map((key) => [key, env[key]])
-  );
-};
+const { resolveRuntimeMetadata } = require('./logger');
 
 const logStartupDiagnostics = ({ logger, buildInfo, config }) => {
   const context = {
@@ -198,16 +219,9 @@ const logStartupDiagnostics = ({ logger, buildInfo, config }) => {
     apiTokenConfigured: Boolean(config.apiToken)
   };
 
-  const generateLogAddsKubernetes = (
-    process.env.LOG_K8S_METADATA_ENABLED === 'true'
-    || config.logging?.kubernetes?.enabled === true
-  );
-  const kubernetes = collectAvailableEnv({
-    keys: KUBERNETES_LOGGING_ENV_KEYS
-  });
-
-  if (!generateLogAddsKubernetes && Object.keys(kubernetes).length > 0) {
-    context.kubernetes = kubernetes;
+  const { enabled, metadata } = resolveRuntimeMetadata({ logging: config.logging });
+  if (!enabled && metadata) {
+    context.runtime = metadata;
   }
 
   logger.generateLog({
@@ -226,13 +240,13 @@ Include useful non-secret runtime and configuration diagnostics, such as config 
 
 The startup diagnostics log is only useful if it reaches the right sink. Configure the logger so `SERVICE_BOOT_DIAGNOSTICS` is not filtered out.
 
-For stdout-based Kubernetes logging, prefer JSON console output and make sure `info` logs are enabled:
+For deployments where a collector reads stdout, prefer JSON console output and enable `info` logs:
 
 ```env
 LOG_CONSOLE_ENABLED=true
 LOG_CONSOLE_FORMAT=json
 LOG_CONSOLE_LEVELS=info,warn,error
-LOG_K8S_METADATA_ENABLED=true
+LOG_RUNTIME_ENABLED=true
 ```
 
 When using file, HTTP, or syslog forwarding, make sure the sink is enabled and its level filter includes `info`, or add an explicit gate for the startup diagnostics event:
@@ -249,30 +263,36 @@ settings.logging.gates.SERVICE_BOOT_DIAGNOSTICS = {
 
 Only enable sinks that the deployment actually uses. For example, a Kubernetes cluster that collects container stdout may only need the console sink. A platform that forwards to a SIEM may need the HTTP or syslog sink too.
 
-Kubernetes metadata env vars should usually come from the Downward API:
+### Kubernetes example
+
+Use the [Downward API](https://kubernetes.io/docs/concepts/workloads/pods/downward-api/) to populate the same runtime variables from the pod. Set `RUNTIME_DEPLOYMENT` from the deployment template.
 
 ```yaml
 env:
-  - name: LOG_K8S_METADATA_ENABLED
+  - name: LOG_RUNTIME_ENABLED
     value: "true"
-  - name: K8S_POD_NAME
+  - name: RUNTIME_NAME
     valueFrom:
       fieldRef:
         fieldPath: metadata.name
-  - name: K8S_NAMESPACE
+  - name: RUNTIME_NAMESPACE
     valueFrom:
       fieldRef:
         fieldPath: metadata.namespace
-  - name: K8S_POD_IP
+  - name: RUNTIME_IP
     valueFrom:
       fieldRef:
         fieldPath: status.podIP
-  - name: K8S_NODE_NAME
+  - name: RUNTIME_IPS
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIPs
+  - name: RUNTIME_NODE
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
-  - name: K8S_DEPLOYMENT
-    value: your-deployment-name
+  - name: RUNTIME_DEPLOYMENT
+    value: "your-deployment-name"
 ```
 
 ## Probe Endpoints
@@ -303,36 +323,100 @@ Use the same build-info loader as startup diagnostics. Each call gets one correl
 
 ## Image Publishing
 
-Use a version tag and a commit-specific tag for every pushed image. The version tag is convenient for humans, while the version-plus-hash tag is the precise deployment and rollback target.
+When writing a publish script, inspect the project's build files and identify the components versioned together for the requested release. Fill in `check_release_versions` with those paths and adapt the build and publish steps to the artifact.
+
+- For Svelte and Node.js, read `version` from the `package.json` files that own the release. Include workspace packages that ship together under that version.
+- For Rust, use [`cargo metadata --no-deps --format-version 1`](https://doc.rust-lang.org/cargo/commands/cargo-metadata.html) and select the package being released. This resolves Cargo workspace inheritance.
+- For mixed projects, check both stacks when they share a release version. For Tauri, resolve the [effective app version](https://v2.tauri.app/reference/config/#version) and use the project's bundling and publishing commands for desktop artifacts.
+- For example, an `mqttctl` web image release can check the workspace, Svelte frontend, and Node API manifests. Include the Rust broker agent and MCP server when releasing their images under the same version.
+
+Use a trusted build env file with shell assignments and exclude it from Git and the Docker build context. Run from the repository root and pass the file path as the first argument, or use `./.build.env`.
+
+```env
+BUILD_USERNAME=your-team
+BUILD_APP_NAME=your-service
+BUILD_VERSION=v0.4.2
+BUILD_BUILDER=podman
+```
+
+Run all version checks before tagging, building, or publishing. Fail on a missing manifest, parse error, missing version, or mismatch. The skeleton ignores an optional leading `v` during comparison and uses `BUILD_VERSION` in image tags. If the release version contains characters such as `+`, adapt the tag to the project's registry convention.
 
 ```bash
-USERNAME=YOURUSERNAME
-DOMAIN=registry.example.com
-IMAGE_NAME=your-service
-# VERSION="dev"
-VERSION=v0.1.0
+#!/usr/bin/env bash
+set -euo pipefail
 
-git tag -a "$VERSION" -m "$VERSION"
-git push origin "$VERSION"
-# git push --force origin "$VERSION"
+fail() {
+  printf '%s\n' "$*" >&2
+  exit 1
+}
 
-SHA=$(git rev-parse --short=12 HEAD)
+check_version() {
+  local manifest=$1 actual=$2
+  [[ -n ${actual#v} && ${actual#v} == "${BUILD_VERSION#v}" ]] \
+    || fail "$manifest reports '${actual:-<missing>}', expected '$BUILD_VERSION'"
+}
 
-docker build --build-arg BUILD_HASH="$SHA" --build-arg BUILD_VERSION="$VERSION" -t "$IMAGE_NAME:build" -f ./Dockerfile .
+check_release_versions() {
+  # Parse each selected manifest with the project's tooling and require a version string.
+  # Assign the parsed version to actual, then call check_version "$manifest" "$actual".
+  fail 'Fill in the version checks for this release'
+}
 
-for TAG in latest "$VERSION" "$VERSION-$SHA"; do
-  docker tag "$IMAGE_NAME:build" "$USERNAME/$IMAGE_NAME:$TAG"
-  docker tag "$IMAGE_NAME:build" "$DOMAIN/$USERNAME/$IMAGE_NAME:$TAG"
-  docker push "$USERNAME/$IMAGE_NAME:$TAG"
-  docker push "$DOMAIN/$USERNAME/$IMAGE_NAME:$TAG"
+build_env=${1:-.build.env}
+[[ $build_env == /* ]] || build_env="./$build_env"
+[[ -f $build_env ]] || fail "Build env file not found: $build_env"
+source "$build_env"
+
+: "${BUILD_USERNAME:?Set BUILD_USERNAME in the build env file}"
+: "${BUILD_APP_NAME:?Set BUILD_APP_NAME in the build env file}"
+: "${BUILD_VERSION:?Set BUILD_VERSION in the build env file}"
+builder=${BUILD_BUILDER:-podman}
+check_release_versions
+
+GIT_SHA=$(git rev-parse --verify HEAD)
+# Check the release Git tag against GIT_SHA here when the project uses one.
+BUILD_HASH=$(git rev-parse --short=12 "$GIT_SHA")
+BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+CI_RUN_ID=${BUILD_CI_RUN_ID:-${CI_RUN_ID:-local}}
+status=$(git status --porcelain)
+GIT_DIRTY=false
+if [[ -n $status ]]; then
+  GIT_DIRTY=true
+fi
+
+# Adapt the Dockerfile, context, targets, and destinations to the project.
+commit_tag="$BUILD_VERSION-$BUILD_HASH"
+[[ $commit_tag =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$ ]] || fail 'Invalid image tag'
+image="$BUILD_APP_NAME:$commit_tag"
+destination="docker.io/$BUILD_USERNAME/$BUILD_APP_NAME"
+"$builder" build \
+    --build-arg BUILD_HASH="$BUILD_HASH" \
+    --build-arg BUILD_VERSION="$BUILD_VERSION" \
+    --build-arg BUILD_DATE="$BUILD_DATE" \
+    --build-arg GIT_SHA="$GIT_SHA" \
+    --build-arg GIT_DIRTY="$GIT_DIRTY" \
+    --build-arg CI_RUN_ID="$CI_RUN_ID" \
+    --label "org.opencontainers.image.title=$BUILD_APP_NAME" \
+    --label "org.opencontainers.image.revision=$GIT_SHA" \
+    --label "org.opencontainers.image.version=$BUILD_VERSION" \
+    --label "org.opencontainers.image.created=$BUILD_DATE" \
+    --label "build.git.dirty=$GIT_DIRTY" \
+    --label "build.ci.run-id=$CI_RUN_ID" \
+    -t "$image" -f ./Dockerfile .
+
+for tag in "$commit_tag" "$BUILD_VERSION" latest; do
+  "$builder" tag "$image" "$destination:$tag"
+  "$builder" push "$destination:$tag"
 done
 ```
 
-Only force-move a version tag for an unreleased or intentionally replaced build. Prefer creating a new version for anything that has already been deployed.
+For a mirror push, copy the published tags to the mirror repository, such as `registry.example.com/your-team/your-service`. Configure the mirror hostname in that step.
 
-## Kubernetes Deployment Notes
+If the release uses a Git tag, verify that any existing tag points to `GIT_SHA` before building. Create and push a missing tag for that commit at the step owned by the project's release workflow. Use a new version for a build that replaces one already deployed.
 
-Prefer deploying the immutable `VERSION-SHA` image tag instead of `latest`. Carry the same metadata into labels or annotations when useful for operators:
+## Deploying an Image
+
+Deploy the commit-specific `BUILD_VERSION-BUILD_HASH` image tag for precise rollbacks. In Kubernetes, you can also expose that version and hash through labels and annotations.
 
 ```yaml
 metadata:
@@ -354,10 +438,9 @@ Before considering a deployment complete:
 
 - Confirm the container starts successfully.
 - Confirm startup logs include `version` and `buildHash`.
-- Confirm Kubernetes metadata appears once in startup logs when the environment provides `K8S_*` values.
+- Confirm runtime metadata appears once in startup logs when `RUNTIME_*` values are supplied.
 - Confirm logging sinks or gates emit `SERVICE_BOOT_DIAGNOSTICS` to the outputs required by the deployment.
 - Confirm `/livez` succeeds without making dependency calls and includes service identity, `ok`, `version`, `buildHash`, and correlation metadata.
 - Confirm `/readyz` checks every required dependency, returns HTTP 500 for a failed required check, and does not expose sensitive runtime details.
 - Confirm liveness remains HTTP 200 during a simulated external dependency outage while readiness becomes HTTP 500.
-- Confirm the pushed registry tags include `latest`, `$VERSION`, and `$VERSION-$SHA`.
-- Prefer deploying the `$VERSION-$SHA` tag when exact rollback behavior matters.
+- Confirm the publish script stops on a version mismatch and the registry receives `latest`, `$BUILD_VERSION`, and `$BUILD_VERSION-$BUILD_HASH` for a valid release.

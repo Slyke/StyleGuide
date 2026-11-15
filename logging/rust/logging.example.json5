@@ -32,9 +32,14 @@
       failedLoginAttemptsExample: { level: 'warn', console: true, file: true, http: false, syslog: true },
       successfulLogin: { enabled: false },
     },
-    kubernetes: {
+    runtime: {
       enabled: false,
-      podName: '${K8S_POD_NAME}', namespace: '${K8S_NAMESPACE}', nodeName: '${K8S_NODE_NAME}',
+      name: '${RUNTIME_NAME}',
+      deployment: '${RUNTIME_DEPLOYMENT}',
+      namespace: '${RUNTIME_NAMESPACE}',
+      ip: '${RUNTIME_IP}',
+      ips: '${RUNTIME_IPS}',
+      node: '${RUNTIME_NODE}',
     },
   },
 }

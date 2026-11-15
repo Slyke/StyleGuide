@@ -121,11 +121,14 @@ application settings without changing process environment variables.
 For compatibility with the copied JavaScript logger, precedence is:
 
 1. Built-in defaults.
-2. The styleguide's direct `LOG_*`, `K8S_*`, and `ERROR_FILE_PATH` variables.
+2. The styleguide's direct `LOG_*`, `RUNTIME_*`, and `ERROR_FILE_PATH` variables.
 3. Explicit JSON5 settings, after reference expansion.
 
-`LOG_CONSOLE_*`, `LOG_FILE_*`, `LOG_HTTP_*`, `LOG_SYSLOG_*`, and Kubernetes variables
-documented in the styleguide are supported. `LOG_STDOUT_ENABLED/FORMAT/LEVELS`,
+The crate supports the documented `LOG_CONSOLE_*`, `LOG_FILE_*`, `LOG_HTTP_*`,
+`LOG_SYSLOG_*`, and [runtime variables](../logging.md#runtime-metadata). Existing
+`logging.kubernetes` settings and `K8S_*` variables are accepted as fallbacks.
+In Rust, configure `LoggingConfig.runtime` and read the emitted metadata from
+`LogEntry.runtime`. `LOG_STDOUT_ENABLED/FORMAT/LEVELS`,
 `LOG_STDERR_ENABLED/FORMAT/LEVELS`, and `LOG_HTTP_FORMAT` are also available.
 Legacy `*_LEVELS` values use comma-separated levels; `LOG_HTTP_HEADERS` accepts a
 JSON5 object. Invalid legacy values fail validation. Prefer JSON5 `${ENV_VAR}`
@@ -161,7 +164,7 @@ Gate settings themselves never appear in serialized events.
 
 Text templates support `{$timestamp}`, `{$level}`, `{$caller}`, `{$message}`,
 `{$correlationId}`, `{$errorCode}`, `{$errorKey}`, and `{$loggerKey}`. Context, structured
-errors, and enabled/nonempty Kubernetes metadata are appended as JSON. Timestamps use
+errors, and enabled, nonempty runtime metadata are appended as JSON. Timestamps use
 UTC RFC3339 milliseconds; JSON field names match the styleguide's camelCase schema.
 
 Syslog defaults to UDP port 514; TCP also defaults to 514, TLS to 6514. Facilities may

@@ -283,14 +283,29 @@ LOG_SYSLOG_SOCKET_TYPE=udp4
 LOG_SYSLOG_SERVERNAME=
 LOG_SYSLOG_LEVELS=warn,error
 
-LOG_K8S_METADATA_ENABLED=false
-K8S_POD_NAME=
-K8S_DEPLOYMENT=
-K8S_NAMESPACE=
-K8S_POD_IP=
-K8S_POD_IPS=
-K8S_NODE_NAME=
+LOG_RUNTIME_ENABLED=false
+RUNTIME_NAME=
+RUNTIME_DEPLOYMENT=
+RUNTIME_NAMESPACE=
+RUNTIME_IP=
+RUNTIME_IPS=
+RUNTIME_NODE=
 ```
+
+### Runtime metadata
+
+Set `LOG_RUNTIME_ENABLED=true` or set `logging.runtime.enabled` to `true` to add `runtime` to JSON logs and `runtime={...}` to text logs. The fields are optional. Supply only the values your deployment exposes.
+
+| Environment variable | Log and config field | Value |
+| --- | --- | --- |
+| `RUNTIME_NAME` | `name` | Instance name, such as a pod name |
+| `RUNTIME_DEPLOYMENT` | `deployment` | Deployment or service name |
+| `RUNTIME_NAMESPACE` | `namespace` | Namespace |
+| `RUNTIME_IP` | `ip` | Instance's primary IP |
+| `RUNTIME_IPS` | `ips` | Instance IPs as supplied by the environment |
+| `RUNTIME_NODE` | `node` | Host or node name |
+
+Explicit logging settings take precedence over environment variables. Within each source, the new names take precedence over the existing `logging.kubernetes` and `LOG_K8S_METADATA_ENABLED`/`K8S_*` aliases. Both forms emit a `runtime` field. See the [Kubernetes example](../deployment.md#kubernetes-example) for Downward API mappings.
 
 ## Notes
 

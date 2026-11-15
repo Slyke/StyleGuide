@@ -242,9 +242,9 @@ async fn text_templates_are_single_pass_and_metadata_is_optional() {
     let path = directory.path().join("text.log");
     let mut config = file_config(&path);
     config.sinks.file.format = Format::Text;
-    config.kubernetes.enabled = true;
-    config.kubernetes.pod_name = Some("pod-1".into());
-    config.kubernetes.namespace = Some(String::new());
+    config.runtime.enabled = true;
+    config.runtime.name = Some("instance-1".into());
+    config.runtime.namespace = Some(String::new());
     let logger = Logger::new(config, ErrorCodeMap::new()).unwrap();
     let outcome = logger
         .generate_log(LogOptions {
@@ -256,9 +256,11 @@ async fn text_templates_are_single_pass_and_metadata_is_optional() {
     let text = format_text("{$level}|{$message}|{$caller}|{$missing}", &outcome.entry);
     assert_eq!(
         text,
-        "INFO|literal {$caller}|demo| kubernetes={\"podName\":\"pod-1\"}"
+        "INFO|literal {$caller}|demo| runtime={\"name\":\"instance-1\"}"
     );
-    assert_eq!(outcome.entry.kubernetes, Some(json!({"podName":"pod-1"})));
+    let entry = serde_json::to_value(&outcome.entry).unwrap();
+    assert_eq!(entry["runtime"], json!({"name":"instance-1"}));
+    assert!(entry.get("kubernetes").is_none());
     assert!(std::fs::read_to_string(path)
         .unwrap()
         .contains("literal {$caller}"));

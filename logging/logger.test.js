@@ -166,6 +166,15 @@ const main = async () => {
           settings: {
             logging: {
               logTextFormat: '[{$timestamp}] {$level} {$caller} {$loggerKey} {$message}',
+              runtime: {
+                enabled: true,
+                name: 'instance-1',
+                deployment: 'orders',
+                namespace: '',
+                ip: '192.0.2.1',
+                ips: ['192.0.2.1', '2001:db8::1'],
+                node: 'host-1'
+              },
               sinks: {
                 console: {
                   enabled: true,
@@ -319,11 +328,20 @@ const main = async () => {
   assert.strictEqual(failedLogin.level, 'warn');
   assert.strictEqual(failedLogin.error.errorCode, '111111111111111F');
   assert.strictEqual(failedLogin.gate, undefined);
+  assert.deepStrictEqual(failedLogin.runtime, {
+    name: 'instance-1',
+    deployment: 'orders',
+    ip: '192.0.2.1',
+    ips: ['192.0.2.1', '2001:db8::1'],
+    node: 'host-1'
+  });
+  assert.strictEqual(failedLogin.kubernetes, undefined);
 
   assert.strictEqual(capturedConsole.log.length, 0);
   assert.strictEqual(capturedConsole.warn.length, 1);
   assert.strictEqual(capturedConsole.error.length, 1);
   assert.match(capturedConsole.warn[0], /WARN auth::login AUTH_FAILED_LOGIN_ATTEMPT Failed login attempt/);
+  assert.ok(capturedConsole.warn[0].endsWith(` runtime=${JSON.stringify(failedLogin.runtime)}`));
   assert.match(capturedConsole.error[0], /ERROR routes::wrapped WRAPPED_ROUTE_FAILED Wrapped route failed/);
 
   for (const request of httpRequests) {

@@ -153,7 +153,7 @@ pub struct LogEntry {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error_code: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub kubernetes: Option<Value>,
+    pub runtime: Option<Value>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -232,8 +232,8 @@ pub fn format_text(template: &str, entry: &LogEntry) -> String {
             output.push_str(&format!(" error={json}"));
         }
     }
-    if let Some(metadata) = &entry.kubernetes {
-        output.push_str(&format!(" kubernetes={metadata}"));
+    if let Some(metadata) = &entry.runtime {
+        output.push_str(&format!(" runtime={metadata}"));
     }
     output.trim().to_owned()
 }

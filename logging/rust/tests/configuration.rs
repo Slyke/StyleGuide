@@ -79,6 +79,38 @@ fn defaults_and_legacy_precedence_match_the_styleguide() {
 }
 
 #[test]
+fn runtime_settings_prefer_generic_names_and_accept_legacy_inputs() {
+    let environment = &|key: &str| match key {
+        "LOG_K8S_METADATA_ENABLED" => Some("true".into()),
+        "RUNTIME_NAME" => Some("runtime-name".into()),
+        "K8S_POD_NAME" => Some("pod-name".into()),
+        "K8S_POD_IP" => Some("192.0.2.1".into()),
+        "K8S_POD_IPS" => Some("192.0.2.1,2001:db8::1".into()),
+        _ => None,
+    };
+    let defaults = LoggingConfig::from_json5_with_environment("{}", environment).unwrap();
+    assert!(defaults.runtime.enabled);
+    assert_eq!(defaults.runtime.name.as_deref(), Some("runtime-name"));
+    assert_eq!(defaults.runtime.ips, Some(json!("192.0.2.1,2001:db8::1")));
+
+    let config = LoggingConfig::from_json5_with_environment(
+        "{ kubernetes: {podName: 'old-config', nodeName: 'node-1'}, runtime: {name: 'new-config'} }",
+        environment,
+    )
+    .unwrap();
+    assert_eq!(config.runtime.name.as_deref(), Some("new-config"));
+    assert_eq!(config.runtime.node.as_deref(), Some("node-1"));
+    assert_eq!(config.runtime.ip.as_deref(), Some("192.0.2.1"));
+
+    let disabled = LoggingConfig::from_json5_with_environment("{}", &|key| match key {
+        "LOG_RUNTIME_ENABLED" => Some("false".into()),
+        _ => environment(key),
+    })
+    .unwrap();
+    assert!(!disabled.runtime.enabled);
+}
+
+#[test]
 fn schema_rejects_mistakes_and_invalid_transport_settings() {
     for text in [
         "{sinks:{file:{enabeld:true}}}",
