@@ -330,17 +330,18 @@ When writing a publish script, inspect the project's build files and identify th
 - For mixed projects, check both stacks when they share a release version. For Tauri, resolve the [effective app version](https://v2.tauri.app/reference/config/#version) and use the project's bundling and publishing commands for desktop artifacts.
 - For example, an `mqttctl` web image release can check the workspace, Svelte frontend, and Node API manifests. Include the Rust broker agent and MCP server when releasing their images under the same version.
 
-Use a trusted build env file with shell assignments. Run from the repository root and pass the file path as the first argument, or use `./.build.env`. Keep the file out of Git and the build context. If it sits inside the context, exclude it in the active ignore file, including a Dockerfile-specific `.dockerignore` or Podman's `.containerignore` where applicable. [Docker build context](https://docs.docker.com/build/concepts/context/#dockerignore-files) · [Podman build context](https://docs.podman.io/en/latest/markdown/podman-build.1.html#files)
+Use a trusted build env file with shell assignments. Run from the repository root and pass the file path as the first argument, or use `./.build.env`. Use this file only on the publishing host. Keep it out of Git and the build context. If it sits inside the context, exclude it in the active ignore file, including a Dockerfile-specific `.dockerignore` or Podman's `.containerignore` where applicable. [Docker build context](https://docs.docker.com/build/concepts/context/#dockerignore-files) · [Podman build context](https://docs.podman.io/en/latest/markdown/podman-build.1.html#files)
 
 ```env
 BUILD_USERNAME=your-team
 BUILD_APP_NAME=your-service
 BUILD_VERSION=v0.4.2
 BUILDER_BIN=podman # or docker
+# MIRROR_DOMAIN=registry.example.com
 # PUSH_TAGS="beta preview"
 ```
 
-Pass a mirror registry hostname as the optional second argument, for example `./publish-image.sh ./.build.env registry.example.com`. The script reads the hostname after building and pushes the same tags there after Docker Hub.
+Set `MIRROR_DOMAIN` to push the same tags to a mirror after Docker Hub. The optional second argument overrides it for one run. The script keeps the hostname in the publishing shell and uses it for temporary registry tags.
 
 Use `PUSH_TAGS` for space-separated aliases in addition to the version and commit tags. After verifying a stable release, use `PUSH_TAGS=latest` to move the `latest` tag. The script accepts `latest` only for versions in `MAJOR.MINOR.PATCH` format with an optional leading `v`.
 
@@ -371,6 +372,8 @@ build_env=${1:-.build.env}
 [[ $build_env == /* ]] || build_env="./$build_env"
 [[ -f $build_env ]] || fail "Build env file not found: $build_env"
 source "$build_env"
+# Keep the mirror hostname in the publishing shell.
+export -n MIRROR_DOMAIN
 
 : "${BUILD_USERNAME:?Set BUILD_USERNAME in the build env file}"
 : "${BUILD_APP_NAME:?Set BUILD_APP_NAME in the build env file}"
@@ -419,19 +422,30 @@ image="$BUILD_APP_NAME:$commit_tag"
     --label "build.ci.run-id=$CI_RUN_ID" \
     -t "$image" -f ./Dockerfile .
 
-destinations=("docker.io/$BUILD_USERNAME/$BUILD_APP_NAME")
-mirror_domain=${2:-}
-if [[ -n $mirror_domain ]]; then
+primary="docker.io/$BUILD_USERNAME/$BUILD_APP_NAME"
+destinations=("$primary")
+mirror_domain=${2:-${MIRROR_DOMAIN:-}}
+if [[ -n $mirror_domain && $mirror_domain != docker.io ]]; then
   destinations+=("$mirror_domain/$BUILD_USERNAME/$BUILD_APP_NAME")
 fi
 
 for destination in "${destinations[@]}"; do
   for tag in "${tags[@]}"; do
-    "$BUILDER_BIN" tag "$image" "$destination:$tag"
-    "$BUILDER_BIN" push "$destination:$tag"
+    ref="$destination:$tag"
+    "$BUILDER_BIN" tag "$image" "$ref"
+    push_status=0
+    "$BUILDER_BIN" push "$ref" || push_status=$?
+    if [[ $destination != "$primary" ]]; then
+      "$BUILDER_BIN" image rm "$ref" >/dev/null
+    fi
+    if (( push_status != 0 )); then
+      exit "$push_status"
+    fi
   done
 done
 ```
+
+The script removes each temporary local mirror tag after its push attempt. A host that pulls directly from the mirror can show that registry address in its local image references. Inspect the image config, history, and layers to check the published content. [Docker image inspection fields](https://github.com/moby/moby/blob/master/api/types/image/image_inspect.go)
 
 If the release uses a Git tag, verify that any existing tag points to `GIT_SHA` before building. Create and push a missing tag for that commit at the step owned by the project's release workflow. Use a new version for a build that replaces one already deployed.
 
@@ -450,7 +464,7 @@ spec:
     spec:
       containers:
         - name: your-service
-          image: registry.example.com/team/your-service:v0.4.2-abc1234def56
+          image: docker.io/your-team/your-service:v0.4.2-abc1234def56
 ```
 
 ## Verification
@@ -465,4 +479,4 @@ Before considering a deployment complete:
 - Confirm `/readyz` checks every required dependency, returns HTTP 500 for a failed required check, and does not expose sensitive runtime details.
 - Confirm liveness remains HTTP 200 during a simulated external dependency outage while readiness becomes HTTP 500.
 - Confirm the publish script stops on a version mismatch. Check that Docker Hub and any configured mirror receive the version and commit tags plus the aliases in `PUSH_TAGS`. Verify that `latest` moves only when requested for a stable release.
-- Inspect the image config, history, and layers to verify that the mirror hostname stays in the publishing step.
+- Check that the mirror hostname stays out of the running container's environment and the image config, history, and layers. Verify that the publishing host has removed its temporary mirror tags.
